@@ -29,6 +29,10 @@ public class Customer implements Serializable {
 		return username;
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public boolean authenticate(String user, String pass) {
 		return this.username.equals(user) && this.password.equals(pass);
 	}

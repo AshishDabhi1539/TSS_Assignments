@@ -35,16 +35,16 @@ public class CustomerService {
 
 				// ✅ Validation for empty login fields
 				if (user.trim().isEmpty() || pass.trim().isEmpty()) {
-					System.out.println("❌ Username or password cannot be empty.");
+					System.out.println("Username or password cannot be empty.");
 					break;
 				}
 
 				Customer customer = customers.stream().filter(c -> c.authenticate(user, pass)).findFirst().orElse(null);
 				if (customer != null) {
-					System.out.println("✅ Login successful! Welcome " + customer.getName());
+					System.out.println("Login successful! Welcome " + customer.getName());
 					return customer;
 				} else {
-					System.out.println("❌ Invalid credentials.");
+					System.out.println("Invalid credentials.");
 				}
 			}
 			case 2 -> {
@@ -57,21 +57,21 @@ public class CustomerService {
 
 				// ✅ Validation for empty signup fields
 				if (user.trim().isEmpty() || pass.trim().isEmpty()) {
-					System.out.println("❌ Username or password cannot be empty.");
+					System.out.println("Username or password cannot be empty.");
 					break;
 				}
 
 				boolean exists = customers.stream().anyMatch(c -> c.getUsername().equals(user));
 				if (exists) {
-					System.out.println("❌ Username already taken. Try again.");
+					System.out.println("Username already taken. Try again.");
 				} else {
-					Customer newCustomer = new Customer(IDGenerator.generateId(), name, user, pass);
+					Customer newCustomer = new Customer(IDGenerator.generateCustomerId(), name, user, pass);
 					customers.add(newCustomer);
 					saveCustomers();
-					System.out.println("✅ Registration successful. You can now login.");
+					System.out.println("Registration successful. You can now login.");
 				}
 			}
-			default -> System.out.println("❌ Invalid choice.");
+			default -> System.out.println("Invalid choice.");
 			}
 		}
 	}

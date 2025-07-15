@@ -2,6 +2,7 @@ package com.tss.service;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import com.tss.model.DeliveryPartner;
 import com.tss.model.Discount;
@@ -20,7 +21,6 @@ public class AdminService {
 	private final String DISCOUNT_FILE = "discount.ser";
 
 	public AdminService() {
-		// Load or initialize data
 		this.menu = SerializationUtil.readList(MENU_FILE);
 		this.partners = SerializationUtil.readList(PARTNER_FILE);
 		this.discount = SerializationUtil.readObject(DISCOUNT_FILE);
@@ -34,15 +34,19 @@ public class AdminService {
 	}
 
 	public void showAdminMenu(Scanner scanner) {
-		int choice;
+		int choice = -1;
 		do {
 			System.out.println("\n--- Admin Panel ---");
 			System.out.println("1. Manage Menu");
 			System.out.println("2. Manage Delivery Partners");
 			System.out.println("3. Manage Discount");
-			System.out.println("4. Save Changes");
 			System.out.println("0. Exit Admin Panel");
 			System.out.print("Enter choice: ");
+			if (!scanner.hasNextInt()) {
+				System.out.println("Invalid input. Please enter a number (0, 1, 2 or 3).");
+				scanner.nextLine();
+				continue;
+			}
 			choice = scanner.nextInt();
 			scanner.nextLine();
 
@@ -50,34 +54,34 @@ public class AdminService {
 			case 1 -> manageMenu(scanner);
 			case 2 -> managePartners(scanner);
 			case 3 -> manageDiscount(scanner);
-			case 4 -> saveAll();
 			case 0 -> System.out.println("Exiting Admin Panel...");
 			default -> System.out.println("Invalid choice.");
 			}
 		} while (choice != 0);
+
 	}
 
 	private void manageMenu(Scanner scanner) {
-		int choice;
+		int choice = -1;
 		do {
 			System.out.println("\n--- Menu Management ---");
-			System.out.println("1. View Menu");
+			System.out.println("1. View Menu by Cuisine");
 			System.out.println("2. Add Food Item");
 			System.out.println("3. Update Food Item");
 			System.out.println("4. Remove Food Item");
+			System.out.println("5. Manage Cuisine");
 			System.out.println("0. Back");
 			System.out.print("Enter choice: ");
+			if (!scanner.hasNextInt()) {
+				System.out.println("Invalid input. Please enter a number (0, 1, 2, 3, 4 or 5).");
+				scanner.nextLine();
+				continue;
+			}
 			choice = scanner.nextInt();
 			scanner.nextLine();
 
 			switch (choice) {
-			case 1 -> {
-				if (menu.isEmpty()) {
-					System.out.println("Menu is currently empty.");
-				} else {
-					menu.forEach(System.out::println);
-				}
-			}
+			case 1 -> viewMenuByCuisine(scanner);
 			case 2 -> {
 				System.out.print("Enter name: ");
 				String name = scanner.nextLine();
@@ -88,12 +92,12 @@ public class AdminService {
 				scanner.nextLine();
 
 				Cuisine cuisine = (c == 1) ? Cuisine.INDIAN : Cuisine.ITALIAN;
-				menu.add(new FoodItem(IDGenerator.generateId(), name, price, cuisine));
-				System.out.println("✅ Food item added.");
+				menu.add(new FoodItem(IDGenerator.generateFoodItemId(), name, price, cuisine));
+				System.out.println("Food item added.");
 			}
 			case 3 -> {
 				if (menu.isEmpty()) {
-					System.out.println("⚠️ No items available to update.");
+					System.out.println("No items available to update.");
 					break;
 				}
 				System.out.print("Enter Food ID to update: ");
@@ -111,28 +115,50 @@ public class AdminService {
 					scanner.nextLine();
 					System.out.println("Item updated.");
 				} else {
-					System.out.println("❌ Food item not found.");
+					System.out.println("Food item not found.");
 				}
 			}
 			case 4 -> {
 				if (menu.isEmpty()) {
-					System.out.println("⚠️ No items available to remove.");
+					System.out.println("No items available to remove.");
 					break;
 				}
 				System.out.print("Enter Food ID to remove: ");
 				int id = scanner.nextInt();
 				boolean removed = menu.removeIf(f -> f.getId() == id);
-				if (removed)
-					System.out.println("Item removed.");
-				else
-					System.out.println("❌ No item found with ID " + id);
+				System.out.println(removed ? "Item removed." : "No item found with ID " + id);
 			}
+			case 5 -> viewMenuByCuisine(scanner);
 			case 0 -> {
 				saveAll();
 				return;
 			}
+			default -> System.out.println("Invalid choice.");
 			}
 		} while (choice != 0);
+	}
+
+	private void viewMenuByCuisine(Scanner scanner) {
+		System.out.println("\n--- View Menu by Cuisine ---");
+		System.out.println("1. Indian Cuisine");
+		System.out.println("2. Italian Cuisine");
+		System.out.print("Enter choice: ");
+		int cuisineChoice = scanner.nextInt();
+		scanner.nextLine();
+		Cuisine selected = (cuisineChoice == 1) ? Cuisine.INDIAN : Cuisine.ITALIAN;
+		List<FoodItem> filtered = menu.stream().filter(f -> f.getCuisine() == selected).collect(Collectors.toList());
+		if (filtered.isEmpty()) {
+			System.out.println("No items in " + selected + " cuisine.");
+		} else {
+			System.out.printf("+------+----------------------+----------+%n");
+			System.out.printf("| ID   | Name                 | Price ₹  |%n");
+			System.out.printf("+------+----------------------+----------+%n");
+			for (FoodItem item : filtered) {
+				System.out.printf("| %-4d | %-20s | %-8.2f | %-7s |%n", item.getId(), item.getName(), item.getPrice(),
+						item.getCuisine());
+			}
+			System.out.printf("+------+----------------------+----------+%n");
+		}
 	}
 
 	private void managePartners(Scanner scanner) {
@@ -148,52 +174,52 @@ public class AdminService {
 			scanner.nextLine();
 
 			switch (choice) {
-				case 1 -> {
-					if (partners.isEmpty()) {
-						System.out.println("⚠️ No delivery partners available.");
-					} else {
-						partners.forEach(System.out::println);
-					}
+			case 1 -> {
+				if (partners.isEmpty()) {
+					System.out.println("⚠️ No delivery partners available.");
+				} else {
+					partners.forEach(System.out::println);
 				}
-				case 2 -> {
-					System.out.print("Enter partner name: ");
-					String name = scanner.nextLine();
-					DeliveryPartner partner = new DeliveryPartner(IDGenerator.generateId(), name);
-					partners.add(partner);
-					System.out.println("✅ Partner added.");
+			}
+			case 2 -> {
+				System.out.print("Enter partner name: ");
+				String name = scanner.nextLine();
+				DeliveryPartner partner = new DeliveryPartner(IDGenerator.generatePartnerId(), name);
+				partners.add(partner);
+				System.out.println("✅ Partner added.");
+			}
+			case 3 -> {
+				if (partners.isEmpty()) {
+					System.out.println("⚠️ No delivery partners available to update.");
+					break;
 				}
-				case 3 -> {
-					if (partners.isEmpty()) {
-						System.out.println("⚠️ No delivery partners available to update.");
-						break;
-					}
-					System.out.print("Enter Partner ID to update: ");
-					int id = scanner.nextInt();
-					scanner.nextLine();
-					DeliveryPartner partner = partners.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
-					if (partner != null) {
-						System.out.print("Enter new name: ");
-						partner.setName(scanner.nextLine());
-						System.out.println("✅ Partner updated.");
-					} else {
-						System.out.println("❌ Partner not found.");
-					}
+				System.out.print("Enter Partner ID to update: ");
+				int id = scanner.nextInt();
+				scanner.nextLine();
+				DeliveryPartner partner = partners.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+				if (partner != null) {
+					System.out.print("Enter new name: ");
+					partner.setName(scanner.nextLine());
+					System.out.println("✅ Partner updated.");
+				} else {
+					System.out.println("❌ Partner not found.");
 				}
-				case 4 -> {
-					if (partners.isEmpty()) {
-						System.out.println("⚠️ No delivery partners available to remove.");
-						break;
-					}
-					System.out.print("Enter Partner ID to remove: ");
-					int id = scanner.nextInt();
-					boolean removed = partners.removeIf(p -> p.getId() == id);
-					System.out.println(removed ? "✅ Partner removed." : "❌ Partner not found.");
+			}
+			case 4 -> {
+				if (partners.isEmpty()) {
+					System.out.println("⚠️ No delivery partners available to remove.");
+					break;
 				}
-				case 0 -> {
-					saveAll();
-					return;
-				}
-				default -> System.out.println("❌ Invalid choice.");
+				System.out.print("Enter Partner ID to remove: ");
+				int id = scanner.nextInt();
+				boolean removed = partners.removeIf(p -> p.getId() == id);
+				System.out.println(removed ? "✅ Partner removed." : "❌ Partner not found.");
+			}
+			case 0 -> {
+				saveAll();
+				return;
+			}
+			default -> System.out.println("❌ Invalid choice.");
 			}
 		}
 	}
@@ -216,7 +242,6 @@ public class AdminService {
 		System.out.println("All data saved.");
 	}
 
-	// Getters to use in customer services
 	public List<FoodItem> getMenu() {
 		return menu;
 	}

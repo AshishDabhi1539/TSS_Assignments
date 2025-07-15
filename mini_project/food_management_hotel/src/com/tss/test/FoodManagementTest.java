@@ -45,6 +45,11 @@ public class FoodManagementTest {
 				System.out.println("2. Order as Customer");
 				System.out.println("0. Exit");
 				System.out.print("Choose an option: ");
+				if (!scanner.hasNextInt()) {
+					System.out.println("Invalid input. Please enter a number (0, 1 or 2).");
+					scanner.nextLine();
+					continue;
+				}
 				int choice = scanner.nextInt();
 				scanner.nextLine();
 
@@ -84,7 +89,7 @@ public class FoodManagementTest {
 
 			CustomerService customerService = new CustomerService();
 			Customer customer = customerService.handleCustomerAuth(scanner);
-			Order order = new Order(IDGenerator.generateId(), customer);
+			Order order = new Order(IDGenerator.generateOrderId(), customer);
 
 			// Cuisine selection
 			System.out.println("\nChoose Cuisine:");

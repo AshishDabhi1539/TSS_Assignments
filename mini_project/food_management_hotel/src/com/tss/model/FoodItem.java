@@ -61,6 +61,10 @@ public class FoodItem implements Comparable<FoodItem>, Serializable {
 		return Comparator.comparing(FoodItem::getName);
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
 		return id + ". " + name + " - " + price + " rupees (" + cuisine + ")";
