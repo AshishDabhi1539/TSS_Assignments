@@ -14,7 +14,7 @@ public class Order {
 		this.customer = customer;
 	}
 	
-	private void addItem(OrderItem item) {
+	public void addItem(OrderItem item) {
 		// TODO Auto-generated method stub
 		items.add(item);
 	}
