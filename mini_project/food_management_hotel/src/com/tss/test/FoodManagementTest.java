@@ -1,5 +1,8 @@
 package com.tss.test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 
 import com.tss.model.Admin;
@@ -15,13 +18,12 @@ import com.tss.service.InvoiceService;
 import com.tss.service.MenuService;
 import com.tss.service.OrderService;
 import com.tss.service.PaymentService;
+import com.tss.util.ConfigUtil;
 import com.tss.util.IDGenerator;
-import com.tss.util.SerializationUtil;
 
 public class FoodManagementTest {
 
 	private static Admin admin;
-	private static final String ADMIN_FILE = "admin.ser";
 
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
@@ -30,11 +32,11 @@ public class FoodManagementTest {
 		DeliveryService deliveryService = new DeliveryService(adminService.getPartners());
 		InvoiceService invoiceService = new InvoiceService();
 
-		admin = SerializationUtil.readObject(ADMIN_FILE);
-		if (admin == null) {
-			admin = new Admin("admin", "admin123");
-			SerializationUtil.saveObject(admin, ADMIN_FILE);
-		}
+		Properties adminProps = ConfigUtil.loadProperties("admin.properties");
+		String adminUser = adminProps.getProperty("username");
+		String adminPass = adminProps.getProperty("password");
+
+		admin = new Admin(adminUser, adminPass);
 
 		try {
 			while (true) {
@@ -72,7 +74,7 @@ public class FoodManagementTest {
 		System.out.print("Enter password: ");
 		String pass = scanner.nextLine();
 
-		if (admin.authenticate(user, pass)) {
+		if (admin != null && admin.authenticate(user, pass)) {
 			adminService.showAdminMenu(scanner);
 		} else {
 			System.out.println("Invalid admin credentials.");
@@ -84,30 +86,53 @@ public class FoodManagementTest {
 
 		CustomerService customerService = new CustomerService();
 		Customer customer = customerService.handleCustomerAuth(scanner);
-		Order order = new Order(IDGenerator.generateOrderId(), customer);
-
-		System.out.println("\nChoose Cuisine:");
-		System.out.println("Available Cuisines: " + adminService.getCustomCuisines());
-		System.out.print("Enter cuisine name: ");
-		String selectedCuisine = scanner.nextLine().toUpperCase();
-
-		if (!adminService.getCustomCuisines().contains(selectedCuisine)) {
-			System.out.println("Invalid cuisine.");
-			return;
+		if (customer == null) {
+			return; // Exit if authentication fails
 		}
 
-		MenuService menuService = new MenuService(adminService.getMenu());
-		System.out.println("\n--- " + selectedCuisine + " MENU ---");
-		menuService.getByCuisine(selectedCuisine).forEach(System.out::println);
+		Order order = new Order(IDGenerator.generateOrderId(), customer);
+		List<String> cuisines = new ArrayList<>(adminService.getCustomCuisines());
 
-		OrderService orderService = new OrderService();
-		orderService.takeOrder(order, menuService, scanner);
+		while (true) {
+			System.out.println("\nChoose Cuisine:");
+			for (int i = 0; i < cuisines.size(); i++) {
+				System.out.println((i + 1) + ". " + cuisines.get(i));
+			}
+			System.out.println("0. Back");
+			System.out.print("Enter choice: ");
+			if (!scanner.hasNextInt()) {
+				System.out.println("Invalid input. Please enter a number.");
+				scanner.nextLine();
+				continue;
+			}
+			int cuisineChoice = scanner.nextInt();
+			scanner.nextLine();
 
-		double total = order.getTotal();
-		double discount = discountService.getDiscountAmount(total);
-		Payment payment = new PaymentService().processPayment(total - discount, scanner);
-		DeliveryPartner partner = deliveryService.assignPartner();
+			if (cuisineChoice == 0) {
+				return; // Go back to main menu
+			}
 
-		invoiceService.printInvoice(order, discount, payment, partner);
+			if (cuisineChoice < 1 || cuisineChoice > cuisines.size()) {
+				System.out.println("Invalid choice.");
+				continue;
+			}
+
+			String selectedCuisine = cuisines.get(cuisineChoice - 1);
+			MenuService menuService = new MenuService(adminService.getMenu());
+			System.out.println("\n--- " + selectedCuisine + " MENU ---");
+			menuService.getByCuisine(selectedCuisine).forEach(System.out::println);
+
+			OrderService orderService = new OrderService();
+			orderService.takeOrder(order, menuService, scanner);
+
+			if (!order.getItems().isEmpty()) {
+				double total = order.getTotal();
+				double discount = discountService.getDiscountAmount(total);
+				Payment payment = new PaymentService().processPayment(total - discount, scanner);
+				DeliveryPartner partner = deliveryService.assignPartner();
+				invoiceService.printInvoice(order, discount, payment, partner);
+			}
+			break; // Exit after placing order
+		}
 	}
 }
