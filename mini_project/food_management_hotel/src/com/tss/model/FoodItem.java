@@ -6,16 +6,12 @@ import java.util.Comparator;
 public class FoodItem implements Comparable<FoodItem>, Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public enum Cuisine {
-		INDIAN, ITALIAN
-	}
-
 	private int id;
 	private String name;
 	private double price;
-	private Cuisine cuisine;
+	private String cuisine;
 
-	public FoodItem(int id, String name, double price, Cuisine cuisine) {
+	public FoodItem(int id, String name, double price, String cuisine) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -35,11 +31,11 @@ public class FoodItem implements Comparable<FoodItem>, Serializable {
 		return price;
 	}
 
-	public Cuisine getCuisine() {
+	public String getCuisine() {
 		return cuisine;
 	}
 
-	public void setCuisine(Cuisine cuisine) {
+	public void setCuisine(String cuisine) {
 		this.cuisine = cuisine;
 	}
 
