@@ -35,7 +35,7 @@ public class AdminService {
             partners = new ArrayList<>();
         if (discount == null)
             discount = new Discount(500, 50);
-        IDGenerator.loadInitialCounters(menu, partners, new ArrayList<>()); // Initialize counters
+        IDGenerator.loadInitialCounters(menu, partners, new ArrayList<>());
     }
 
     public void showAdminMenu(Scanner scanner) {
@@ -118,8 +118,9 @@ public class AdminService {
                     break;
                 }
                 String cuisineInput = cuisines.get(cuisineChoice - 1);
-                menu.add(new FoodItem(IDGenerator.generateFoodItemId(), name, price, cuisineInput));
-                IDGenerator.resetFoodItemCounter(menu);
+                FoodItem newItem = new FoodItem(IDGenerator.generateFoodItemId(cuisineInput), name, price, cuisineInput);
+                menu.add(newItem);
+                IDGenerator.resetCuisineCounter(cuisineInput, menu.stream().filter(i -> i.getCuisine().equals(cuisineInput)).collect(Collectors.toList()));
                 System.out.println("Food item added.");
             }
             case 3 -> {
@@ -127,10 +128,31 @@ public class AdminService {
                     System.out.println("No items available to update.");
                     break;
                 }
+                System.out.println("Available Cuisines:");
+                List<String> cuisines = new ArrayList<>(customCuisines);
+                for (int i = 0; i < cuisines.size(); i++) {
+                    System.out.println((i + 1) + ". " + cuisines.get(i));
+                }
+                System.out.print("Select cuisine to update from: ");
+                if (!scanner.hasNextInt()) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.nextLine();
+                    break;
+                }
+                int cuisineChoice = scanner.nextInt();
+                scanner.nextLine();
+                if (cuisineChoice < 1 || cuisineChoice > cuisines.size()) {
+                    System.out.println("Invalid cuisine choice.");
+                    break;
+                }
+                String selectedCuisine = cuisines.get(cuisineChoice - 1);
                 System.out.print("Enter Food ID to update: ");
                 int id = scanner.nextInt();
                 scanner.nextLine();
-                FoodItem item = menu.stream().filter(f -> f.getId() == id).findFirst().orElse(null);
+                FoodItem item = menu.stream()
+                    .filter(f -> f.getId() == id && f.getCuisine().equalsIgnoreCase(selectedCuisine))
+                    .findFirst()
+                    .orElse(null);
                 if (item != null) {
                     System.out.print("New name: ");
                     item.setName(scanner.nextLine());
@@ -142,29 +164,62 @@ public class AdminService {
                     }
                     item.setPrice(scanner.nextDouble());
                     scanner.nextLine();
-                    System.out.print("New cuisine name: ");
-                    String newCuisine = scanner.nextLine().toUpperCase();
-                    if (customCuisines.contains(newCuisine)) {
-                        item.setCuisine(newCuisine);
+                    System.out.println("Available Cuisines:");
+                    List<String> updateCuisines = new ArrayList<>(customCuisines);
+                    for (int i = 0; i < updateCuisines.size(); i++) {
+                        System.out.println((i + 1) + ". " + updateCuisines.get(i));
+                    }
+                    System.out.print("Enter choice: ");
+                    int newCuisineChoice = scanner.nextInt();
+                    scanner.nextLine();
+                    if (newCuisineChoice >= 1 && newCuisineChoice <= updateCuisines.size()) {
+                        item.setCuisine(updateCuisines.get(newCuisineChoice - 1));
+                        IDGenerator.resetCuisineCounter(item.getCuisine(), menu.stream().filter(i -> i.getCuisine().equals(item.getCuisine())).collect(Collectors.toList()));
                         System.out.println("Item updated.");
                     } else {
-                        System.out.println("Invalid cuisine name.");
+                        System.out.println("Invalid cuisine choice.");
                     }
                 } else {
-                    System.out.println("Food item not found.");
+                    System.out.println("Food item not found with ID " + id + " in " + selectedCuisine + " cuisine.");
                 }
-                IDGenerator.resetFoodItemCounter(menu);
             }
             case 4 -> {
                 if (menu.isEmpty()) {
                     System.out.println("No items available to remove.");
                     break;
                 }
+                System.out.println("Available Cuisines:");
+                List<String> cuisines = new ArrayList<>(customCuisines);
+                for (int i = 0; i < cuisines.size(); i++) {
+                    System.out.println((i + 1) + ". " + cuisines.get(i));
+                }
+                System.out.print("Select cuisine to remove from: ");
+                if (!scanner.hasNextInt()) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.nextLine();
+                    break;
+                }
+                int cuisineChoice = scanner.nextInt();
+                scanner.nextLine();
+                if (cuisineChoice < 1 || cuisineChoice > cuisines.size()) {
+                    System.out.println("Invalid cuisine choice.");
+                    break;
+                }
+                String selectedCuisine = cuisines.get(cuisineChoice - 1);
                 System.out.print("Enter Food ID to remove: ");
                 int id = scanner.nextInt();
-                boolean removed = menu.removeIf(f -> f.getId() == id);
-                System.out.println(removed ? "Item removed." : "No item found with ID " + id);
-                IDGenerator.resetFoodItemCounter(menu);
+                scanner.nextLine();
+                FoodItem itemToRemove = menu.stream()
+                    .filter(f -> f.getId() == id && f.getCuisine().equalsIgnoreCase(selectedCuisine))
+                    .findFirst()
+                    .orElse(null);
+                if (itemToRemove != null) {
+                    menu.removeIf(f -> f.getId() == id && f.getCuisine().equalsIgnoreCase(selectedCuisine));
+                    IDGenerator.resetCuisineCounter(selectedCuisine, menu.stream().filter(i -> i.getCuisine().equals(selectedCuisine)).collect(Collectors.toList()));
+                    System.out.println("Item removed.");
+                } else {
+                    System.out.println("No item found with ID " + id + " in " + selectedCuisine + " cuisine.");
+                }
             }
             case 5 -> manageCuisine(scanner);
             case 0 -> {

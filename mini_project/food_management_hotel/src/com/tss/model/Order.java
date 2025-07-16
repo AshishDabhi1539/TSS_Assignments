@@ -35,4 +35,7 @@ public class Order {
 		return items.stream().mapToDouble(OrderItem::getSubtotal).sum();
 	}
 
+	public boolean removeItem(int itemId) {
+		return items.removeIf(item -> item.getItem().getId() == itemId);
+	}
 }
