@@ -9,17 +9,16 @@ public class Order {
 	private final int orderId;
 	private final Customer customer;
 	private final List<OrderItem> items = new ArrayList<>();
+	private int starRating;
+	private String feedbackNote;
 
 	public Order(int orderId, Customer customer) {
 		this.orderId = orderId;
 		this.customer = customer;
+		this.starRating = 0;
+		this.feedbackNote = "";
 	}
 
-	/**
-	 * Adds an item to the order.
-	 * 
-	 * @param item The OrderItem to add.
-	 */
 	public void addItem(OrderItem item, OrderService orderService) {
 		item.setCartId(orderService.generateCartId());
 		items.add(item);
@@ -37,22 +36,10 @@ public class Order {
 		return items;
 	}
 
-	/**
-	 * Calculates the total order amount.
-	 * 
-	 * @return The total amount.
-	 */
 	public double getTotal() {
 		return items.stream().mapToDouble(OrderItem::getSubtotal).sum();
 	}
 
-	/**
-	 * Removes an item from the order or reduces its quantity.
-	 * 
-	 * @param cartId           The cart ID of the item.
-	 * @param quantityToRemove The quantity to remove.
-	 * @return True if the item was removed or updated, false otherwise.
-	 */
 	public boolean removeItem(int cartId, int quantityToRemove) {
 		for (OrderItem item : items) {
 			if (item.getCartId() == cartId) {
@@ -65,5 +52,32 @@ public class Order {
 			}
 		}
 		return false;
+	}
+
+	public int getStarRating() {
+		return starRating;
+	}
+
+	public void setStarRating(int starRating) {
+		this.starRating = starRating;
+	}
+
+	public String getFeedbackNote() {
+		return feedbackNote;
+	}
+
+	public void setFeedbackNote(String feedbackNote) {
+		this.feedbackNote = feedbackNote;
+	}
+
+	// Deprecated: Use getStarRating and getFeedbackNote instead
+	@Deprecated
+	public String getFeedback() {
+		return feedbackNote;
+	}
+
+	@Deprecated
+	public void setFeedback(String feedback) {
+		this.feedbackNote = feedback;
 	}
 }

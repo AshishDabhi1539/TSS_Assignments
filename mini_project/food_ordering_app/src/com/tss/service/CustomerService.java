@@ -126,8 +126,9 @@ public class CustomerService {
 			System.out.println("2. Add Item to Buy");
 			System.out.println("3. Remove Item from Buy");
 			System.out.println("4. Print Invoice");
+			System.out.println("5. Provide Feedback");
 			System.out.println("0. Exit");
-			choice = readIntInput(scanner, "Enter choice: ", 0, 4);
+			choice = readIntInput(scanner, "Enter choice: ", 0, 5);
 			if (choice == -1)
 				continue;
 
@@ -141,6 +142,7 @@ public class CustomerService {
 					order = orderService.createOrder(customer); // Reset order after successful invoice
 				}
 			}
+			case 5 -> addFeedback(order, scanner);
 			case 0 -> {
 				customerRepository.save();
 				System.out.println("All data saved.");
@@ -167,6 +169,17 @@ public class CustomerService {
 			Payment payment = paymentService.processPayment(payable, scanner);
 			if (payment == null)
 				return order;
+
+			// Collect feedback after successful payment
+			int starRating = readIntInput(scanner, "Rate your order (1-5 stars): ", 1, 5);
+			if (starRating == -1)
+				throw new AppException("Invalid rating. Feedback not saved.");
+			System.out.print("Enter feedback note (max 500 characters, press Enter to skip): ");
+			String feedbackNote = scanner.nextLine().trim();
+			if (!feedbackNote.isEmpty() && feedbackNote.length() > 500) {
+				throw new AppException("Feedback note cannot exceed 500 characters.");
+			}
+			orderService.addFeedback(order, starRating, feedbackNote);
 
 			DeliveryPartner partner = deliveryService.assignPartner();
 			if (partner.getId() == 0) {
@@ -297,6 +310,28 @@ public class CustomerService {
 		}
 	}
 
+	private void addFeedback(Order order, Scanner scanner) {
+		try {
+			if (order.getItems().isEmpty() && order.getStarRating() == 0 && order.getFeedbackNote().isEmpty()) {
+				System.out.println("No order placed yet. Please place an order before providing feedback.");
+				return;
+			}
+			int starRating = readIntInput(scanner, "Rate your order (1-5 stars): ", 1, 5);
+			if (starRating == -1)
+				throw new AppException("Invalid rating. Feedback not saved.");
+			System.out.print("Enter feedback note (max 500 characters, press Enter to skip): ");
+			String feedbackNote = scanner.nextLine().trim();
+			if (!feedbackNote.isEmpty() && feedbackNote.length() > 500) {
+				throw new AppException("Feedback note cannot exceed 500 characters.");
+			}
+			orderService.addFeedback(order, starRating, feedbackNote);
+			customerRepository.save();
+			System.out.println("Feedback submitted.");
+		} catch (AppException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	private void printMenuTable(List<FoodItem> items, String cuisine) {
 		if (items.isEmpty()) {
 			System.out.println("No items in " + cuisine + " cuisine.");
@@ -320,5 +355,5 @@ public class CustomerService {
 					item.getQuantity(), item.getSubtotal(), item.getItem().getCuisine());
 		}
 		System.out.printf("+-------+----------------------+----------+----------+----------+%n");
-	}
+	}	
 }

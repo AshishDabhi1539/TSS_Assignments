@@ -124,12 +124,19 @@ public class AdminService {
 			double price = readDoubleInput(scanner, "Enter price: ");
 			if (price <= 0)
 				throw new AppException("Price must be positive.");
+			System.out.print("Enter description (max 200 characters): ");
+			String description = scanner.nextLine().trim();
+			if (description.isEmpty())
+				throw new AppException("Description cannot be empty.");
+			if (description.length() > 200)
+				throw new AppException("Description cannot exceed 200 characters.");
 			String cuisine = selectCuisine(scanner);
 			if (cuisine == null)
 				return;
 
 			FoodItem newItem = new FoodItem(IDGenerator.getInstance().generateFoodItemId(cuisine), name, price,
 					cuisine);
+			newItem.setDescription(description);
 			menuRepository.add(newItem);
 			IDGenerator.getInstance().resetCuisineCounter(cuisine, menuRepository.getAll().stream()
 					.filter(i -> i.getCuisine().equals(cuisine)).collect(Collectors.toList()));

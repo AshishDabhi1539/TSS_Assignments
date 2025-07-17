@@ -119,4 +119,16 @@ public class OrderService {
 		}
 		System.out.printf("+------+----------------------+----------+%n");
 	}
+
+	/**
+	 * Adds feedback to an order.
+	 * 
+	 * @param order        The order to add feedback to.
+	 * @param starRating   The star rating (1-5).
+	 * @param feedbackNote The feedback note (optional).
+	 */
+	public void addFeedback(Order order, int starRating, String feedbackNote) {
+		order.setStarRating(starRating);
+		order.setFeedbackNote(feedbackNote);
+	}
 }
