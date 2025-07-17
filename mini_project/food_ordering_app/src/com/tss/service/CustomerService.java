@@ -55,12 +55,13 @@ public class CustomerService {
 			case 1 -> {
 				try {
 					System.out.print("Enter username: ");
-					String user = scanner.nextLine();
+					String user = scanner.nextLine().trim();
+					if (user.isEmpty())
+						throw new AppException("Username cannot be empty.");
 					System.out.print("Enter password: ");
-					String pass = scanner.nextLine();
-					if (user.trim().isEmpty() || pass.trim().isEmpty()) {
-						throw new AppException("Username or password cannot be empty.");
-					}
+					String pass = scanner.nextLine().trim();
+					if (pass.isEmpty())
+						throw new AppException("Password cannot be empty.");
 					Customer customer = customerRepository.findByCredentials(user, pass);
 					if (customer != null) {
 						System.out.println("Login successful! Welcome " + customer.getName());
@@ -75,21 +76,27 @@ public class CustomerService {
 			case 2 -> {
 				try {
 					System.out.print("Enter your full name: ");
-					String name = scanner.nextLine();
+					String name = scanner.nextLine().trim();
+					if (name.isEmpty())
+						throw new AppException("Full name cannot be empty.");
 					System.out.print("Choose username: ");
-					String user = scanner.nextLine();
+					String user = scanner.nextLine().trim();
+					if (user.isEmpty())
+						throw new AppException("Username cannot be empty.");
+					String userUpper = user.toUpperCase();
+					if (customerRepository.getAll().stream()
+							.anyMatch(c -> c.getUsername().toUpperCase().equals(userUpper))) {
+						throw new AppException("Username '" + user + "' already taken. Try another.");
+					}
 					System.out.print("Choose password: ");
-					String pass = scanner.nextLine();
-					if (user.trim().isEmpty() || pass.trim().isEmpty()) {
-						throw new AppException("Username or password cannot be empty.");
-					}
-					if (customerRepository.existsByUsername(user)) {
-						throw new AppException("Username already taken. Try again.");
-					}
+					String pass = scanner.nextLine().trim();
+					if (pass.isEmpty())
+						throw new AppException("Password cannot be empty.");
 					Customer newCustomer = new Customer(IDGenerator.getInstance().generateCustomerId(), name, user,
 							pass);
 					customerRepository.add(newCustomer);
 					IDGenerator.getInstance().resetCustomerCounter(customerRepository.getAll());
+					customerRepository.save();
 					System.out.println("Registration successful. You can now login.");
 				} catch (AppException e) {
 					System.out.println(e.getMessage());
@@ -128,10 +135,50 @@ public class CustomerService {
 			case 1 -> viewMenuByCuisine(adminService.getCustomCuisines(), scanner);
 			case 2 -> addItemToOrder(order, adminService.getCustomCuisines(), scanner);
 			case 3 -> removeItemFromOrder(order, adminService.getCustomCuisines(), scanner);
-			case 4 -> printInvoice(order, scanner);
-			case 0 -> System.out.println("Exiting Customer Menu...");
+			case 4 -> {
+				order = printInvoice(order, scanner, customer);
+				if (order == null) {
+					order = orderService.createOrder(customer); // Reset order after successful invoice
+				}
+			}
+			case 0 -> {
+				customerRepository.save();
+				System.out.println("All data saved.");
+				System.out.println("Exiting Customer Menu...");
+			}
 			}
 		} while (choice != 0);
+	}
+
+	private Order printInvoice(Order order, Scanner scanner, Customer customer) {
+		if (order.getItems().isEmpty()) {
+			System.out.println("Cart is empty. Nothing to invoice.");
+			return order;
+		}
+		try {
+			double total = order.getTotal();
+			double discountThreshold = order.getCustomer().getDiscountThreshold();
+			if (discountThreshold < 0) {
+				throw new AppException("Invalid discount threshold. Contact support.");
+			}
+			double discount = total > discountThreshold ? discountService.getDiscountAmount(total) : 0.0;
+			double payable = total - discount;
+
+			Payment payment = paymentService.processPayment(payable, scanner);
+			if (payment == null)
+				return order;
+
+			DeliveryPartner partner = deliveryService.assignPartner();
+			if (partner.getId() == 0) {
+				System.out.println("Warning: No delivery partner available. Order will be processed without delivery.");
+			}
+			invoiceService.printInvoice(order, discount, payment, partner);
+			customerRepository.save();
+			return orderService.createOrder(customer); // Create new order after invoice
+		} catch (AppException e) {
+			System.out.println(e.getMessage());
+			return order;
+		}
 	}
 
 	private void viewMenuByCuisine(Set<String> cuisines, Scanner scanner) {
@@ -174,9 +221,11 @@ public class CustomerService {
 			System.out.println("No items available in " + selectedCuisine + " cuisine.");
 			return;
 		}
+		System.out.println("\nAvailable Food Items in " + selectedCuisine + ":");
 		printMenuTable(items, selectedCuisine);
 
-		int itemId = readIntInput(scanner, "Enter Food Item ID: ", 1, Integer.MAX_VALUE);
+		int maxId = items.stream().mapToInt(FoodItem::getId).max().orElse(0);
+		int itemId = readIntInput(scanner, "Enter Food Item ID: ", 1, maxId);
 		if (itemId == -1)
 			return;
 
@@ -189,7 +238,7 @@ public class CustomerService {
 		if (quantity == -1)
 			return;
 
-		order.addItem(new OrderItem(item, quantity, 0));
+		order.addItem(new OrderItem(item, quantity, 0), orderService);
 		System.out.println(quantity + " x " + item.getName() + " added to cart.");
 	}
 
@@ -201,7 +250,8 @@ public class CustomerService {
 		System.out.println("\n--- Remove Item from Buy ---");
 		printOrderTable(order.getItems());
 
-		int cartId = readIntInput(scanner, "Enter Cart ID to remove: ", 1, Integer.MAX_VALUE);
+		int maxCartId = order.getItems().stream().mapToInt(OrderItem::getCartId).max().orElse(0);
+		int cartId = readIntInput(scanner, "Enter Cart ID to remove: ", 1, maxCartId);
 		if (cartId == -1)
 			return;
 
@@ -227,83 +277,24 @@ public class CustomerService {
 		}
 	}
 
-	private void printInvoice(Order order, Scanner scanner) {
-		if (order.getItems().isEmpty()) {
-			System.out.println("Cart is empty. Nothing to invoice.");
-			return;
-		}
-		try {
-			double total = order.getTotal();
-			double discountThreshold = order.getCustomer().getDiscountThreshold();
-			if (discountThreshold < 0) {
-				throw new AppException("Invalid discount threshold. Contact support.");
-			}
-			double discount = total > discountThreshold ? discountService.getDiscountAmount(total) : 0.0;
-			double payable = total - discount;
-
-			Payment payment = processPayment(payable, scanner);
-			if (payment == null)
-				return;
-
-			DeliveryPartner partner = deliveryService.assignPartner();
-			if (partner.getId() == 0) {
-				System.out.println("Warning: No delivery partner available. Order will be processed without delivery.");
-			}
-			invoiceService.printInvoice(order, discount, payment, partner);
-		} catch (AppException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	private Payment processPayment(double amount, Scanner scanner) throws AppException {
-		Payment.Mode[] modes = Payment.Mode.values();
-		System.out.println("Available Payment Modes:");
-		for (int i = 0; i < modes.length; i++) {
-			System.out.println((i + 1) + ". " + modes[i]);
-		}
-		int paymentMode = readIntInput(scanner, "Choose Payment Mode (1-" + modes.length + "): ", 1, modes.length);
-		if (paymentMode == -1)
-			return null;
-
-		Payment.Mode mode = modes[paymentMode - 1];
-		if (mode == Payment.Mode.UPI) {
-			String pinInput = readPinInput(scanner);
-			if (pinInput == null)
-				return null;
-		}
-		return new Payment(mode, amount);
-	}
-
-	private String readPinInput(Scanner scanner) throws AppException {
-		int maxAttempts = 3;
-		for (int attempts = 0; attempts < maxAttempts; attempts++) {
-			System.out.print("Enter 4-digit UPI PIN: ");
-			String pinInput = scanner.nextLine().trim();
-			if (pinInput.matches("\\d{4}")) {
-				return pinInput;
-			}
-			System.out.println("Invalid PIN. Please enter exactly 4 digits.");
-			if (attempts < maxAttempts - 1) {
-				System.out.println("PIN attempts remaining: " + (maxAttempts - attempts - 1));
-			}
-		}
-		throw new AppException("Too many invalid PIN attempts.");
-	}
-
 	private int readIntInput(Scanner scanner, String prompt, int min, int max) {
 		System.out.print(prompt);
-		if (!scanner.hasNextInt()) {
+		try {
+			String input = scanner.nextLine().trim();
+			if (input.isEmpty()) {
+				System.out.println("Input cannot be empty. Please enter a number between " + min + " and " + max + ".");
+				return -1;
+			}
+			int choice = Integer.parseInt(input);
+			if (choice < min || choice > max) {
+				System.out.println("Invalid choice. Please enter a number between " + min + " and " + max + ".");
+				return -1;
+			}
+			return choice;
+		} catch (NumberFormatException e) {
 			System.out.println("Invalid input. Please enter a number between " + min + " and " + max + ".");
-			scanner.nextLine();
 			return -1;
 		}
-		int choice = scanner.nextInt();
-		scanner.nextLine();
-		if (choice < min || choice > max) {
-			System.out.println("Invalid choice. Please enter a number between " + min + " and " + max + ".");
-			return -1;
-		}
-		return choice;
 	}
 
 	private void printMenuTable(List<FoodItem> items, String cuisine) {

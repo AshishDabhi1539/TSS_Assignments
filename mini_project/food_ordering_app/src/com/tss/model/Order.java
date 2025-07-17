@@ -3,11 +3,12 @@ package com.tss.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tss.service.OrderService;
+
 public class Order {
 	private final int orderId;
 	private final Customer customer;
 	private final List<OrderItem> items = new ArrayList<>();
-	private static int nextCartId = 1;
 
 	public Order(int orderId, Customer customer) {
 		this.orderId = orderId;
@@ -19,8 +20,8 @@ public class Order {
 	 * 
 	 * @param item The OrderItem to add.
 	 */
-	public void addItem(OrderItem item) {
-		item.setCartId(nextCartId++);
+	public void addItem(OrderItem item, OrderService orderService) {
+		item.setCartId(orderService.generateCartId());
 		items.add(item);
 	}
 
@@ -60,18 +61,9 @@ public class Order {
 				} else {
 					item.setQuantity(item.getQuantity() - quantityToRemove);
 				}
-				reassignCartIds();
 				return true;
 			}
 		}
 		return false;
-	}
-
-	private void reassignCartIds() {
-		int newCartId = 1;
-		for (OrderItem item : items) {
-			item.setCartId(newCartId++);
-		}
-		nextCartId = newCartId;
 	}
 }

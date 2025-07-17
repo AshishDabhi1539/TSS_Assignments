@@ -57,7 +57,10 @@ public class AdminService {
 			case 1 -> manageMenu(scanner);
 			case 2 -> managePartners(scanner);
 			case 3 -> manageDiscount(scanner);
-			case 0 -> saveAll();
+			case 0 -> {
+				saveAll();
+				System.out.println("All data saved.");
+			}
 			}
 		} while (choice != 0);
 	}
@@ -111,8 +114,16 @@ public class AdminService {
 	private void addFoodItem(Scanner scanner) {
 		try {
 			System.out.print("Enter name: ");
-			String name = scanner.nextLine();
+			String name = scanner.nextLine().trim();
+			if (name.isEmpty())
+				throw new AppException("Food item name cannot be empty.");
+			String nameUpper = name.toUpperCase();
+			if (menuRepository.getAll().stream().anyMatch(item -> item.getName().toUpperCase().equals(nameUpper))) {
+				throw new AppException("Food item with name '" + name + "' already exists.");
+			}
 			double price = readDoubleInput(scanner, "Enter price: ");
+			if (price <= 0)
+				throw new AppException("Price must be positive.");
 			String cuisine = selectCuisine(scanner);
 			if (cuisine == null)
 				return;
@@ -122,6 +133,7 @@ public class AdminService {
 			menuRepository.add(newItem);
 			IDGenerator.getInstance().resetCuisineCounter(cuisine, menuRepository.getAll().stream()
 					.filter(i -> i.getCuisine().equals(cuisine)).collect(Collectors.toList()));
+			saveAll();
 			System.out.println("Food item added.");
 		} catch (AppException e) {
 			System.out.println(e.getMessage());
@@ -138,20 +150,35 @@ public class AdminService {
 			if (cuisine == null)
 				return;
 
-			System.out.print("Enter Food ID to update: ");
-			int id = readIntInput(scanner, "Enter Food ID to update: ", 1, Integer.MAX_VALUE);
+			List<FoodItem> items = menuRepository.getAll().stream()
+					.filter(f -> f.getCuisine().equalsIgnoreCase(cuisine)).collect(Collectors.toList());
+			if (items.isEmpty()) {
+				System.out.println("No items available in " + cuisine + " cuisine.");
+				return;
+			}
+			System.out.println("\nAvailable Food Items in " + cuisine + ":");
+			printMenuTable(items, cuisine);
+
+			int maxId = items.stream().mapToInt(FoodItem::getId).max().orElse(0);
+			int id = readIntInput(scanner, "Enter Food ID to update: ", 1, maxId);
 			if (id == -1)
 				return;
 
-			FoodItem item = menuRepository.getAll().stream()
-					.filter(f -> f.getId() == id && f.getCuisine().equalsIgnoreCase(cuisine)).findFirst().orElse(null);
+			FoodItem item = items.stream().filter(f -> f.getId() == id).findFirst().orElse(null);
 			if (item == null) {
 				throw new AppException("Food item not found with ID " + id + " in " + cuisine + " cuisine.");
 			}
 
-			System.out.print("New name: ");
-			item.setName(scanner.nextLine());
-			item.setPrice(readDoubleInput(scanner, "New price: "));
+			System.out.print("New name (leave blank to keep current): ");
+			String newName = scanner.nextLine().trim();
+			if (!newName.isEmpty()) {
+				item.setName(newName);
+			}
+			double newPrice = readDoubleInput(scanner, "New price (enter 0 to keep current): ");
+			if (newPrice > 0) {
+				item.setPrice(newPrice);
+			}
+			System.out.println("Select new cuisine (0 to keep current):");
 			String newCuisine = selectCuisine(scanner);
 			if (newCuisine != null) {
 				item.setCuisine(newCuisine);
@@ -159,6 +186,11 @@ public class AdminService {
 			menuRepository.update(item);
 			IDGenerator.getInstance().resetCuisineCounter(item.getCuisine(), menuRepository.getAll().stream()
 					.filter(i -> i.getCuisine().equals(item.getCuisine())).collect(Collectors.toList()));
+			if (!item.getCuisine().equalsIgnoreCase(cuisine)) {
+				IDGenerator.getInstance().resetCuisineCounter(cuisine, menuRepository.getAll().stream()
+						.filter(i -> i.getCuisine().equals(cuisine)).collect(Collectors.toList()));
+			}
+			saveAll();
 			System.out.println("Item updated.");
 		} catch (AppException e) {
 			System.out.println(e.getMessage());
@@ -175,7 +207,17 @@ public class AdminService {
 			if (cuisine == null)
 				return;
 
-			int id = readIntInput(scanner, "Enter Food ID to remove: ", 1, Integer.MAX_VALUE);
+			List<FoodItem> items = menuRepository.getAll().stream()
+					.filter(f -> f.getCuisine().equalsIgnoreCase(cuisine)).collect(Collectors.toList());
+			if (items.isEmpty()) {
+				System.out.println("No items available in " + cuisine + " cuisine.");
+				return;
+			}
+			System.out.println("\nAvailable Food Items in " + cuisine + ":");
+			printMenuTable(items, cuisine);
+
+			int maxId = items.stream().mapToInt(FoodItem::getId).max().orElse(0);
+			int id = readIntInput(scanner, "Enter Food ID to remove: ", 1, maxId);
 			if (id == -1)
 				return;
 
@@ -183,6 +225,7 @@ public class AdminService {
 			if (removed) {
 				IDGenerator.getInstance().resetCuisineCounter(cuisine, menuRepository.getAll().stream()
 						.filter(i -> i.getCuisine().equals(cuisine)).collect(Collectors.toList()));
+				saveAll();
 				System.out.println("Item removed.");
 			} else {
 				throw new AppException("No item found with ID " + id + " in " + cuisine + " cuisine.");
@@ -208,23 +251,36 @@ public class AdminService {
 			case 1 -> customCuisines.forEach(c -> System.out.println("- " + c));
 			case 2 -> {
 				System.out.print("Enter new cuisine name: ");
-				String newCuisine = scanner.nextLine().toUpperCase();
-				if (customCuisines.contains(newCuisine)) {
+				String newCuisine = scanner.nextLine().trim().toUpperCase();
+				if (newCuisine.isEmpty()) {
+					System.out.println("Application Error: Cuisine name cannot be empty.");
+				} else if (customCuisines.contains(newCuisine)) {
 					System.out.println("Cuisine already exists.");
 				} else {
 					customCuisines.add(newCuisine);
+					saveAll();
 					System.out.println("Cuisine added: " + newCuisine);
 				}
 			}
 			case 3 -> {
-				System.out.print("Enter cuisine name to remove: ");
-				String toRemove = scanner.nextLine().toUpperCase();
-				if (!customCuisines.contains(toRemove)) {
-					System.out.println("Cuisine not found.");
-				} else {
-					customCuisines.remove(toRemove);
-					System.out.println("Cuisine removed: " + toRemove);
+				List<String> cuisines = new ArrayList<>(customCuisines);
+				if (cuisines.isEmpty()) {
+					System.out.println("No cuisines available to remove.");
+					break;
 				}
+				System.out.println("\nAvailable Cuisines:");
+				for (int i = 0; i < cuisines.size(); i++) {
+					System.out.println((i + 1) + ". " + cuisines.get(i));
+				}
+				int cuisineChoice = readIntInput(scanner, "Select cuisine to remove: ", 1, cuisines.size());
+				if (cuisineChoice == -1)
+					break;
+				String toRemove = cuisines.get(cuisineChoice - 1);
+				customCuisines.remove(toRemove);
+				menuRepository.getAll().removeIf(item -> item.getCuisine().equalsIgnoreCase(toRemove));
+				menuRepository.save();
+				saveAll();
+				System.out.println("Cuisine removed: " + toRemove);
 			}
 			case 0 -> saveAll();
 			}
@@ -249,15 +305,26 @@ public class AdminService {
 				if (partnerRepository.getAll().isEmpty()) {
 					System.out.println("No delivery partners available.");
 				} else {
-					partnerRepository.getAll().forEach(System.out::println);
+					System.out.println("\nAvailable Delivery Partners:");
+					printPartnerTable(partnerRepository.getAll());
 				}
 			}
 			case 2 -> {
 				System.out.print("Enter partner name: ");
-				String name = scanner.nextLine();
+				String name = scanner.nextLine().trim();
+				if (name.isEmpty()) {
+					System.out.println("Application Error: Partner name cannot be empty.");
+					break;
+				}
+				String nameUpper = name.toUpperCase();
+				if (partnerRepository.getAll().stream().anyMatch(p -> p.getName().toUpperCase().equals(nameUpper))) {
+					System.out.println("Partner with name '" + name + "' already exists.");
+					break;
+				}
 				DeliveryPartner partner = new DeliveryPartner(IDGenerator.getInstance().generatePartnerId(), name);
 				partnerRepository.add(partner);
 				IDGenerator.getInstance().resetPartnerCounter(partnerRepository.getAll());
+				saveAll();
 				System.out.println("Partner added.");
 			}
 			case 3 -> {
@@ -265,32 +332,56 @@ public class AdminService {
 					System.out.println("No delivery partners available to update.");
 					break;
 				}
-				int id = readIntInput(scanner, "Enter Partner ID to update: ", 1, Integer.MAX_VALUE);
+				System.out.println("\nAvailable Delivery Partners:");
+				printPartnerTable(partnerRepository.getAll());
+				int maxId = partnerRepository.getAll().stream().mapToInt(DeliveryPartner::getId).max().orElse(0);
+				int id = readIntInput(scanner, "Enter Partner ID to update: ", 1, maxId);
 				if (id == -1)
 					break;
 				DeliveryPartner partner = partnerRepository.getAll().stream().filter(p -> p.getId() == id).findFirst()
 						.orElse(null);
 				if (partner != null) {
 					System.out.print("Enter new name: ");
-					partner.setName(scanner.nextLine());
+					String newName = scanner.nextLine().trim();
+					if (newName.isEmpty()) {
+						System.out.println("Application Error: Partner name cannot be empty.");
+						break;
+					}
+					String newNameUpper = newName.toUpperCase();
+					if (partnerRepository.getAll().stream()
+							.anyMatch(p -> p.getId() != id && p.getName().toUpperCase().equals(newNameUpper))) {
+						System.out.println("Partner with name '" + newName + "' already exists.");
+						break;
+					}
+					partner.setName(newName);
 					partnerRepository.update(partner);
+					IDGenerator.getInstance().resetPartnerCounter(partnerRepository.getAll());
+					saveAll();
 					System.out.println("Partner updated.");
+					break; // Break after successful update
 				} else {
 					System.out.println("Partner not found.");
 				}
-				IDGenerator.getInstance().resetPartnerCounter(partnerRepository.getAll());
 			}
 			case 4 -> {
 				if (partnerRepository.getAll().isEmpty()) {
 					System.out.println("No delivery partners available to remove.");
 					break;
 				}
-				int id = readIntInput(scanner, "Enter Partner ID to remove: ", 1, Integer.MAX_VALUE);
+				System.out.println("\nAvailable Delivery Partners:");
+				printPartnerTable(partnerRepository.getAll());
+				int maxId = partnerRepository.getAll().stream().mapToInt(DeliveryPartner::getId).max().orElse(0);
+				int id = readIntInput(scanner, "Enter Partner ID to remove: ", 1, maxId);
 				if (id == -1)
 					break;
 				boolean removed = partnerRepository.remove(id);
-				System.out.println(removed ? "Partner removed." : "Partner not found.");
-				IDGenerator.getInstance().resetPartnerCounter(partnerRepository.getAll());
+				if (removed) {
+					IDGenerator.getInstance().resetPartnerCounter(partnerRepository.getAll());
+					saveAll();
+					System.out.println("Partner removed.");
+				} else {
+					System.out.println("Partner not found.");
+				}
 			}
 			case 0 -> saveAll();
 			}
@@ -302,9 +393,18 @@ public class AdminService {
 			System.out.println("\n--- Discount Management ---");
 			System.out.println("Current Threshold: ₹" + discount.getThreshold());
 			System.out.println("Current Discount: ₹" + discount.getAmount());
-			discount.setThreshold(readDoubleInput(scanner, "Enter new threshold: "));
-			discount.setAmount(readDoubleInput(scanner, "Enter new discount amount: "));
-			SerializationUtil.saveObject(discount, DISCOUNT_FILE);
+			double newThreshold = readDoubleInput(scanner, "Enter new threshold: ");
+			if (newThreshold < 0)
+				throw new AppException("Threshold cannot be negative.");
+			double newAmount = readDoubleInput(scanner, "Enter new discount amount: ");
+			if (newAmount < 0)
+				throw new AppException("Discount amount cannot be negative.");
+			if (newAmount > newThreshold)
+				throw new AppException("Discount amount cannot exceed the threshold.");
+			discount.setThreshold(newThreshold);
+			discount.setAmount(newAmount);
+			saveAll();
+			System.out.println("Discount updated.");
 		} catch (AppException e) {
 			System.out.println(e.getMessage());
 		}
@@ -314,7 +414,6 @@ public class AdminService {
 		menuRepository.save();
 		partnerRepository.save();
 		SerializationUtil.saveObject(discount, DISCOUNT_FILE);
-		System.out.println("All data saved.");
 	}
 
 	public Set<String> getCustomCuisines() {
@@ -335,32 +434,35 @@ public class AdminService {
 
 	private int readIntInput(Scanner scanner, String prompt, int min, int max) {
 		System.out.print(prompt);
-		if (!scanner.hasNextInt()) {
+		try {
+			String input = scanner.nextLine().trim();
+			if (input.isEmpty()) {
+				System.out.println("Input cannot be empty. Please enter a number between " + min + " and " + max + ".");
+				return -1;
+			}
+			int choice = Integer.parseInt(input);
+			if (choice < min || choice > max) {
+				System.out.println("Invalid choice. Please enter a number between " + min + " and " + max + ".");
+				return -1;
+			}
+			return choice;
+		} catch (NumberFormatException e) {
 			System.out.println("Invalid input. Please enter a number between " + min + " and " + max + ".");
-			scanner.nextLine();
 			return -1;
 		}
-		int choice = scanner.nextInt();
-		scanner.nextLine();
-		if (choice < min || choice > max) {
-			System.out.println("Invalid choice. Please enter a number between " + min + " and " + max + ".");
-			return -1;
-		}
-		return choice;
 	}
 
 	private double readDoubleInput(Scanner scanner, String prompt) throws AppException {
 		System.out.print(prompt);
-		if (!scanner.hasNextDouble()) {
-			scanner.nextLine();
+		try {
+			String input = scanner.nextLine().trim();
+			if (input.isEmpty()) {
+				throw new AppException("Input cannot be empty.");
+			}
+			return Double.parseDouble(input);
+		} catch (NumberFormatException e) {
 			throw new AppException("Invalid input. Please enter a numeric value.");
 		}
-		double value = scanner.nextDouble();
-		scanner.nextLine();
-		if (value < 0) {
-			throw new AppException("Value must be non-negative.");
-		}
-		return value;
 	}
 
 	private String selectCuisine(Scanner scanner) {
@@ -373,8 +475,9 @@ public class AdminService {
 		for (int i = 0; i < cuisines.size(); i++) {
 			System.out.println((i + 1) + ". " + cuisines.get(i));
 		}
-		int choice = readIntInput(scanner, "Enter choice: ", 1, cuisines.size());
-		return choice == -1 ? null : cuisines.get(choice - 1);
+		System.out.println("0. Back");
+		int choice = readIntInput(scanner, "Enter choice: ", 0, cuisines.size());
+		return choice == -1 || choice == 0 ? null : cuisines.get(choice - 1);
 	}
 
 	private void printMenuTable(List<FoodItem> items, String cuisine) {
@@ -389,5 +492,15 @@ public class AdminService {
 			System.out.printf("| %-4d | %-20s | %-8.2f |%n", item.getId(), item.getName(), item.getPrice());
 		}
 		System.out.printf("+------+----------------------+----------+%n");
+	}
+
+	private void printPartnerTable(List<DeliveryPartner> partners) {
+		System.out.printf("+------+----------------------+%n");
+		System.out.printf("| ID   | Name                 |%n");
+		System.out.printf("+------+----------------------+%n");
+		for (DeliveryPartner partner : partners) {
+			System.out.printf("| %-4d | %-20s |%n", partner.getId(), partner.getName());
+		}
+		System.out.printf("+------+----------------------+%n");
 	}
 }
