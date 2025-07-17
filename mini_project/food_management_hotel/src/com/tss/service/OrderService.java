@@ -48,7 +48,7 @@ public class OrderService {
                 continue;
             }
 
-            order.addItem(new OrderItem(selectedItem, quantity));
+            order.addItem(new OrderItem(selectedItem, quantity, 0));
             System.out.println(quantity + " x " + selectedItem.getName() + " added to order.");
 
             System.out.print("Do you want to add more items? (y/n): ");

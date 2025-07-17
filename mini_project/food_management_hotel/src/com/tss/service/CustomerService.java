@@ -115,7 +115,7 @@ public class CustomerService {
             switch (choice) {
             case 1 -> viewMenuByCuisine(menuService, adminService.getCustomCuisines(), scanner);
             case 2 -> addItemToOrder(order, menuService, adminService.getCustomCuisines(), scanner);
-            case 3 -> removeItemFromOrder(order, scanner);
+            case 3 -> removeItemFromOrder(order, scanner, menuService, adminService.getCustomCuisines());
             case 4 -> printInvoice(order, discountService, paymentService, invoiceService, deliveryService, scanner);
             case 0 -> System.out.println("Exiting Customer Menu...");
             default -> System.out.println("Invalid choice. Please enter 0-4.");
@@ -190,6 +190,15 @@ public class CustomerService {
             System.out.println("No items available in " + selectedCuisine + " cuisine.");
             return;
         }
+        System.out.printf("\nAvailable Items in %s Cuisine:%n", selectedCuisine);
+        System.out.printf("+------+----------------------+----------+%n");
+        System.out.printf("| ID   | Name                 | Price ₹  |%n");
+        System.out.printf("+------+----------------------+----------+%n");
+        for (FoodItem item : items) {
+            System.out.printf("| %-4d | %-20s | %-8.2f |%n", item.getId(), item.getName(), item.getPrice());
+        }
+        System.out.printf("+------+----------------------+----------+%n");
+
         System.out.print("Enter Food Item ID: ");
         if (!scanner.hasNextInt()) {
             System.out.println("Invalid input. Please enter a number.");
@@ -215,33 +224,74 @@ public class CustomerService {
             System.out.println("Quantity must be greater than 0.");
             return;
         }
-        order.addItem(new OrderItem(item, quantity));
+        order.addItem(new OrderItem(item, quantity, 0));
         System.out.println(quantity + " x " + item.getName() + " added to cart.");
     }
 
-    private void removeItemFromOrder(Order order, Scanner scanner) {
+    private void removeItemFromOrder(Order order, Scanner scanner, MenuService menuService, Set<String> cuisines) {
         if (order.getItems().isEmpty()) {
             System.out.println("Cart is empty. No items to remove.");
             return;
         }
         System.out.println("\n--- Remove Item from Buy ---");
-        System.out.println("Cart Items:");
+        System.out.printf("+-------+----------------------+----------+----------+----------+%n");
+        System.out.printf("| CartID| Name                 | Quantity | Subtotal | Cuisine  |%n");
+        System.out.printf("+-------+----------------------+----------+----------+----------+%n");
         for (OrderItem item : order.getItems()) {
-            System.out.println(item.getItem().getId() + ". " + item.getItem().getName() + " x " + item.getQuantity() + " - ₹" + item.getSubtotal());
+            System.out.printf("| %-5d | %-20s | %-8d | ₹%-7.2f | %-8s |%n",
+                    item.getCartId(),
+                    item.getItem().getName(),
+                    item.getQuantity(),
+                    item.getSubtotal(),
+                    item.getItem().getCuisine());
         }
-        System.out.print("Enter Food Item ID to remove: ");
+        System.out.printf("+-------+----------------------+----------+----------+----------+%n");
+
+        System.out.print("Enter Cart ID to remove: ");
         if (!scanner.hasNextInt()) {
             System.out.println("Invalid input. Please enter a number.");
             scanner.nextLine();
             return;
         }
-        int itemId = scanner.nextInt();
+        int cartId = scanner.nextInt();
         scanner.nextLine();
-        boolean removed = order.removeItem(itemId);
-        if (removed) {
-            System.out.println("Item with ID " + itemId + " removed from cart.");
+
+        OrderItem itemToRemove = order.getItems().stream()
+                .filter(item -> item.getCartId() == cartId)
+                .findFirst()
+                .orElse(null);
+        if (itemToRemove == null) {
+            System.out.println("No item found with Cart ID " + cartId + " in cart.");
+            return;
+        }
+
+        int maxQuantity = itemToRemove.getQuantity();
+        if (maxQuantity > 1) {
+            System.out.printf("Enter quantity to remove (1 to %d): ", maxQuantity);
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                return;
+            }
+            int quantityToRemove = scanner.nextInt();
+            scanner.nextLine();
+            if (quantityToRemove <= 0 || quantityToRemove > maxQuantity) {
+                System.out.printf("Invalid quantity. Please enter a number between 1 and %d.%n", maxQuantity);
+                return;
+            }
+            boolean removed = order.removeItem(cartId, quantityToRemove);
+            if (removed) {
+                if (quantityToRemove == maxQuantity) {
+                    System.out.println("Item with Cart ID " + cartId + " (" + itemToRemove.getItem().getName() + ") removed from cart.");
+                } else {
+                    System.out.println(quantityToRemove + " x " + itemToRemove.getItem().getName() + " removed from cart.");
+                }
+            }
         } else {
-            System.out.println("No item found with ID " + itemId + " in cart.");
+            boolean removed = order.removeItem(cartId, 1);
+            if (removed) {
+                System.out.println("Item with Cart ID " + cartId + " (" + itemToRemove.getItem().getName() + ") removed from cart.");
+            }
         }
     }
 
@@ -250,24 +300,97 @@ public class CustomerService {
             System.out.println("Cart is empty. Nothing to invoice.");
             return;
         }
+
         double total = order.getTotal();
-        double discount = (total > order.getCustomer().getDiscountThreshold()) ? discountService.getDiscountAmount(total) : 0.0;
+        double discountThreshold = order.getCustomer().getDiscountThreshold();
+        if (discountThreshold < 0) {
+            System.out.println("Invalid discount threshold. Contact support.");
+            return;
+        }
+
+        double discount = (total > discountThreshold) ? discountService.getDiscountAmount(total) : 0.0;
         double payable = total - discount;
-        System.out.print("Choose Payment Mode (1. Cash, 2. UPI): ");
-        if (scanner.hasNextInt()) {
+
+        int maxAttempts = 3;
+        int attempts = 0;
+        Payment payment = null;
+
+        while (attempts < maxAttempts) {
+            System.out.println("Available Payment Modes:");
+            Payment.Mode[] modes = Payment.Mode.values();
+            for (int i = 0; i < modes.length; i++) {
+                System.out.println((i + 1) + ". " + modes[i]);
+            }
+            System.out.print("Choose Payment Mode (1-" + modes.length + "): ");
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                attempts++;
+                if (attempts < maxAttempts) {
+                    System.out.println("Attempts remaining: " + (maxAttempts - attempts));
+                } else {
+                    System.out.println("Too many invalid attempts. Returning to menu.");
+                    return;
+                }
+                continue;
+            }
+
             int paymentMode = scanner.nextInt();
             scanner.nextLine();
-            if (paymentMode == 1 || paymentMode == 2) {
-                Payment.Mode mode = (paymentMode == 1) ? Payment.Mode.CASH : Payment.Mode.UPI;
-                Payment payment = new Payment(mode, payable);
-                DeliveryPartner partner = deliveryService.assignPartner();
-                invoiceService.printInvoice(order, discount, payment, partner);
-            } else {
-                System.out.println("Invalid payment mode. Please enter 1 or 2.");
+            if (paymentMode < 1 || paymentMode > modes.length) {
+                System.out.println("Invalid payment mode. Please enter a number between 1 and " + modes.length + ".");
+                attempts++;
+                if (attempts < maxAttempts) {
+                    System.out.println("Attempts remaining: " + (maxAttempts - attempts));
+                } else {
+                    System.out.println("Too many invalid attempts. Returning to menu.");
+                    return;
+                }
+                continue;
             }
-        } else {
-            System.out.println("Invalid input. Please enter 1 or 2.");
-            scanner.nextLine();
+
+            Payment.Mode mode = modes[paymentMode - 1];
+            if (mode == Payment.Mode.UPI) {
+                int pinAttempts = 0;
+                boolean validPin = false;
+                while (pinAttempts < maxAttempts) {
+                    System.out.print("Enter 4-digit UPI PIN: ");
+                    String pinInput = scanner.nextLine().trim();
+                    if (pinInput.matches("\\d{4}")) {
+                        int pin = Integer.parseInt(pinInput);
+                        if (pin >= 0 && pin <= 9999) {
+                            validPin = true;
+                            break;
+                        } else {
+                            System.out.println("PIN must be a 4-digit number between 0000 and 9999.");
+                        }
+                    } else {
+                        System.out.println("Invalid PIN. Please enter exactly 4 digits.");
+                    }
+                    pinAttempts++;
+                    if (pinAttempts < maxAttempts) {
+                        System.out.println("PIN attempts remaining: " + (maxAttempts - pinAttempts));
+                    } else {
+                        System.out.println("Too many invalid PIN attempts. Returning to menu.");
+                        return;
+                    }
+                }
+                if (!validPin) {
+                    return;
+                }
+            }
+
+            payment = new Payment(mode, payable);
+            break;
+        }
+
+        if (payment != null) {
+            DeliveryPartner partner = deliveryService.assignPartner();
+            if (partner.getId() == 0) {
+                System.out.println("Warning: No delivery partner available. Order will be processed without delivery.");
+            }
+            invoiceService.printInvoice(order, discount, payment, partner);
         }
     }
 
