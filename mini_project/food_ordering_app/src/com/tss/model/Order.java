@@ -70,7 +70,6 @@ public class Order {
 		this.feedbackNote = feedbackNote;
 	}
 
-	// Deprecated: Use getStarRating and getFeedbackNote instead
 	@Deprecated
 	public String getFeedback() {
 		return feedbackNote;

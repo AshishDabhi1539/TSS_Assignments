@@ -31,10 +31,6 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    /**
-     * Calculates the subtotal for this order item.
-     * @return The subtotal amount.
-     */
     public double getSubtotal() {
         return item.getPrice() * quantity;
     }

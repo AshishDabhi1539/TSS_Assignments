@@ -11,33 +11,15 @@ import com.tss.model.OrderItem;
 import com.tss.util.IDGenerator;
 
 public class OrderService {
-	/**
-	 * Creates a new order for a customer.
-	 * 
-	 * @param customer The customer placing the order.
-	 * @return The created order.
-	 */
+
 	public Order createOrder(Customer customer) {
 		return new Order(IDGenerator.getInstance().generateOrderId(), customer);
 	}
 
-	/**
-	 * Generates a unique cart ID for an order item.
-	 * 
-	 * @return The generated cart ID.
-	 */
 	public int generateCartId() {
 		return IDGenerator.getInstance().generateCartId();
 	}
 
-	/**
-	 * Takes an order by adding items to it.
-	 * 
-	 * @param order           The order to add items to.
-	 * @param menuService     The menu service for accessing food items.
-	 * @param selectedCuisine The selected cuisine.
-	 * @param scanner         The scanner for user input.
-	 */
 	public void takeOrder(Order order, MenuService menuService, String selectedCuisine, Scanner scanner) {
 		List<FoodItem> menuItems = menuService.getByCuisine(selectedCuisine);
 		if (menuItems.isEmpty()) {
@@ -120,13 +102,6 @@ public class OrderService {
 		System.out.printf("+------+----------------------+----------+%n");
 	}
 
-	/**
-	 * Adds feedback to an order.
-	 * 
-	 * @param order        The order to add feedback to.
-	 * @param starRating   The star rating (1-5).
-	 * @param feedbackNote The feedback note (optional).
-	 */
 	public void addFeedback(Order order, int starRating, String feedbackNote) {
 		order.setStarRating(starRating);
 		order.setFeedbackNote(feedbackNote);

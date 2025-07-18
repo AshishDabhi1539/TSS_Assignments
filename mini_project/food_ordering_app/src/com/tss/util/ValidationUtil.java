@@ -9,7 +9,6 @@ import com.tss.exception.AppException;
 public class ValidationUtil {
 	private static final Properties config = ConfigService.getInstance().loadProperties("validation.properties");
 
-	// Validation constants from configuration
 	private static final int MAX_NAME_LENGTH = Integer.parseInt(config.getProperty("max.name.length", "50"));
 	private static final double MAX_PRICE = Double.parseDouble(config.getProperty("max.food.price", "10000.0"));
 	private static final int MAX_QUANTITY = Integer.parseInt(config.getProperty("max.order.quantity", "100"));
@@ -18,14 +17,9 @@ public class ValidationUtil {
 	private static final double MAX_DISCOUNT_PERCENT = Double
 			.parseDouble(config.getProperty("max.discount.percent", "50.0"));
 	private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9 ]+$");
+	private static final Pattern UPI_ID_PATTERN = Pattern.compile("^[a-zA-Z0-9]+@[a-zA-Z0-9]+$");
+	private static final Pattern UPI_PIN_PATTERN = Pattern.compile("^\\d{4}$");
 
-	/**
-	 * Validates a food item name.
-	 * 
-	 * @param name          The name to validate.
-	 * @param existingNames Existing names in the same cuisine.
-	 * @throws AppException If validation fails.
-	 */
 	public static void validateFoodName(String name, Iterable<String> existingNames) throws AppException {
 		if (name == null || name.trim().isEmpty()) {
 			throw new AppException("Food name cannot be empty.");
@@ -44,12 +38,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates a food price.
-	 * 
-	 * @param price The price to validate.
-	 * @throws AppException If validation fails.
-	 */
 	public static void validateFoodPrice(double price) throws AppException {
 		if (price <= 0) {
 			throw new AppException("Price must be positive.");
@@ -59,12 +47,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates an order quantity.
-	 * 
-	 * @param quantity The quantity to validate.
-	 * @throws AppException If validation fails.
-	 */
 	public static void validateQuantity(int quantity) throws AppException {
 		if (quantity <= 0) {
 			throw new AppException("Quantity must be positive.");
@@ -74,13 +56,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates a discount threshold and amount.
-	 * 
-	 * @param threshold The discount threshold.
-	 * @param amount    The discount amount.
-	 * @throws AppException If validation fails.
-	 */
 	public static void validateDiscount(double threshold, double amount) throws AppException {
 		if (threshold < 0) {
 			throw new AppException("Discount threshold cannot be negative.");
@@ -96,13 +71,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates a delivery partner name.
-	 * 
-	 * @param name          The name to validate.
-	 * @param existingNames Existing partner names.
-	 * @throws AppException If validation fails.
-	 */
 	public static void validatePartnerName(String name, Iterable<String> existingNames) throws AppException {
 		if (name == null || name.trim().isEmpty()) {
 			throw new AppException("Partner name cannot be empty.");
@@ -121,12 +89,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates that the username is not null, empty, or too long.
-	 * 
-	 * @param username The username to validate.
-	 * @throws AppException If the username is invalid.
-	 */
 	public static void validateUsername(String username) throws AppException {
 		if (username == null || username.trim().isEmpty()) {
 			throw new AppException("Username cannot be null or empty.");
@@ -136,12 +98,6 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Validates that the password is not null, empty, or too weak.
-	 * 
-	 * @param password The password to validate.
-	 * @throws AppException If the password is invalid.
-	 */
 	public static void validatePassword(String password) throws AppException {
 		if (password == null || password.trim().isEmpty()) {
 			throw new AppException("Password cannot be null or empty.");
@@ -151,17 +107,32 @@ public class ValidationUtil {
 		}
 	}
 
-	/**
-	 * Sanitizes input by trimming and removing potentially harmful characters.
-	 * 
-	 * @param input The input string to sanitize.
-	 * @return The sanitized string or null if invalid.
-	 */
+	public static void validateUpiId(String upiId) throws AppException {
+		if (upiId == null || upiId.trim().isEmpty()) {
+			throw new AppException("UPI ID cannot be null or empty.");
+		}
+		if (!UPI_ID_PATTERN.matcher(upiId).matches()) {
+			throw new AppException("Invalid UPI ID format. Use format like 'user@bank'.");
+		}
+	}
+
+	public static void validateUpiPin(String upiPin) throws AppException {
+		if (upiPin == null || upiPin.trim().isEmpty()) {
+			throw new AppException("UPI PIN cannot be null or empty.");
+		}
+		if (!UPI_PIN_PATTERN.matcher(upiPin).matches()) {
+			throw new AppException("UPI PIN must be exactly 4 digits.");
+		}
+		// Check for repeating digits (e.g., 1111, 2222)
+		if (upiPin.matches("(\\d)\\1{3}")) {
+			throw new AppException("UPI PIN cannot consist of repeating digits.");
+		}
+	}
+
 	public static String sanitizeInput(String input) {
 		if (input == null) {
 			return null;
 		}
-		// Remove leading/trailing whitespace and basic harmful characters
 		return input.trim().replaceAll("[<>\"&]", "");
 	}
 }
