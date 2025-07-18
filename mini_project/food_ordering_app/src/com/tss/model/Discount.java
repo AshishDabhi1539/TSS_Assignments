@@ -14,11 +14,6 @@ public class Discount implements Serializable {
         this.amount = amount;
     }
 
-    /**
-     * Applies the discount to a total amount.
-     * @param total The total order amount.
-     * @return The discount amount if applicable, 0 otherwise.
-     */
     public double applyDiscount(double total) {
         return total > threshold ? amount : 0;
     }

@@ -36,12 +36,6 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    /**
-     * Authenticates the customer.
-     * @param user The input username.
-     * @param pass The input password.
-     * @return True if authentication is successful, false otherwise.
-     */
     public boolean authenticate(String user, String pass) {
         return this.username.equals(user) && this.password.equals(pass);
     }

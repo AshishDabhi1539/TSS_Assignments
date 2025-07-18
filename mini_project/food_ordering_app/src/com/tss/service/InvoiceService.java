@@ -25,10 +25,10 @@ public class InvoiceService {
 	    System.out.println("Customer: " + order.getCustomer().getName() + " (" + order.getCustomer().getUsername() + ")");
 	    System.out.println("──────────────────────────────────────");
 	    System.out.println("Items Ordered:");
-	    System.out.printf("| %-20s | %-8s | %-10s | %-10s |%n", "ID", "Item Name", "Qty", "Unit Price", "Subtotal");
+	    System.out.printf("| %-20s | %-8s | %-10s | %-10s |%n", "Item Name", "Qty", "Unit Price", "Subtotal");
 	    System.out.println("|──────────────────────|──────────|────────────|────────────|");
 	    for (OrderItem item : order.getItems()) {
-	        System.out.printf("| %-4d | %-20s | %-8d | ₹%-9.2f | ₹%-9.2f |%n",
+	        System.out.printf("| %-20s | %-8d | ₹%-9.2f | ₹%-9.2f |%n",
 	                item.getItem().getName(), item.getQuantity(),
 	                item.getItem().getPrice(), item.getSubtotal());
 	    }

@@ -2,9 +2,8 @@ package com.tss.model;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Comparator;
 
-public class FoodItem implements Comparable<FoodItem>, Serializable {
+public class FoodItem implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -51,20 +50,6 @@ public class FoodItem implements Comparable<FoodItem>, Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	@Override
-	public int compareTo(FoodItem other) {
-		return Double.compare(this.price, other.price);
-	}
-
-	/**
-	 * Creates a comparator for sorting by name.
-	 * 
-	 * @return A comparator for FoodItem names.
-	 */
-	public static Comparator<FoodItem> nameComparator() {
-		return Comparator.comparing(FoodItem::getName);
 	}
 
 	public String getDescription() {

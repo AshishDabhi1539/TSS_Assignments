@@ -36,12 +36,6 @@ public class CustomerService {
 				customerRepository.getAll());
 	}
 
-	/**
-	 * Handles customer authentication (login or signup).
-	 * 
-	 * @param scanner The scanner for user input.
-	 * @return The authenticated customer or null if authentication fails.
-	 */
 	public Customer handleCustomerAuth(Scanner scanner) {
 		int option;
 		do {
@@ -106,13 +100,6 @@ public class CustomerService {
 		} while (true);
 	}
 
-	/**
-	 * Manages the customer order process.
-	 * 
-	 * @param customer     The authenticated customer.
-	 * @param adminService The admin service for accessing menu and partners.
-	 * @param scanner      The scanner for user input.
-	 */
 	public void manageCustomerOrder(Customer customer, AdminService adminService, Scanner scanner) {
 		Order order = orderService.createOrder(customer);
 		menuService.setMenu(adminService.getMenu());
@@ -126,9 +113,8 @@ public class CustomerService {
 			System.out.println("2. Add Item to Buy");
 			System.out.println("3. Remove Item from Buy");
 			System.out.println("4. Print Invoice");
-			System.out.println("5. Provide Feedback");
 			System.out.println("0. Exit");
-			choice = readIntInput(scanner, "Enter choice: ", 0, 5);
+			choice = readIntInput(scanner, "Enter choice: ", 0, 4);
 			if (choice == -1)
 				continue;
 
@@ -139,10 +125,9 @@ public class CustomerService {
 			case 4 -> {
 				order = printInvoice(order, scanner, customer);
 				if (order == null) {
-					order = orderService.createOrder(customer); // Reset order after successful invoice
+					order = orderService.createOrder(customer);
 				}
 			}
-			case 5 -> addFeedback(order, scanner);
 			case 0 -> {
 				customerRepository.save();
 				System.out.println("All data saved.");
@@ -310,28 +295,6 @@ public class CustomerService {
 		}
 	}
 
-	private void addFeedback(Order order, Scanner scanner) {
-		try {
-			if (order.getItems().isEmpty() && order.getStarRating() == 0 && order.getFeedbackNote().isEmpty()) {
-				System.out.println("No order placed yet. Please place an order before providing feedback.");
-				return;
-			}
-			int starRating = readIntInput(scanner, "Rate your order (1-5 stars): ", 1, 5);
-			if (starRating == -1)
-				throw new AppException("Invalid rating. Feedback not saved.");
-			System.out.print("Enter feedback note (max 500 characters, press Enter to skip): ");
-			String feedbackNote = scanner.nextLine().trim();
-			if (!feedbackNote.isEmpty() && feedbackNote.length() > 500) {
-				throw new AppException("Feedback note cannot exceed 500 characters.");
-			}
-			orderService.addFeedback(order, starRating, feedbackNote);
-			customerRepository.save();
-			System.out.println("Feedback submitted.");
-		} catch (AppException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
 	private void printMenuTable(List<FoodItem> items, String cuisine) {
 		if (items.isEmpty()) {
 			System.out.println("No items in " + cuisine + " cuisine.");
@@ -347,13 +310,13 @@ public class CustomerService {
 	}
 
 	private void printOrderTable(List<OrderItem> items) {
-		System.out.printf("+-------+----------------------+----------+----------+----------+%n");
-		System.out.printf("| CartID| Name                 | Quantity | Subtotal | Cuisine  |%n");
-		System.out.printf("+-------+----------------------+----------+----------+----------+%n");
+		System.out.printf("+--------+----------------------+----------+----------+----------+%n");
+		System.out.printf("| CartID | Name                 | Quantity | Subtotal | Cuisine  |%n");
+		System.out.printf("+--------+----------------------+----------+----------+----------+%n");
 		for (OrderItem item : items) {
-			System.out.printf("| %-5d | %-20s | %-8d | ₹%-7.2f | %-8s |%n", item.getCartId(), item.getItem().getName(),
+			System.out.printf("| %-5d  | %-20s | %-8d | ₹%-7.2f | %-8s |%n", item.getCartId(), item.getItem().getName(),
 					item.getQuantity(), item.getSubtotal(), item.getItem().getCuisine());
 		}
-		System.out.printf("+-------+----------------------+----------+----------+----------+%n");
+		System.out.printf("+--------+----------------------+----------+----------+----------+%n");
 	}	
 }
