@@ -36,11 +36,6 @@ public class AdminService {
 				new ArrayList<>());
 	}
 
-	/**
-	 * Displays and handles the admin menu.
-	 * 
-	 * @param scanner The scanner for user input.
-	 */
 	public void showAdminMenu(Scanner scanner) {
 		int choice;
 		do {

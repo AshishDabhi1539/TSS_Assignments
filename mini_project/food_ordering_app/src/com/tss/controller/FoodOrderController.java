@@ -24,20 +24,21 @@ public class FoodOrderController {
 	private final InvoiceService invoiceService;
     private final Admin admin;
 
-    public FoodOrderController() {
+    public FoodOrderController() throws AppException {
         this.adminService = new AdminService();
         this.discountService = new DiscountService();
         this.deliveryService = new DeliveryService(adminService.getPartners());
         this.invoiceService = new InvoiceService();
         this.customerService = new CustomerService();
         Properties adminProps = ConfigService.getInstance().loadProperties("admin.properties");
-        this.admin = new Admin(adminProps.getProperty("username", "admin"), 
-                              adminProps.getProperty("password", "admin123"));
+        String adminUser = adminProps.getProperty("username");
+        String adminPass = adminProps.getProperty("password");
+        if (adminUser == null || adminUser.trim().isEmpty() || adminPass == null || adminPass.trim().isEmpty()) {
+            throw new AppException("Admin username or password not found in admin.properties.");
+        }
+        this.admin = new Admin(adminUser, adminPass);
     }
 
-    /**
-     * Starts the food ordering system and handles the main menu.
-     */
     public void start() {
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
@@ -116,7 +117,7 @@ public class FoodOrderController {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AppException {
         new FoodOrderController().start();
     }
 }

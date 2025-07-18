@@ -46,12 +46,6 @@ public class SerializationUtil {
         saveObject(list, filename);
     }
 
-    /**
-     * Reads a list of objects from a file.
-     * @param filename The file to read from.
-     * @param <T> The type of the objects in the list.
-     * @return The deserialized list or null if not found.
-     */
     public static <T> List<T> readList(String filename) {
         return readObject(filename);
     }
