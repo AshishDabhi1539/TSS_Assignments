@@ -9,13 +9,6 @@ import com.tss.model.OrderItem;
 import com.tss.model.Payment;
 
 public class InvoiceService {
-	/**
-	 * Prints the invoice for an order.
-	 * @param order The order to print.
-	 * @param discount The discount applied.
-	 * @param payment The payment details.
-	 * @param partner The assigned delivery partner.
-	 */
 	public void printInvoice(Order order, double discount, Payment payment, DeliveryPartner partner) {
 	    System.out.println("\n══════════════════════════════════════");
 	    System.out.println("           MINI FOOD ORDERING SYSTEM   ");

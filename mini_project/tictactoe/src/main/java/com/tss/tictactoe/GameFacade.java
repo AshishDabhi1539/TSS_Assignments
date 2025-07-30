@@ -16,10 +16,18 @@ public class GameFacade {
 	}
 
 	public boolean makeMove(int row, int col) {
+		if (isGameOver() || (row == -1 && col == -1)) { // Check game over or dummy move
+			if (row == -1 && col == -1) {
+				currentPlayerIndex = 1 - currentPlayerIndex;
+				return true;
+			}
+			return false;
+		}
 		Player player = getCurrentPlayer();
 		boolean movePlaced = board.placeMove(row, col, player.getSymbol());
-		if (movePlaced)
+		if (movePlaced) {
 			currentPlayerIndex = 1 - currentPlayerIndex;
+		}
 		return movePlaced;
 	}
 

@@ -14,6 +14,7 @@ import com.tss.model.OrderItem;
 import com.tss.model.Payment;
 import com.tss.repository.CustomerRepository;
 import com.tss.util.IDGenerator;
+import com.tss.util.ValidationUtil;
 
 public class CustomerService {
 	private final CustomerRepository customerRepository;
@@ -58,10 +59,10 @@ public class CustomerService {
 						throw new AppException("Password cannot be empty.");
 					Customer customer = customerRepository.findByCredentials(user, pass);
 					if (customer != null) {
-						System.out.println("Login successful! Welcome " + customer.getName());
+						System.out.println("Login successful! Welcome " + customer.getName() + ".");
 						return customer;
 					} else {
-						throw new AppException("Invalid credentials.");
+						throw new AppException("Invalid username or password.");
 					}
 				} catch (AppException e) {
 					System.out.println(e.getMessage());
@@ -73,25 +74,30 @@ public class CustomerService {
 					String name = scanner.nextLine().trim();
 					if (name.isEmpty())
 						throw new AppException("Full name cannot be empty.");
+					ValidationUtil.validateUsername(name);
 					System.out.print("Choose username: ");
 					String user = scanner.nextLine().trim();
-					if (user.isEmpty())
-						throw new AppException("Username cannot be empty.");
+					ValidationUtil.validateUsername(user);
 					String userUpper = user.toUpperCase();
 					if (customerRepository.getAll().stream()
 							.anyMatch(c -> c.getUsername().toUpperCase().equals(userUpper))) {
-						throw new AppException("Username '" + user + "' already taken. Try another.");
+						throw new AppException("Username '" + user + "' is already taken. Please try another.");
 					}
 					System.out.print("Choose password: ");
 					String pass = scanner.nextLine().trim();
-					if (pass.isEmpty())
-						throw new AppException("Password cannot be empty.");
+					ValidationUtil.validatePassword(pass);
+					System.out.print("Enter UPI ID (e.g., user@bank): ");
+					String upiId = scanner.nextLine().trim();
+					ValidationUtil.validateUpiId(upiId);
+					System.out.print("Enter 4-digit UPI PIN: ");
+					String upiPin = scanner.nextLine().trim();
+					ValidationUtil.validateUpiPin(upiPin);
 					Customer newCustomer = new Customer(IDGenerator.getInstance().generateCustomerId(), name, user,
-							pass);
+							pass, upiId, upiPin);
 					customerRepository.add(newCustomer);
 					IDGenerator.getInstance().resetCustomerCounter(customerRepository.getAll());
 					customerRepository.save();
-					System.out.println("Registration successful. You can now login.");
+					System.out.println("Registration successful! You can now log in, " + name + ".");
 				} catch (AppException e) {
 					System.out.println(e.getMessage());
 				}
@@ -110,11 +116,12 @@ public class CustomerService {
 		do {
 			System.out.println("\n--- Customer Menu ---");
 			System.out.println("1. View Menu by Cuisine");
-			System.out.println("2. Add Item to Buy");
-			System.out.println("3. Remove Item from Buy");
-			System.out.println("4. Print Invoice");
+			System.out.println("2. Add Item to Cart");
+			System.out.println("3. Remove Item from Cart");
+			System.out.println("4. Show Cart");
+			System.out.println("5. Checkout");
 			System.out.println("0. Exit");
-			choice = readIntInput(scanner, "Enter choice: ", 0, 4);
+			choice = readIntInput(scanner, "Enter choice: ", 0, 5);
 			if (choice == -1)
 				continue;
 
@@ -122,36 +129,47 @@ public class CustomerService {
 			case 1 -> viewMenuByCuisine(adminService.getCustomCuisines(), scanner);
 			case 2 -> addItemToOrder(order, adminService.getCustomCuisines(), scanner);
 			case 3 -> removeItemFromOrder(order, adminService.getCustomCuisines(), scanner);
-			case 4 -> {
-				order = printInvoice(order, scanner, customer);
+			case 4 -> showCart(order);
+			case 5 -> {
+				order = checkout(order, scanner, customer);
 				if (order == null) {
 					order = orderService.createOrder(customer);
 				}
 			}
 			case 0 -> {
 				customerRepository.save();
-				System.out.println("All data saved.");
+				System.out.println("Data saved successfully.");
 				System.out.println("Exiting Customer Menu...");
 			}
 			}
 		} while (choice != 0);
 	}
 
-	private Order printInvoice(Order order, Scanner scanner, Customer customer) {
+	private void showCart(Order order) {
 		if (order.getItems().isEmpty()) {
-			System.out.println("Cart is empty. Nothing to invoice.");
+			System.out.println("Your cart is empty.");
+			return;
+		}
+		System.out.println("\n--- Your Cart ---");
+		printOrderTable(order.getItems());
+		System.out.printf("Total: ₹%.2f%n", order.getTotal());
+	}
+
+	private Order checkout(Order order, Scanner scanner, Customer customer) {
+		if (order.getItems().isEmpty()) {
+			System.out.println("Your cart is empty. Please add items to proceed with checkout.");
 			return order;
 		}
 		try {
 			double total = order.getTotal();
 			double discountThreshold = order.getCustomer().getDiscountThreshold();
 			if (discountThreshold < 0) {
-				throw new AppException("Invalid discount threshold. Contact support.");
+				throw new AppException("Invalid discount threshold. Please contact support.");
 			}
 			double discount = total > discountThreshold ? discountService.getDiscountAmount(total) : 0.0;
 			double payable = total - discount;
 
-			Payment payment = paymentService.processPayment(payable, scanner);
+			Payment payment = paymentService.processPayment(payable, scanner, customer);
 			if (payment == null)
 				return order;
 
@@ -172,7 +190,8 @@ public class CustomerService {
 			}
 			invoiceService.printInvoice(order, discount, payment, partner);
 			customerRepository.save();
-			return orderService.createOrder(customer); // Create new order after invoice
+			System.out.println("Checkout completed successfully. New cart created.");
+			return orderService.createOrder(customer); // Create new order after checkout
 		} catch (AppException e) {
 			System.out.println(e.getMessage());
 			return order;
@@ -205,7 +224,7 @@ public class CustomerService {
 			System.out.println("No cuisines available.");
 			return;
 		}
-		System.out.println("\n--- Add Item to Buy ---");
+		System.out.println("\n--- Add Item to Cart ---");
 		for (int i = 0; i < cuisineList.size(); i++) {
 			System.out.println((i + 1) + ". " + cuisineList.get(i));
 		}
@@ -237,15 +256,15 @@ public class CustomerService {
 			return;
 
 		order.addItem(new OrderItem(item, quantity, 0), orderService);
-		System.out.println(quantity + " x " + item.getName() + " added to cart.");
+		System.out.println(quantity + " x " + item.getName() + " added to your cart.");
 	}
 
 	private void removeItemFromOrder(Order order, Set<String> cuisines, Scanner scanner) {
 		if (order.getItems().isEmpty()) {
-			System.out.println("Cart is empty. No items to remove.");
+			System.out.println("Your cart is empty. No items to remove.");
 			return;
 		}
-		System.out.println("\n--- Remove Item from Buy ---");
+		System.out.println("\n--- Remove Item from Cart ---");
 		printOrderTable(order.getItems());
 
 		int maxCartId = order.getItems().stream().mapToInt(OrderItem::getCartId).max().orElse(0);
@@ -256,7 +275,7 @@ public class CustomerService {
 		OrderItem itemToRemove = order.getItems().stream().filter(item -> item.getCartId() == cartId).findFirst()
 				.orElse(null);
 		if (itemToRemove == null) {
-			System.out.println("No item found with Cart ID " + cartId + " in cart.");
+			System.out.println("No item found with Cart ID " + cartId + " in your cart.");
 			return;
 		}
 
@@ -270,8 +289,8 @@ public class CustomerService {
 		boolean removed = order.removeItem(cartId, quantityToRemove);
 		if (removed) {
 			System.out.println(quantityToRemove == maxQuantity
-					? "Item with Cart ID " + cartId + " (" + itemToRemove.getItem().getName() + ") removed from cart."
-					: quantityToRemove + " x " + itemToRemove.getItem().getName() + " removed from cart.");
+					? itemToRemove.getItem().getName() + " (Cart ID: " + cartId + ") removed from your cart."
+					: quantityToRemove + " x " + itemToRemove.getItem().getName() + " removed from your cart.");
 		}
 	}
 
@@ -318,5 +337,5 @@ public class CustomerService {
 					item.getQuantity(), item.getSubtotal(), item.getItem().getCuisine());
 		}
 		System.out.printf("+--------+----------------------+----------+----------+----------+%n");
-	}	
+	}
 }
