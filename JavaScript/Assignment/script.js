@@ -3,7 +3,6 @@
 
 // console.log("The sum of " + number1 + " and " + number2 + " is: " + (number1 + number2));
 
-
 // Example of var, let, and const with different scopes
 
 // if (true) {
@@ -77,7 +76,6 @@
 // console.log("match(/World/):", string.match(/World/));
 // console.log("replaceAll(' ', '-'):", string.replaceAll(' ', '-'));
 
-
 // let arr = ["Virat Kohli", "Rohit Sharma", "Jasprit Bumrah", "Ravindra Jadeja", "KL Rahul"];
 
 // console.log("push('Shubman Gill'):", arr.push("Shubman Gill"), arr);
@@ -88,7 +86,6 @@
 // console.log("join(' - '):", arr.join(' - '));
 // console.log("slice(1,3):", arr.slice(1, 3));
 // console.log("splice(1,2,'Yuzvendra Chahal','R Ashwin'):", arr.splice(1, 2, "Yuzvendra Chahal", "R Ashwin"), arr);
-
 
 // arr = ["Virat Kohli", "Rohit Sharma", "Jasprit Bumrah", "Ravindra Jadeja", "KL Rahul"];
 // console.log("reverse():", arr.reverse());
@@ -128,8 +125,145 @@
 // console.log(typeof b); // boolean
 // console.log(b); // true
 
-function greet(name) {
-    console.log("Hello, " + name + "!");
+// function greet(name) {
+//     console.log("Hello, " + name + "!");
+// }
+
+// greet("Ashish");
+
+// const products = [100, 250, 75, 50, 200];
+// const taxRate = 0.10;
+
+// let totalWithTax = 0;
+// for (let i = 0; i < products.length; i++) {
+//     totalWithTax += products[i] + products[i] * taxRate;
+// }
+
+// console.log("Total sum after tax:", totalWithTax);
+
+// // 1. Given an array of numbers, create three new arrays one for even numbers, one for odd numbers, and one for numbers that are divisible by 3 but not by 2. Use a for loop to iterate through the array and populate the new arrays.
+// const numbers = [1, 2, 5, 6, 9, 10, 12, 15, 18, 21, 49, 80];
+
+// const evenNumbers = [];
+// const oddNumbers = [];
+// const divisibleBy3Not2 = [];
+
+// for (let i = 0; i < numbers.length; i++) {
+//     if (numbers[i] % 2 === 0) {
+//         evenNumbers.push(numbers[i]);
+//     } else {
+//         oddNumbers.push(numbers[i]);
+//     }
+//     // Added a comment for clarity
+//     if (numbers[i] % 3 === 0 && numbers[i] % 2 !== 0) {
+//         divisibleBy3Not2.push(numbers[i]);
+//     }
+// }
+
+// console.log("Even numbers:", evenNumbers);
+// console.log("Odd numbers:", oddNumbers);
+// console.log("Numbers divisible by 3 but not by 2:", divisibleBy3Not2);
+
+// // 2. Find and print all unique duplicate elements in an array and store them in a new array.
+
+// const arr = [11, 22, 33, 22, 44, 55, 66, 33, 22, 77, 88, 55, 99, 44, 11];
+// const duplicates = [];
+// const counts = {};
+
+// for (let i = 0; i < arr.length; i++) {
+//     counts[arr[i]] = (counts[arr[i]] || 0) + 1;
+// }
+
+// for (let key in counts) {
+//     if (counts[key] > 1) {
+//         duplicates.push(Number(key));
+//     }
+// }
+
+// console.log("Duplicate elements:", duplicates);
+// console.log("Counts of duplicates:", counts);
+
+//3. Read a string and Remove All Whitespaces
+
+// const inputStr = "a b c d";
+// let noSpaces = "";
+// for (let i = 0; i < inputStr.length; i++) {
+//   if (inputStr[i] !== " ") {
+//     noSpaces += inputStr[i];
+//   }
+// }
+// console.log("String without whitespaces:", noSpaces);
+
+
+// //4. Check if Two Strings are Rotations of Each Other
+
+// const str1 = "abcd";
+// const str2 = "cdab";
+// function areRotations(str1, str2) {
+//   return str1.length === str2.length && (str1 + str1).includes(str2); // example "abcd" + "abcd" → "abcdabcd"
+// }
+// console.log(areRotations("abcd", "cdab")); // true
+// console.log(areRotations("abcd", "acbd")); // false
+
+
+// let user = {
+//   name: "Ashish",
+//   age: 21,
+//   email: "ashish@gmail.com",
+//   hobbies: ["reading", "coding", "gaming"],
+//   login: () => {
+//     console.log(`${user.name} has logged in.`);
+//   },
+//   logout: () => {
+//     console.log(`${user.name} has logged out.`);
+//   }
+// };
+
+// console.log(user);
+// console.log(user.hobbies[0]); // Accessing the first hobby
+// console.log(user["email"]); // Accessing email using bracket notation
+
+// user.age = 23; // Updating age
+// console.log(user)
+
+// // const key = "name";
+// // console.log(user.key)
+
+// user.login(); // Calling the login method
+// user.logout(); // Calling the logout method
+
+
+function Blog(title, content, author) {
+  this.title = title;
+  this.content = content;
+  this.author = author;
+  this.published = false;
+  this.publish = function() {
+    this.published = true;
+    console.log(`Blog "${this.title}" published.`);
+  };
+  this.unpublish = function() {
+    this.published = false;
+    console.log(`Blog "${this.title}" unpublished.`);
+  };
 }
 
-greet("Ashish");
+const blogs = [
+  new Blog("JavaScript Basics", "Learn about variables, scopes, and data types.", "Ashish"),
+  new Blog("Advanced JS", "Deep dive into closures and prototypes.", "Chirag"),
+  new Blog("Frontend Frameworks", "React, Angular, and Vue overview.", "Jayesh")
+];
+
+function printBlogs(blogArray) {
+  blogArray.forEach(blog => {
+    console.log(`Title: ${blog.title}\nContent: ${blog.content}\nAuthor: ${blog.author}\nPublished: ${blog.published}\n`);
+  });
+}
+
+printBlogs(blogs);
+blogs[0].publish();
+blogs[1].publish();
+printBlogs(blogs);
+
+blogs[0].unpublish();
+printBlogs(blogs);
