@@ -233,37 +233,141 @@
 // user.logout(); // Calling the logout method
 
 
-function Blog(title, content, author) {
-  this.title = title;
-  this.content = content;
-  this.author = author;
-  this.published = false;
-  this.publish = function() {
-    this.published = true;
-    console.log(`Blog "${this.title}" published.`);
-  };
-  this.unpublish = function() {
-    this.published = false;
-    console.log(`Blog "${this.title}" unpublished.`);
-  };
-}
+// function Blog(title, content, author) {
+//   this.title = title;
+//   this.content = content;
+//   this.author = author;
+//   this.published = false;
+//   this.publish = function() {
+//     this.published = true;
+//     console.log(`Blog "${this.title}" published.`);
+//   };
+//   this.unpublish = function() {
+//     this.published = false;
+//     console.log(`Blog "${this.title}" unpublished.`);
+//   };
+// }
 
-const blogs = [
-  new Blog("JavaScript Basics", "Learn about variables, scopes, and data types.", "Ashish"),
-  new Blog("Advanced JS", "Deep dive into closures and prototypes.", "Chirag"),
-  new Blog("Frontend Frameworks", "React, Angular, and Vue overview.", "Jayesh")
-];
+// const blogs = [
+//   new Blog("JavaScript Basics", "Learn about variables, scopes, and data types.", "Ashish"),
+//   new Blog("Advanced JS", "Deep dive into closures and prototypes.", "Chirag"),
+//   new Blog("Frontend Frameworks", "React, Angular, and Vue overview.", "Jayesh")
+// ];
 
-function printBlogs(blogArray) {
-  blogArray.forEach(blog => {
-    console.log(`Title: ${blog.title}\nContent: ${blog.content}\nAuthor: ${blog.author}\nPublished: ${blog.published}\n`);
-  });
-}
+// function printBlogs(blogArray) {
+//   blogArray.forEach(blog => {
+//     console.log(`Title: ${blog.title}\nContent: ${blog.content}\nAuthor: ${blog.author}\nPublished: ${blog.published}\n`);
+//   });
+// }
 
-printBlogs(blogs);
-blogs[0].publish();
-blogs[1].publish();
-printBlogs(blogs);
+// printBlogs(blogs);
+// blogs[0].publish();
+// blogs[1].publish();
+// printBlogs(blogs);
 
-blogs[0].unpublish();
-printBlogs(blogs);
+// blogs[0].unpublish();
+// printBlogs(blogs);
+
+
+// // User object with login, logout, and blog management
+// class Blog {
+//   constructor(title, content, author) {
+//     this.title = title;
+//     this.content = content;
+//     this.author = author;
+//     this.published = false;
+//   }
+
+//   publish() {
+//     this.published = true;
+//   }
+
+//   unpublish() {
+//     this.published = false;
+//   }
+// }
+
+
+// const user = {
+//   name: "Ashish",
+//   email: "ashish@gmail.com",
+//   blogs: [],
+//   isLoggedIn: false,
+
+//   login() {
+//     this.isLoggedIn = true;
+//     console.log(`${this.name} has logged in.`);
+//   },
+
+//   logout() {
+//     this.isLoggedIn = false;
+//     console.log(`${this.name} has logged out.`);
+//   },
+
+//   createBlog(title, content) {
+//     const blog = new Blog(title, content, this.name);
+//     blog.publish();
+//     this.blogs.push(blog);
+//     console.log(`Blog "${title}" created and published.`);
+//   },
+
+//   unpublishBlogByTitle(title) {
+//     const blog = this.blogs.find(b => b.title === title);
+//     if (blog) {
+//       blog.unpublish();
+//       console.log(`Blog "${title}" has been unpublished.`);
+//     } else {
+//       console.log(`Blog with title "${title}" not found.`);
+//     }
+//   },
+
+//   listBlogs() {
+//     if (this.blogs.length === 0) {
+//       console.log("No blogs found.");
+//       return;
+//     }
+//     this.blogs.forEach(blog => {
+//       console.log(`Title: ${blog.title}\nContent: ${blog.content}\nAuthor: ${blog.author}\nPublished: ${blog.published}\n`);
+//     });
+//   },
+
+//   searchBlogs(keyword) {
+//     const found = this.blogs.filter(blog =>
+//       blog.title.includes(keyword) || blog.content.includes(keyword)
+//     );
+//     if (found.length === 0) {
+//       console.log(`No blogs found with keyword "${keyword}".`);
+//     } else {
+//       found.forEach(blog => {
+//         console.log(`Title: ${blog.title}\nContent: ${blog.content}\nAuthor: ${blog.author}\nPublished: ${blog.published}\n`);
+//       });
+//     }
+//   },
+
+//   countPublishedBlogs() {
+//     const count = this.blogs.filter(blog => blog.published).length;
+//     console.log(`Number of published blogs: ${count}`);
+//     return count;
+//   }
+// };
+
+// user.login();
+// user.createBlog("My First Blog", "This is my first blog post!");
+// user.createBlog("Learning JavaScript", "JavaScript is fun and powerful.");
+// user.listBlogs();
+// user.unpublishBlogByTitle("My First Blog");
+// user.listBlogs();
+// user.searchBlogs("JavaScript");
+// user.countPublishedBlogs();
+// user.logout();
+
+
+let players = ["Virat", "Rohit", "Sachin", "Rahul"];
+
+const playerTable = document.querySelector('.table tbody');
+let count = 1;
+// Example of getElementById usage:
+const tableElement = document.getElementById('playerTable');
+players.forEach(player => {
+    playerTable.innerHTML += `<tr><td>${count++}</td><td>${player}</td></tr>`;
+});
