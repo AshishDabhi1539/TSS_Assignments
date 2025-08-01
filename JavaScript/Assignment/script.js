@@ -362,12 +362,40 @@
 // user.logout();
 
 
-let players = ["Virat", "Rohit", "Sachin", "Rahul"];
+// let players = ["Virat", "Rohit", "Sachin", "Rahul"];
 
-const playerTable = document.querySelector('.table tbody');
-let count = 1;
-// Example of getElementById usage:
-const tableElement = document.getElementById('playerTable');
-players.forEach(player => {
-    playerTable.innerHTML += `<tr><td>${count++}</td><td>${player}</td></tr>`;
+// const playerTable = document.querySelector('.table tbody');
+// let count = 1;
+// // Example of getElementById usage:
+// const tableElement = document.getElementById('playerTable');
+// players.forEach(player => {
+//     playerTable.innerHTML += `<tr><td>${count++}</td><td>${player}</td></tr>`;
+// });
+
+// const allP = document.querySelectorAll('p');
+// allP.forEach(para => {
+//     const text = para.textContent.trim().toLowerCase();
+//     if (text.includes('error')) 
+//         para.classList.add('error');
+//     if (text.includes('success'))
+//         para.classList.add('success');
+// });
+
+
+const displayBtn = document.querySelector(".btnDisplay");
+const nameTxt = document.querySelector(".nameTxt");
+const displayDiv = document.querySelector(".nameDiv");
+
+displayBtn.addEventListener("click", () => {
+  let name = nameTxt.value;
+  displayDiv.innerText = name;
+});
+
+
+
+const inputTxt = document.querySelector('.inputTxt');
+const outputTxt = document.querySelector('.outputTxt');
+
+inputTxt.addEventListener('input', () => {
+  outputTxt.value = inputTxt.value;
 });

@@ -1,0 +1,19 @@
+.error {
+    padding: 10px;
+    color: red;
+    border: 1px dotted red;
+}
+
+.success {
+    padding: 10px;
+    color: limegreen;
+    border: 1px dotted limegreen;
+}
+
+ .outputTxt {
+      background-color: #e0ffe0;
+      color: green;
+      font-weight: bold;
+      border: 2px solid green;
+      padding: 5px;
+    }
