@@ -1,0 +1,43 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+#buttonContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.number-button {
+  width: 60px;
+  height: 60px;
+  background-color: #007BFF;
+  color: transparent; /* Hide number */
+  border: none;
+  border-radius: 50%; /* Make it round */
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.number-button.correct {
+  background-color: green !important;
+  color: white;
+}
+
+.number-button.wrong {
+  background-color: red !important;
+  color: white;
+}
+
+.number-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+#message {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 18px;
+}
