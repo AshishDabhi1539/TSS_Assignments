@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <label>Select Product</label><br />
+    <select id="productSelect">
+      <option value="" disabled selected>Select a product</option>
+      <option value="Apple" data-price="50">Apple - ₹50</option>
+      <option value="Banana" data-price="30">Banana - ₹30</option>
+      <option value="Orange" data-price="40">Orange - ₹40</option>
+      <option value="Biscuit" data-price="10">Biscuit - ₹10</option>
+      <option value="Chocolate" data-price="20">Chocolate - ₹20</option>
+      <option value="Juice" data-price="30">Juice - ₹30</option></select
+    ><br />
+
+    <label>Quantity</label><br />
+    <input type="number" id="quantityInput" min="1" value="1" /><br />
+
+    <button onclick="addToCart()">Add To Cart</button>
+    <button onclick="clearCart()" class="clear">Clear Cart</button>
+
+    <table id="cartTable">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Price (₹)</th>
+          <th>Quantity</th>
+          <th>Date</th>
+          <th>Action</th>
+          <th>Total (₹)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="right"><strong>Grand Total</strong></td>
+          <td id="grandTotal">₹0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <script src="script.js"></script>
+  </body>
+</html>
