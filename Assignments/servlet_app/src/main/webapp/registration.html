@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Form</title>
+</head>
+<body>
+
+    <h2>User Registration</h2>
+    <form action="UserController" method="post">
+        <table>
+            <tr>
+                <td><label>Full Name:</label></td>
+                <td><input type="text" name="fullname" required><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Email:</label></td>
+                <td><input type="email" name="email" required><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Address:</label></td>
+                <td><textarea name="address" rows="3" cols="30" required></textarea><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Gender:</label></td>
+                <td>
+                    <input type="radio" name="gender" value="Male" required> Male
+                    <input type="radio" name="gender" value="Female"> Female
+                    <input type="radio" name="gender" value="Other"> Other
+                    <br>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label>City:</label></td>
+                <td>
+                    <select name="city" required>
+                        <option value="">--Select City--</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Rajkot">Rajkot</option>
+                        <option value="Vadodara">Vadodara</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <br>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label>Languages Known:</label></td>
+                <td>
+                    <input type="checkbox" name="language" value="English"> English
+                    <input type="checkbox" name="language" value="Hindi"> Hindi
+                    <input type="checkbox" name="language" value="Gujarati"> Gujarati
+                    <input type="checkbox" name="language" value="Other"> Other
+                    <br>
+                </td>
+            </tr>
+
+            <tr>
+                <td><label>Username:</label></td>
+                <td><input type="text" name="username" required><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Password:</label></td>
+                <td><input type="password" name="password" required><br></td>
+            </tr>
+
+            <tr>
+                <td><label>Confirm Password:</label></td>
+                <td><input type="password" name="confirmpassword" required><br></td>
+            </tr>
+
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="submit">Register</button>
+                    <button type="reset">Clear</button>
+                    <br>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+</html>
