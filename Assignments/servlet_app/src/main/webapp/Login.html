@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Login Controller</title>
+<title>User Registration</title>
 </head>
 <body>
-	<h2>User Registration</h2>
-    <form action="UserController" method="post">
-        <label>Username:</label>
-        <input type="text" name="username" required><br><br>
-        <label>Password:</label>
-        <input type="password" name="password" required><br><br>
-        <input type="submit" value="Register">
-        <input type="reset" value="Clear">
-    </form>
+	<h2>Register User</h2>
+	<form action="UserController" method="post">
+		<label>Username:</label> <input type="text" name="username" required><br>
+		<br> <label>Password:</label> <input type="password"
+			name="password" required><br>
+		<br> <label>Role:</label> <select name="role">
+			<option value="Customer">Customer</option>
+			<option value="Admin">Admin</option>
+		</select><br>
+		<br> <label>Theme:</label> <select name="theme">
+			<option value="green">Green</option>
+			<option value="blue">Blue</option>
+		</select><br>
+		<br> <input type="submit" value="Submit"> <input
+			type="reset" value="Clear">
+	</form>
 </body>
 </html>
