@@ -152,7 +152,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="servlet_app" path="/servlet_app" reloadable="true" source="org.eclipse.jst.jee.server:servlet_app"/><Context docBase="quiz_app" path="/quiz_app" reloadable="true" source="org.eclipse.jst.jee.server:quiz_app"/><Context docBase="jsp_app" path="/jsp_app" reloadable="true" source="org.eclipse.jst.jee.server:jsp_app"/><Context docBase="feedback_app" path="/feedback_app" reloadable="true" source="org.eclipse.jst.jee.server:feedback_app"/></Host>
+      <Context docBase="servlet_app" path="/servlet_app" reloadable="true" source="org.eclipse.jst.jee.server:servlet_app"/><Context docBase="quiz_app" path="/quiz_app" reloadable="true" source="org.eclipse.jst.jee.server:quiz_app"/><Context docBase="jsp_app" path="/jsp_app" reloadable="true" source="org.eclipse.jst.jee.server:jsp_app"/><Context docBase="feedback_app" path="/feedback_app" reloadable="true" source="org.eclipse.jst.jee.server:feedback_app"/><Context docBase="jstl_app" path="/jstl_app" reloadable="true" source="org.eclipse.jst.jee.server:jstl_app"/><Context docBase="leave_management_system" path="/leave_management_system" reloadable="true" source="org.eclipse.jst.jee.server:leave_management_system"/></Host>
     </Engine>
   </Service>
 </Server>
