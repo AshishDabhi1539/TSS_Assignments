@@ -11,6 +11,7 @@ public class LeaveRequest {
 	private LocalDate endDate;
 	private String status;
 	private String reason;
+	private String rejectionReason;
 	@SuppressWarnings("unused")
 	private String startDateFormatted;
 	@SuppressWarnings("unused")
@@ -20,7 +21,7 @@ public class LeaveRequest {
 	}
 
 	public LeaveRequest(int requestId, int empId, String leaveType, LocalDate startDate, LocalDate endDate,
-			String reason, String status) {
+			String reason, String status, String rejectionReason) {
 		this.requestId = requestId;
 		this.empId = empId;
 		this.leaveType = leaveType;
@@ -28,6 +29,7 @@ public class LeaveRequest {
 		this.endDate = endDate;
 		this.reason = reason;
 		this.status = status;
+		this.rejectionReason = rejectionReason;
 		this.startDateFormatted = startDate != null ? startDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : "";
 		this.endDateFormatted = endDate != null ? endDate.format(DateTimeFormatter.ISO_LOCAL_DATE) : "";
 	}
@@ -105,5 +107,13 @@ public class LeaveRequest {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 }

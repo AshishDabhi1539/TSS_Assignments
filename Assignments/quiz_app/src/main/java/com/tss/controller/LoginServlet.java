@@ -16,39 +16,42 @@ import com.tss.service.QuizService;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private UserDAO userDAO;
+    private static final long serialVersionUID = 1L;
+    private UserDAO userDAO;
 
-	public LoginServlet() {
-		super();
-		this.userDAO = new UserDAO();
-	}
+    public LoginServlet() {
+        super();
+        this.userDAO = new UserDAO();
+    }
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Redirect GET requests to login page
+        response.sendRedirect("login.html");
+    }
 
-		try {
-			User user = userDAO.loginUser(username, password);
-			if (user != null) {
-				HttpSession session = request.getSession();
-				session.setAttribute("user", user);
-				new QuizService().initializeQuiz(session);
-				response.sendRedirect("question");
-			} else {
-				request.setAttribute("error", "Invalid username or password");
-				request.getRequestDispatcher("login.html").forward(request, response);
-			}
-		} catch (SQLException e) {
-			request.setAttribute("error", "Login failed: " + e.getMessage());
-			request.getRequestDispatcher("login.html").forward(request, response);
-		}
-	}
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
-	}
-
+        try {
+            User user = userDAO.loginUser(username, password); // Make sure password is hashed in DAO
+            if (user != null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                new QuizService().initializeQuiz(session);
+                response.sendRedirect("question");
+            } else {
+                request.setAttribute("error", "Invalid username or password");
+                request.getRequestDispatcher("login.html").forward(request, response);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Login failed: " + e.getMessage());
+            request.getRequestDispatcher("login.html").forward(request, response);
+        }
+    }
 }

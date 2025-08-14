@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("role", "ADMIN");
 				session.setAttribute("name", "Admin");
-				response.sendRedirect("AdminDashboardServlet");
+				response.sendRedirect("AdminHomeServlet");
 				return;
 			}
 

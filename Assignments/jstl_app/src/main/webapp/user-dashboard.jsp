@@ -11,9 +11,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>User Dashboard</title>
 <link rel="stylesheet" href="css/dashboard.css" />
+<script>
+	window.onload = function() {
+		var today = new Date().toISOString().split('T')[0];
+		document.getElementById('fromDate').setAttribute('min', today);
+		document.getElementById('toDate').setAttribute('min', today);
+	};
+</script>
 </head>
 <body>
 	<div class="container">
@@ -32,9 +39,7 @@
 				<h2>Your Leave Balance</h2>
 				<p class="big">
 					<strong> <c:choose>
-							<c:when test="${not empty leaveBalance}">
-                                ${leaveBalance}
-                            </c:when>
+							<c:when test="${not empty leaveBalance}">${leaveBalance}</c:when>
 							<c:otherwise>0</c:otherwise>
 						</c:choose>
 					</strong> days remaining
@@ -70,48 +75,53 @@
 					<div class="form-actions">
 						<button class="btn" type="submit">Apply</button>
 					</div>
-
-					<c:if test="${not empty errorMessage}">
-						<p class="error-message">${errorMessage}</p>
-					</c:if>
-					<c:if test="${not empty successMessage}">
-						<p class="success-message">${successMessage}</p>
-					</c:if>
 				</form>
 			</section>
 
-			<section class="panel">
-				<h2>Your Leave History</h2>
-				<table class="styled-table">
-					<thead>
-						<tr>
-							<th>Leave ID</th>
-							<th>Type</th>
-							<th>From</th>
-							<th>To</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="lr" items="${myLeaves}">
+			<c:if test="${not empty myLeaves}">
+				<section class="panel">
+					<h2>Your Leave History</h2>
+					<table class="styled-table">
+						<thead>
 							<tr>
-								<td>${lr.requestId}</td>
-								<td>${lr.leaveType}</td>
-								<td>${lr.startDateFormatted}</td>
-								<td>${lr.endDateFormatted}</td>
-								<td
-									class="status ${not empty lr.status ? fn:toLowerCase(lr.status) : ''}">
-									${lr.status}</td>
+								<th>Leave ID</th>
+								<th>Type</th>
+								<th>From</th>
+								<th>To</th>
+								<th>Status</th>
+								<th>Rejection Reason</th>
+								<th>Action</th>
 							</tr>
-						</c:forEach>
-						<c:if test="${empty myLeaves}">
-							<tr>
-								<td colspan="5" class="muted">No leave requests yet.</td>
-							</tr>
-						</c:if>
-					</tbody>
-				</table>
-			</section>
+						</thead>
+						<tbody>
+							<c:forEach var="lr" items="${myLeaves}">
+								<tr>
+									<td>${lr.requestId}</td>
+									<td>${lr.leaveType}</td>
+									<td>${lr.startDateFormatted}</td>
+									<td>${lr.endDateFormatted}</td>
+									<td><span
+										class="status-badge ${not empty lr.status ? fn:toLowerCase(lr.status) : ''}">
+											<span class="dot"></span> ${lr.status}
+									</span></td>
+									<td>${lr.rejectionReason}</td>
+									<td><c:if test="${lr.status == 'Pending'}">
+											<a href="updateLeaveRequest?requestId=${lr.requestId}"
+												class="btn small-btn">Edit</a>
+										</c:if></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</section>
+			</c:if>
+
+			<c:if test="${empty myLeaves}">
+				<section class="panel">
+					<h2>Your Leave History</h2>
+					<p class="muted">No leave requests yet.</p>
+				</section>
+			</c:if>
 		</main>
 	</div>
 </body>

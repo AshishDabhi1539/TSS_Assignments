@@ -17,9 +17,33 @@ import com.tss.model.LeaveRequest;
 import com.tss.service.LeaveBalanceService;
 import com.tss.service.LeaveRequestService;
 
-@WebServlet("/applyLeave")
-public class ApplyLeaveServlet extends HttpServlet {
+@WebServlet("/updateLeaveRequest")
+public class UpdateLeaveRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+		if (session == null || !"USER".equals(session.getAttribute("role"))) {
+			resp.sendRedirect("login.jsp");
+			return;
+		}
+
+		try (Connection conn = DBConnection.connect()) {
+			LeaveRequestService leaveService = new LeaveRequestService(conn);
+			int requestId = Integer.parseInt(req.getParameter("requestId"));
+			LeaveRequest leaveRequest = leaveService.getRequestById(requestId);
+
+			if (leaveRequest != null && leaveRequest.getStatus().equalsIgnoreCase("Pending")) {
+				req.setAttribute("leaveRequest", leaveRequest);
+				req.getRequestDispatcher("update-leave-request.jsp").forward(req, resp);
+			} else {
+				resp.sendRedirect("leave-error.jsp?error=Cannot edit this leave request.");
+			}
+		} catch (Exception e) {
+			throw new ServletException(e);
+		}
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,6 +57,7 @@ public class ApplyLeaveServlet extends HttpServlet {
 			LeaveRequestService leaveService = new LeaveRequestService(conn);
 			LeaveBalanceService balanceService = new LeaveBalanceService(conn);
 
+			int requestId = Integer.parseInt(req.getParameter("requestId"));
 			int empId = (int) session.getAttribute("empId");
 			String leaveType = req.getParameter("leaveType");
 			LocalDate from = LocalDate.parse(req.getParameter("fromDate"));
@@ -62,6 +87,7 @@ public class ApplyLeaveServlet extends HttpServlet {
 			}
 
 			LeaveRequest lr = new LeaveRequest();
+			lr.setRequestId(requestId);
 			lr.setEmpId(empId);
 			lr.setLeaveType(leaveType);
 			lr.setStartDate(from);
@@ -70,11 +96,11 @@ public class ApplyLeaveServlet extends HttpServlet {
 			lr.setStatus("Pending");
 
 			try {
-				boolean ok = leaveService.addLeaveRequest(lr);
+				boolean ok = leaveService.updateLeaveRequest(lr);
 				if (ok) {
 					resp.sendRedirect("UserDashboardServlet");
 				} else {
-					resp.sendRedirect("leave-error.jsp?error=Unable to apply leave due to a system error.");
+					resp.sendRedirect("leave-error.jsp?error=Unable to update leave request due to a system error.");
 				}
 			} catch (SQLException e) {
 				resp.sendRedirect("leave-error.jsp?error=" + e.getMessage());

@@ -1,0 +1,156 @@
+/* ================== Reset ================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ================== Body ================== */
+body {
+    background: linear-gradient(135deg, #1e1e2f, #121212);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #eee;
+}
+
+/* ================== Container (Glass Effect) ================== */
+.container {
+    background: rgba(255, 255, 255, 0.05); /* semi-transparent */
+    backdrop-filter: blur(15px); /* blur background behind container */
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 15px;
+    padding: 50px 40px;
+    width: 90%;
+    max-width: 700px; /* larger for more content */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* ================== Headings ================== */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ================== Error Messages ================== */
+.error {
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    display: none;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* ================== Form Fields ================== */
+.form-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 14px 12px 14px 12px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #6c63ff;
+}
+
+/* Floating Labels */
+.form-group label {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    color: #aaa;
+    font-size: 14px;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: -23px;
+    font-size: 18px;
+    color: #6c63ff;
+}
+
+/* ================== Buttons ================== */
+button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #6c63ff, #4a4ef5);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.4s;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #4a4ef5, #6c63ff);
+    transform: translateY(-2px);
+}
+
+/* ================== Links ================== */
+a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #6c63ff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ================== Quiz Options ================== */
+.option {
+    margin-bottom: 20px;
+}
+
+.option input[type="radio"] {
+    margin-right: 12px;
+    accent-color: #6c63ff;
+    transform: scale(1.2);
+}
+
+/* ================== Quiz Result ================== */
+.container p {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* ================== Animations ================== */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ================== Responsive ================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 25px;
+        max-width: 90%;
+    }
+    h2 { font-size: 22px; }
+    button { font-size: 14px; padding: 12px; }
+}

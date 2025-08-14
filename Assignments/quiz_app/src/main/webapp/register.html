@@ -1,177 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Register</title>
-<style>
-@import
-	url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap')
-	;
-
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-
-body {
-	font-family: 'Inter', sans-serif;
-	background: linear-gradient(135deg, #6a11cb, #2575fc);
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	animation: fadeIn 1s ease-in-out;
-}
-
-keyframes fadeIn {from { opacity:0;
-	transform: translateY(20px);
-}
-
-to {
-	opacity: 1;
-	transform: translateY(0);
-}
-
-}
-.container {
-	background-color: #fff;
-	padding: 35px;
-	border-radius: 12px;
-	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-	width: 370px;
-	animation: fadeIn 1.2s ease;
-}
-
-h2 {
-	text-align: center;
-	margin-bottom: 20px;
-	font-size: 1.8rem;
-	font-weight: 600;
-	color: #333;
-}
-
-.form-group {
-	position: relative;
-	margin-bottom: 25px;
-}
-
-input {
-	width: 100%;
-	padding: 14px 12px;
-	font-size: 1rem;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	transition: all 0.2s;
-}
-
-input:focus {
-	outline: none;
-	border-color: #2575fc;
-	box-shadow: 0 0 8px rgba(37, 117, 252, 0.3);
-}
-
-input::placeholder {
-	opacity: 0;
-}
-
-label {
-	position: absolute;
-	top: 50%;
-	left: 12px;
-	transform: translateY(-50%);
-	background: #fff;
-	padding: 0 6px;
-	font-size: 0.9rem;
-	color: #888;
-	pointer-events: none;
-	transition: 0.2s ease;
-}
-
-input:focus+label, input:not(:placeholder-shown)+label {
-	top: -8px;
-	font-size: 0.75rem;
-	color: #2575fc;
-}
-
-button {
-	width: 100%;
-	padding: 12px;
-	background: linear-gradient(to right, #2575fc, #6a11cb);
-	color: white;
-	font-weight: bold;
-	font-size: 1rem;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	transition: all 0.3s ease;
-}
-
-button:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 8px 15px rgba(37, 117, 252, 0.4);
-}
-
-.error {
-	color: #e63946;
-	background: #ffe6e9;
-	padding: 10px;
-	border-radius: 6px;
-	text-align: center;
-	font-size: 0.9rem;
-	margin-bottom: 15px;
-	display: none;
-}
-
-a {
-	display: block;
-	margin-top: 16px;
-	text-align: center;
-	color: #2575fc;
-	font-size: 0.9rem;
-	text-decoration: none;
-	transition: 0.3s;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-	<div class="container">
-		<h2>Register</h2>
+    <div class="container">
+        <h2>Register</h2>
+        <p class="error" id="errorMessage"></p>
 
-		<div class="error" id="errorMessage"></div>
+        <form action="register" method="post" onsubmit="return validateRegisterForm()">
+            <div class="form-group">
+                <input type="text" name="username" id="username" placeholder=" " required>
+                <label for="username">Username</label>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" id="password" placeholder=" " required>
+                <label for="password">Password</label>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" id="email" placeholder=" " required>
+                <label for="email">Email</label>
+            </div>
+            <button type="submit">Register</button>
+        </form>
 
-		<form action="register" method="post">
-			<div class="form-group">
-				<input type="text" name="username" id="username" placeholder=" "
-					required /> <label for="username">Username</label>
-			</div>
-			<div class="form-group">
-				<input type="password" name="password" id="password" placeholder=" "
-					required /> <label for="password">Password</label>
-			</div>
-			<div class="form-group">
-				<input type="email" name="email" id="email" placeholder=" " required />
-				<label for="email">Email</label>
-			</div>
-			<button type="submit">Register</button>
-		</form>
-		<a href="login.html">Already have an account? Login</a>
-	</div>
+        <a href="login.html">Already have an account? Login</a>
+    </div>
 
-	<script>
-		// Check for error message in URL
-		const params = new URLSearchParams(window.location.search);
-		const error = params.get("error");
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const error = params.get("error");
+        if (error) {
+            const errorDiv = document.getElementById("errorMessage");
+            errorDiv.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
+            errorDiv.style.display = "block";
+        }
 
-		if (error) {
-			const errorDiv = document.getElementById("errorMessage");
-			errorDiv.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
-			errorDiv.style.display = "block";
-		}
-	</script>
+        function validateRegisterForm() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const errorDiv = document.getElementById("errorMessage");
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!username || !password || !email) {
+                errorDiv.textContent = "Please fill in all fields.";
+                errorDiv.style.display = "block";
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                errorDiv.textContent = "Please enter a valid email address.";
+                errorDiv.style.display = "block";
+                return false;
+            }
+            if (password.length < 6) {
+                errorDiv.textContent = "Password must be at least 6 characters long.";
+                errorDiv.style.display = "block";
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

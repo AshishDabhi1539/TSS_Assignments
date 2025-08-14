@@ -20,11 +20,6 @@ public class UpdateLeaveStatusServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void init() throws ServletException {
-		// No static connection initialization
-	}
-
-	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		if (session == null || !"ADMIN".equals(session.getAttribute("role"))) {
@@ -37,9 +32,16 @@ public class UpdateLeaveStatusServlet extends HttpServlet {
 			LeaveBalanceService tempBalanceService = new LeaveBalanceService(conn);
 
 			int leaveId = Integer.parseInt(req.getParameter("leaveId"));
-			String status = req.getParameter("status"); // APPROVED or REJECTED
+			String status = req.getParameter("status");
+			String rejectionReason = req.getParameter("rejectionReason");
+			String customReason = req.getParameter("customReason");
 
-			boolean updated = tempLeaveService.updateLeaveStatus(leaveId, status);
+			// Combine rejection reason
+			if ("REJECTED".equalsIgnoreCase(status) && "Other".equals(rejectionReason)) {
+				rejectionReason = customReason;
+			}
+
+			boolean updated = tempLeaveService.updateLeaveStatus(leaveId, status, rejectionReason);
 
 			if (updated && "APPROVED".equalsIgnoreCase(status)) {
 				LeaveRequest lr = tempLeaveService.getRequestById(leaveId);
