@@ -29,6 +29,7 @@
                 <input id="deptNo" name="deptNo" type="number" required placeholder="Department number"/>
                 <button class="btn full" type="submit">Register</button>
             </form>
+            <br>
             <p class="muted">Already registered? <a href="login.jsp">Sign in</a></p>
             <c:if test="${not empty errorMessage}">
                 <p class="error-message">${errorMessage}</p>

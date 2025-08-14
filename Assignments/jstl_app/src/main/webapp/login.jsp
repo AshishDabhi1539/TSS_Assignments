@@ -23,6 +23,7 @@
                 <input id="password" name="password" type="password" required placeholder="Enter your password"/>
                 <button class="btn full" type="submit">Login</button>
             </form>
+            <br>
             <p class="muted">New user? <a href="register.jsp">Register here</a></p>
             <c:if test="${not empty errorMessage}">
                 <p class="error-message">${errorMessage}</p>
