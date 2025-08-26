@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tss.hibernate.entity.Student;
@@ -40,8 +41,8 @@ public class StudentController {
 		return studentService.getStudentByRollNumber(rollNumber);
 	}
 
-	@GetMapping("name/{firstName}")
-	public Student getStudentByName(@PathVariable String firstName) {
-		return studentService.getStudentByName(firstName);
+	@GetMapping("/name/get")
+	public Student getStudentsByFirstName(@RequestParam("name") String firstName) {
+	    return studentService.getStudentByName(firstName);
 	}
 }
