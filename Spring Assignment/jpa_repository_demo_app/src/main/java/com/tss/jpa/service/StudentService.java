@@ -3,13 +3,16 @@ package com.tss.jpa.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.tss.jpa.dto.StudentRequestDto;
+import com.tss.jpa.dto.StudentResponseDto;
+import com.tss.jpa.dto.StudentResponsePage;
 import com.tss.jpa.entity.Student;
 
 public interface StudentService {
 
-	List<Student> readAllStudents();
+	StudentResponsePage readAllStudents(int pageSize, int pageNo);
 
-	Student addNewStudent(Student student);
+	StudentResponseDto addNewStudent(StudentRequestDto student);
 
 	Optional<Student> readStudentById(int studentId);
 

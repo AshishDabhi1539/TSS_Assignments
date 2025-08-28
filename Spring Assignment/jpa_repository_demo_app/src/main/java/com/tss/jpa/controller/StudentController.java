@@ -1,6 +1,5 @@
 package com.tss.jpa.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tss.jpa.dto.StudentRequestDto;
+import com.tss.jpa.dto.StudentResponseDto;
+import com.tss.jpa.dto.StudentResponsePage;
 import com.tss.jpa.entity.Student;
 import com.tss.jpa.service.StudentService;
 
@@ -23,18 +25,29 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 
-	@GetMapping("/students")
-	public ResponseEntity<List<Student>> readAllStudents() {
-		List<Student> students = studentService.readAllStudents();
-		if (students.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
+	/*@GetMapping("/students")
+	public ResponseEntity<List<StudentResponseDto>> readAllStudents() {
+		List<StudentResponseDto> students = studentService.readAllStudents();
+		// if (students.isEmpty())
+		// return ResponseEntity.noContent().build();
+
 		return ResponseEntity.ok(students);
+	}*/
+	
+	@GetMapping("/students")
+	public ResponseEntity<StudentResponsePage> readAllStudents(
+	        @RequestParam(defaultValue = "5") int pageSize,
+	        @RequestParam(defaultValue = "0") int pageNo) {
+	    
+	    StudentResponsePage students = studentService.readAllStudents(pageSize, pageNo);
+	    return ResponseEntity.ok(students);
 	}
 
 	@PostMapping("/students")
-	public ResponseEntity<Student> addNewStudent(@RequestBody Student student) {
-		return ResponseEntity.ok().header("author", "Ashish").body(studentService.addNewStudent(student));
+	public ResponseEntity<StudentResponseDto> addNewStudent(@RequestBody StudentRequestDto student) {
+		return ResponseEntity.ok()
+				.header("author", "Ashish")
+				.body(studentService.addNewStudent(student));
 	}
 
 	/*
@@ -55,20 +68,17 @@ public class StudentController {
 	 * studentService.findStudentByFirstment(firstName); }
 	 */
 
-	@GetMapping("/students")
-	public ResponseEntity<List<Student>> getStudents(@RequestParam(required = false) String firstName) {
-		List<Student> students;
-
-		if (firstName == null || firstName.isEmpty()) {
-			students = studentService.readAllStudents();
-		} else {
-			students = studentService.findStudentByFirstment(firstName);
-		}
-
-		if (students.isEmpty()) {
-			return ResponseEntity.noContent().build(); // 204 No Content
-		}
-		return ResponseEntity.ok(students); // 200 OK
-	}
+	/*
+	 * @GetMapping("/students") public ResponseEntity<List<Student>>
+	 * getStudents(@RequestParam(required = false) String firstName) { List<Student>
+	 * students;
+	 * 
+	 * if (firstName == null || firstName.isEmpty()) { students =
+	 * studentService.readAllStudents(); } else { students =
+	 * studentService.findStudentByFirstment(firstName); }
+	 * 
+	 * if (students.isEmpty()) { return ResponseEntity.noContent().build(); // 204
+	 * No Content } return ResponseEntity.ok(students); // 200 OK }
+	 */
 
 }
