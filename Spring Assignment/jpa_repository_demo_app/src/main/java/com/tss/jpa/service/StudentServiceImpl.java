@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import com.tss.jpa.dto.StudentRequestDto;
 import com.tss.jpa.dto.StudentResponseDto;
 import com.tss.jpa.dto.StudentResponsePage;
 import com.tss.jpa.entity.Student;
+import com.tss.jpa.exception.StudentApiException;
 import com.tss.jpa.repository.StudentRepository;
 
 @Service
@@ -21,6 +23,9 @@ public class StudentServiceImpl implements StudentService {
 
 	@Autowired
 	private StudentRepository studentRepo;
+	
+	@Autowired
+	private ModelMapper mapper;
 
 	@Override
 	public StudentResponsePage readAllStudents(int pageSize, int pageNo) {
@@ -51,7 +56,7 @@ public class StudentServiceImpl implements StudentService {
 		return dto;
 	}
 	
-	private Student stuedntRequestDtoToStudent(StudentRequestDto studentDto) {
+	/*private Student stuedntRequestDtoToStudent(StudentRequestDto studentDto) {
 		Student student = new Student();
 		student.setFirstName(studentDto.getFirstName());
 		student.setLastName(studentDto.getLastName());
@@ -60,23 +65,77 @@ public class StudentServiceImpl implements StudentService {
 		student.setEmail(studentDto.getEmail());
 		
 		return student;
-	}
+	}*/
 
+	/*@Override
+	public StudentResponseDto addNewStudent(StudentRequestDto studentDto) {
+
+		//Student student = stuedntRequestDtoToStudent(studentDto);
+		
+	    if (studentDto.getRollNumber() <= 0) {
+	        throw new StudentApiException("Roll number must be a positive integer");
+	    }
+
+	    if (studentDto.getFirstName() == null || 
+	        !studentDto.getFirstName().matches("^[A-Za-z]{2,30}$")) {
+	        throw new StudentApiException("First name must contain only alphabets (2–30 characters)");
+	    }
+
+	    if (studentDto.getLastName() != null && 
+	        !studentDto.getLastName().isEmpty() &&
+	        !studentDto.getLastName().matches("^[A-Za-z]{1,30}$")) {
+	        throw new StudentApiException("Last name must contain only alphabets (1–30 characters)");
+	    }
+
+	    if (studentDto.getEmail() == null || 
+	        !studentDto.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+	        throw new StudentApiException("Invalid email format");
+	    }
+
+	    if (studentDto.getAge() < 17 || studentDto.getAge() > 50) {
+	        throw new StudentApiException("Age must be between 17 and 50");
+	    }
+
+	    if (studentRepo.findByEmail(studentDto.getEmail()).isPresent()) {
+	        throw new StudentApiException("Email already exists: " + studentDto.getEmail());
+	    }
+	    if (studentRepo.findByRollNumber(studentDto.getRollNumber()).isPresent()) {
+	        throw new StudentApiException("Roll number already exists: " + studentDto.getRollNumber());
+	    }
+
+	    Student student = mapper.map(studentDto, Student.class);
+
+	    Student dbStudent = studentRepo.save(student);
+
+	    return studentToStudentResponseDto(dbStudent);
+	}*/
+	
 	@Override
 	public StudentResponseDto addNewStudent(StudentRequestDto studentDto) {
-		// TODO Auto-generated method stub
-		Student student = stuedntRequestDtoToStudent(studentDto);
-		Student dbStudent = studentRepo.save(student);
-		
-		StudentResponseDto studentResp = studentToStudentResponseDto(dbStudent);
-		
-		return studentResp;
+	    // check for duplicates only (business rule, not field validation)
+	    if (studentRepo.findByEmail(studentDto.getEmail()).isPresent()) {
+	        throw new StudentApiException("Email already exists: " + studentDto.getEmail());
+	    }
+	    if (studentRepo.findByRollNumber(studentDto.getRollNumber()).isPresent()) {
+	        throw new StudentApiException("Roll number already exists: " + studentDto.getRollNumber());
+	    }
+
+	    Student student = mapper.map(studentDto, Student.class);
+	    Student dbStudent = studentRepo.save(student);
+
+	    return studentToStudentResponseDto(dbStudent);
 	}
 
+
 	@Override
-	public Optional<Student> readStudentById(int studentId) {
-		return studentRepo.findById(studentId);
+	public Student readStudentById(int studentId) {
+	    Optional<Student> student = studentRepo.findById(studentId);
+	    if (student.isPresent()) {
+	        return student.get();
+	    }
+	    throw new StudentApiException("Student with ID " + studentId + " not found");
 	}
+
 
 	@Override
 	public List<Student> findStudentByFirstment(String firstName) {

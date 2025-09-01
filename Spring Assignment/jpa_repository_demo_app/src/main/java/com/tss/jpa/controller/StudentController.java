@@ -1,7 +1,5 @@
 package com.tss.jpa.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,8 @@ import com.tss.jpa.dto.StudentResponseDto;
 import com.tss.jpa.dto.StudentResponsePage;
 import com.tss.jpa.entity.Student;
 import com.tss.jpa.service.StudentService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/studentapp")
@@ -42,13 +42,14 @@ public class StudentController {
 	    StudentResponsePage students = studentService.readAllStudents(pageSize, pageNo);
 	    return ResponseEntity.ok(students);
 	}
-
+	
 	@PostMapping("/students")
-	public ResponseEntity<StudentResponseDto> addNewStudent(@RequestBody StudentRequestDto student) {
-		return ResponseEntity.ok()
-				.header("author", "Ashish")
-				.body(studentService.addNewStudent(student));
+	public ResponseEntity<StudentResponseDto> addNewStudent(@Valid @RequestBody StudentRequestDto student) {
+	    return ResponseEntity.ok()
+	            .header("author", "Ashish")
+	            .body(studentService.addNewStudent(student));
 	}
+
 
 	/*
 	 * @GetMapping("/students/{studentId}") public Optional<Student>
@@ -56,11 +57,18 @@ public class StudentController {
 	 * studentService.readStudentById(studentId); }
 	 */
 
+	/*@GetMapping("/students/{studentId}")
+	public ResponseEntity<Student> readStudentById(@PathVariable int studentId) {
+		Student student = studentService.readStudentById(studentId);
+		return student.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}*/
+	
 	@GetMapping("/students/{studentId}")
 	public ResponseEntity<Student> readStudentById(@PathVariable int studentId) {
-		Optional<Student> student = studentService.readStudentById(studentId);
-		return student.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	    Student student = studentService.readStudentById(studentId);
+	    return ResponseEntity.ok(student);
 	}
+
 
 	/*
 	 * @GetMapping("/firstName") public List<Student>

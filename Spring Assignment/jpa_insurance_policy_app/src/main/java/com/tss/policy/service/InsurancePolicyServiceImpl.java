@@ -16,6 +16,7 @@ import com.tss.policy.dto.InsurancePolicyRequestDto;
 import com.tss.policy.dto.InsurancePolicyResponseDto;
 import com.tss.policy.dto.InsurancePolicyResponsePage;
 import com.tss.policy.entity.InsurancePolicy;
+import com.tss.policy.exception.PolicyApiException;
 import com.tss.policy.repository.InsurancePolicyRepository;
 
 @Service
@@ -102,6 +103,15 @@ public class InsurancePolicyServiceImpl implements InsurancePolicyService {
 
 	@Override
 	public InsurancePolicyResponseDto addNewPolicy(InsurancePolicyRequestDto policyDto) {
+		List<InsurancePolicy> existingPolicies = policyRepo.findByHolderName(policyDto.getHolderName());
+		boolean duplicate = existingPolicies.stream().anyMatch(p -> p.getStartDate().equals(policyDto.getStartDate())
+				&& p.getEndDate().equals(policyDto.getEndDate()));
+
+		if (duplicate) {
+			throw new PolicyApiException(
+					"Policy already exists for holder " + policyDto.getHolderName() + " in this period.");
+		}
+
 		InsurancePolicy policy = policyRequestDtoToPolicy(policyDto);
 		InsurancePolicy dbPolicy = policyRepo.save(policy);
 		return policyToPolicyResponseDto(dbPolicy);
@@ -120,12 +130,12 @@ public class InsurancePolicyServiceImpl implements InsurancePolicyService {
 
 	@Override
 	public boolean deletePolicyByPolicyNumber(String policyNumber) {
-	    InsurancePolicy policy = policyRepo.findByPolicyNumber(policyNumber);
-	    if (policy != null) {
-	        policyRepo.delete(policy);
-	        return true;
-	    }
-	    return false;
+		InsurancePolicy policy = policyRepo.findByPolicyNumber(policyNumber);
+		if (policy != null) {
+			policyRepo.delete(policy);
+			return true;
+		}
+		return false;
 	}
 
 	private InsurancePolicyResponseDto policyToPolicyResponseDto(InsurancePolicy policy) {

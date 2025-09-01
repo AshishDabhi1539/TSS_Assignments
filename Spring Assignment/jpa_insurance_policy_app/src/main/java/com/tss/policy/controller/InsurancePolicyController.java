@@ -19,6 +19,8 @@ import com.tss.policy.dto.InsurancePolicyResponsePage;
 import com.tss.policy.entity.InsurancePolicy;
 import com.tss.policy.service.InsurancePolicyService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/policyapp")
 public class InsurancePolicyController {
@@ -48,7 +50,8 @@ public class InsurancePolicyController {
 	}
 
 	@PostMapping("/policies")
-	public ResponseEntity<InsurancePolicyResponseDto> addNewPolicy(@RequestBody InsurancePolicyRequestDto policy) {
+	public ResponseEntity<InsurancePolicyResponseDto> addNewPolicy(
+			@Valid @RequestBody InsurancePolicyRequestDto policy) {
 		return ResponseEntity.ok().header("author", "Ashish").body(policyService.addNewPolicy(policy));
 	}
 
@@ -66,7 +69,7 @@ public class InsurancePolicyController {
 
 	@DeleteMapping("/policies/delete")
 	public ResponseEntity<Void> deletePolicyByPolicyNumber(@RequestParam String policyNumber) {
-	    boolean deleted = policyService.deletePolicyByPolicyNumber(policyNumber);
-	    return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+		boolean deleted = policyService.deletePolicyByPolicyNumber(policyNumber);
+		return deleted ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
 }

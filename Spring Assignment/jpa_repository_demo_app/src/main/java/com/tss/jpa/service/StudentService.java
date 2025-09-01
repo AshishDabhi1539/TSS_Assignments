@@ -1,7 +1,6 @@
 package com.tss.jpa.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.tss.jpa.dto.StudentRequestDto;
 import com.tss.jpa.dto.StudentResponseDto;
@@ -14,7 +13,7 @@ public interface StudentService {
 
 	StudentResponseDto addNewStudent(StudentRequestDto student);
 
-	Optional<Student> readStudentById(int studentId);
+	Student readStudentById(int studentId);
 
 	List<Student> findStudentByFirstment(String firstName);
 }
