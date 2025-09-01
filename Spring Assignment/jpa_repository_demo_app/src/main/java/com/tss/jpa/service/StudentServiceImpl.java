@@ -119,6 +119,37 @@ public class StudentServiceImpl implements StudentService {
 	    if (studentRepo.findByRollNumber(studentDto.getRollNumber()).isPresent()) {
 	        throw new StudentApiException("Roll number already exists: " + studentDto.getRollNumber());
 	    }
+	    
+	    if (studentDto.getRollNumber() <= 0) {
+	        throw new StudentApiException("Roll number must be a positive integer");
+	    }
+
+	    if (studentDto.getFirstName() == null || 
+	        !studentDto.getFirstName().matches("^[A-Za-z]{2,30}$")) {
+	        throw new StudentApiException("First name must contain only alphabets (2–30 characters)");
+	    }
+
+	    if (studentDto.getLastName() != null && 
+	        !studentDto.getLastName().isEmpty() &&
+	        !studentDto.getLastName().matches("^[A-Za-z]{1,30}$")) {
+	        throw new StudentApiException("Last name must contain only alphabets (1–30 characters)");
+	    }
+
+	    if (studentDto.getEmail() == null || 
+	        !studentDto.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+	        throw new StudentApiException("Invalid email format");
+	    }
+
+	    if (studentDto.getAge() < 17 || studentDto.getAge() > 50) {
+	        throw new StudentApiException("Age must be between 17 and 50");
+	    }
+
+	    if (studentRepo.findByEmail(studentDto.getEmail()).isPresent()) {
+	        throw new StudentApiException("Email already exists: " + studentDto.getEmail());
+	    }
+	    if (studentRepo.findByRollNumber(studentDto.getRollNumber()).isPresent()) {
+	        throw new StudentApiException("Roll number already exists: " + studentDto.getRollNumber());
+	    }
 
 	    Student student = mapper.map(studentDto, Student.class);
 	    Student dbStudent = studentRepo.save(student);
