@@ -14,16 +14,49 @@ import com.tss.jpa.error.ResponseError;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler
-	public ResponseEntity<ResponseError> handleStudentException(StudentApiException exception) {
-		ResponseError error = new ResponseError();
-		error.setMessage(exception.getMessage());
-		error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-		error.setTimestamp(System.currentTimeMillis());
+    // Business exception (custom)
+    @ExceptionHandler(StudentApiException.class)
+    public ResponseEntity<ResponseError> handleStudentApiException(StudentApiException ex) {
+        ResponseError error = new ResponseError(
+                HttpStatus.BAD_REQUEST.value(),
+                System.currentTimeMillis(),
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
-		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+    // Validation errors (@Valid)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseError> handleValidationException(MethodArgumentNotValidException exception) {
+        Map<String, String> errors = new HashMap<>();
 
+        exception.getBindingResult().getFieldErrors().forEach(err -> {
+            errors.put(err.getField(), err.getDefaultMessage());
+        });
+
+        ResponseError responseError = new ResponseError(
+                HttpStatus.BAD_REQUEST.value(),
+                System.currentTimeMillis(),
+                "Validation failed",
+                errors
+        );
+
+        return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
+    }
+
+    // Fallback for all unhandled exceptions
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseError> handleGenericException(Exception ex) {
+        ResponseError error = new ResponseError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                System.currentTimeMillis(),
+                ex.getMessage(),
+                null
+        );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
 	/*
 	 * @ExceptionHandler(MethodArgumentNotValidException.class) public
 	 * ResponseEntity<ResponseError>
@@ -40,18 +73,4 @@ public class GlobalExceptionHandler {
 	 * ResponseEntity<>(error, HttpStatus.BAD_REQUEST); }
 	 */
 
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ResponseError> handleValidationException(MethodArgumentNotValidException exception) {
-		Map<String, String> errors = new HashMap<>();
-
-		exception.getBindingResult().getFieldErrors().forEach(error -> {
-			errors.put(error.getField(), error.getDefaultMessage());
-		});
-
-		ResponseError responseError = new ResponseError(HttpStatus.BAD_REQUEST.value(), System.currentTimeMillis(),
-				"Validation failed", errors);
-
-		return new ResponseEntity<>(responseError, HttpStatus.BAD_REQUEST);
-	}
-
-}
+	
