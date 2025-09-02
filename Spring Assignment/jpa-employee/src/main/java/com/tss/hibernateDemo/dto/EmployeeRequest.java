@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 public class EmployeeRequest {
 
 	@NotBlank(message = "Name is required")
-    private String name;
+	private String name;
 
-    @NotNull(message = "Salary is required")
-    @PositiveOrZero(message = "Salary must be >= 0")
-    private Double salary;
+	@NotNull(message = "Salary is required")
+	@PositiveOrZero(message = "Salary must be greater than or equal to 0")
+	private Double salary;
 
-    @Valid
-    @NotNull(message = "Salary account is required")
-    private SalaryAccountRequest salaryAccount;
+	@Valid
+	@NotNull(message = "Salary account is required")
+	private SalaryAccountRequest salaryAccount;
 }

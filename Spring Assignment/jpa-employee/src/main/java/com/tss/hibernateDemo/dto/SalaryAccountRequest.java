@@ -9,19 +9,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class SalaryAccountRequest {
 
-	@NotNull(message = "Account number is required")
-	private Long accountNumber;
+    @NotNull(message = "Account number is required")
+    private Long accountNumber;
 
-	@NotBlank(message = "Bank name is required")
-	private String bankName;
+    @NotBlank(message = "Bank name is required")
+    private String bankName;
 
-	@NotBlank(message = "Branch is required")
-	private String branch;
+    @NotBlank(message = "Branch is required")
+    private String branch;
 
-	@NotBlank(message = "IFSC code is required")
-	private String ifscCode;
-
+    @NotBlank(message = "IFSC code is required")
+    private String ifscCode;
 }
