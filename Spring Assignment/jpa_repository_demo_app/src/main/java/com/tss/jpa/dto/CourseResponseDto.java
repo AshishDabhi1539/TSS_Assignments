@@ -7,11 +7,9 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class CourseRequestDto {
-
+public class CourseResponseDto {
+	private long courseId;
 	private String courseName;
-
 	private int duration;
-
 	private double fees;
 }
