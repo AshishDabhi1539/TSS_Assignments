@@ -15,6 +15,7 @@ import com.tss.jpa.dto.AddressRequestDto;
 import com.tss.jpa.dto.StudentRequestDto;
 import com.tss.jpa.dto.StudentResponseDto;
 import com.tss.jpa.dto.StudentResponsePage;
+import com.tss.jpa.dto.StudentWithCoursesResponseDto;
 import com.tss.jpa.entity.Address;
 import com.tss.jpa.entity.Student;
 import com.tss.jpa.service.StudentService;
@@ -56,6 +57,11 @@ public class StudentController {
     public ResponseEntity<Student> readStudentById(@PathVariable int studentId) {
         Student student = studentService.readStudentById(studentId);
         return ResponseEntity.ok(student);
+    }
+    
+    @PutMapping("/students/{studentId}/courses/{courseId}")
+    public ResponseEntity<StudentWithCoursesResponseDto> assignCourse(@PathVariable int studentId, @PathVariable long courseId) {
+        return ResponseEntity.ok(studentService.assignCourse(studentId, courseId));
     }
 }
 

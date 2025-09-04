@@ -6,6 +6,7 @@ import com.tss.jpa.dto.AddressRequestDto;
 import com.tss.jpa.dto.StudentRequestDto;
 import com.tss.jpa.dto.StudentResponseDto;
 import com.tss.jpa.dto.StudentResponsePage;
+import com.tss.jpa.dto.StudentWithCoursesResponseDto;
 import com.tss.jpa.entity.Address;
 import com.tss.jpa.entity.Student;
 
@@ -22,4 +23,6 @@ public interface StudentService {
 	Address getAddressByStudentId(int studentId);
 	
 	Address updateAddressByStudentId(int studentId, AddressRequestDto addressRequestDto);
+	
+	StudentWithCoursesResponseDto assignCourse(int studentId, long courseId);
 }
