@@ -1,0 +1,1 @@
+INSERT INTO customers (name, email, phone, address, status, role) VALUES ('SuperAdmin', 'superadmin@bank.com', '1234567890', 'HQ Office', 'VERIFIED', 'SUPERADMIN');
