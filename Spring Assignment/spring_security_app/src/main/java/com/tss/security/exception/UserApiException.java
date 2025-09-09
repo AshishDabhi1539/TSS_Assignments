@@ -13,4 +13,10 @@ public class UserApiException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	private HttpStatus status;
 	private String message;
+	
+	// Constructor with just message (defaults to BAD_REQUEST)
+	public UserApiException(String message) {
+		this.message = message;
+		this.status = HttpStatus.BAD_REQUEST;
+	}
 }

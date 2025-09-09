@@ -1,5 +1,6 @@
 package com.tss.banking.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
@@ -46,22 +48,28 @@ public class Account {
     @Column(nullable = false, length = 32)
     private AccountType accountType;
 
-    private double balance;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal balance;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private AccountStatus status;
 
-    private double interestRate;
+    @Column(precision = 5, scale = 4)
+    private BigDecimal interestRate;
 
-    private Double minBalance;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal minBalance;
 
-    @Column(length = 3)
+    @Column(length = 3, nullable = false)
     private String currency;
 
+    @Column(nullable = false)
     private LocalDateTime openedAt;
 
     private LocalDateTime closedAt;
+
+    private LocalDateTime updatedAt;
 
     @Version
     private Long version;
@@ -82,11 +90,25 @@ public class Account {
         if (openedAt == null) {
             openedAt = LocalDateTime.now();
         }
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        }
         if (currency == null) {
             currency = "INR";
         }
         if (status == null) {
             status = AccountStatus.ACTIVE;
         }
+        if (balance == null) {
+            balance = BigDecimal.ZERO;
+        }
+        if (interestRate == null) {
+            interestRate = BigDecimal.ZERO;
+        }
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

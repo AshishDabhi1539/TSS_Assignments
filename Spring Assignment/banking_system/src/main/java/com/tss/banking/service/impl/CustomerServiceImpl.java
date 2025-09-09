@@ -2,6 +2,7 @@ package com.tss.banking.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tss.banking.dto.request.CustomerRequestDto;
@@ -22,6 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public CustomerResponseDto registerCustomer(CustomerRequestDto dto) {
         if ("SUPERADMIN".equalsIgnoreCase(dto.getRole())) {
@@ -31,7 +35,16 @@ public class CustomerServiceImpl implements CustomerService {
             throw new BankApiException("Invalid role for registration: " + dto.getRole());
         }
 
+        // Check if email or phone already exists
+        if (customerRepo.existsByEmail(dto.getEmail())) {
+            throw new BankApiException("Email already exists: " + dto.getEmail());
+        }
+        if (customerRepo.existsByPhone(dto.getPhone())) {
+            throw new BankApiException("Phone number already exists: " + dto.getPhone());
+        }
+
         Customer customer = mapper.map(dto, Customer.class);
+        customer.setPassword(passwordEncoder.encode(dto.getPassword()));
         customer.setStatus(CustomerStatus.PENDING);
         try {
             customer.setRole(RoleType.valueOf(dto.getRole().toUpperCase()));

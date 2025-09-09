@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,15 +30,26 @@ public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(nullable = false, length = 128)
     private String name;
+    
+    @Column(length = 512)
     private String address;
-    @Column(unique = true, length = 32)
+    
+    @Column(unique = true, nullable = false, length = 32)
     private String code;
-    @Column(length = 3)
+    
+    @Column(length = 3, nullable = false)
     private String currency;
+    
+    @Column(length = 64)
     private String country;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Branch> branches;
@@ -47,8 +59,16 @@ public class Bank {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        }
         if (currency == null) {
             currency = "INR";
         }
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

@@ -1,5 +1,7 @@
 package com.tss.banking.service.impl;
 
+import java.math.BigDecimal;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = mapper.map(dto, Account.class);
         account.setCustomer(customer);
         account.setBranch(branch);
-        account.setBalance(dto.getInitialBalance());
+        account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
         try {
             account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
         } catch (Exception ex) {

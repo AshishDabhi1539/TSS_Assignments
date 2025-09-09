@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
@@ -36,12 +37,24 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    @Column(nullable = false, unique = true)
+    
+    @Column(nullable = false, length = 64)
+    private String firstName;
+    
+    @Column(nullable = false, length = 64)
+    private String lastName;
+    
+    @Column(nullable = false, unique = true, length = 128)
     private String email;
-    @Column(nullable = false, unique = true)
+    
+    @Column(nullable = false, unique = true, length = 15)
     private String phone;
+    
+    @Column(length = 512)
     private String address;
+
+    @Column(nullable = false, length = 255)
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
@@ -51,8 +64,10 @@ public class Customer {
     @Column(nullable = false, length = 32)
     private RoleType role;
 
+    @Column(nullable = false)
     private Boolean softDeleted = false;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -71,11 +86,22 @@ public class Customer {
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        }
         if (status == null) {
             status = CustomerStatus.PENDING;
         }
         if (role == null) {
             role = RoleType.CUSTOMER;
         }
+        if (softDeleted == null) {
+            softDeleted = false;
+        }
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

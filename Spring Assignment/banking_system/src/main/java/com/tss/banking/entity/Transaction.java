@@ -1,5 +1,6 @@
 package com.tss.banking.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.tss.banking.entity.enums.TransactionStatus;
@@ -17,6 +18,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,8 +43,14 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private TransactionType type;
-    private double amount;
+    
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal amount;
+    
+    @Column(nullable = false)
     private LocalDateTime date;
+    
+    @Column(length = 512)
     private String description;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
@@ -53,19 +61,32 @@ public class Transaction {
     @Column(length = 100)
     private String idempotencyKey;
 
-    private Double balanceBefore;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal balanceBefore;
 
-    private Double balanceAfter;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal balanceAfter;
 
+    @Column(length = 512)
     private String failureReason;
+
+    private LocalDateTime updatedAt;
 
     @PrePersist
     void onCreate() {
         if (date == null) {
             date = LocalDateTime.now();
         }
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        }
         if (status == null) {
             status = TransactionStatus.PENDING;
         }
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }
