@@ -32,7 +32,9 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "accounts", indexes = {
         @Index(name = "idx_accounts_account_number", columnList = "accountNumber", unique = true),
         @Index(name = "idx_accounts_customer", columnList = "customer_id"),
-        @Index(name = "idx_accounts_branch", columnList = "branch_id")
+        @Index(name = "idx_accounts_branch", columnList = "branch_id"),
+        @Index(name = "idx_accounts_status_type", columnList = "status,accountType"),
+        @Index(name = "idx_accounts_opened_at", columnList = "openedAt")
 })
 @RequiredArgsConstructor
 @AllArgsConstructor

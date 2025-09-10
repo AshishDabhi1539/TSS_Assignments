@@ -49,8 +49,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Login customer", description = "Authenticate customer and return JWT token")
-    public ResponseEntity<LoginResponseDto> loginCustomer(@Valid @RequestBody LoginRequestDto loginRequest) {
+    @Operation(summary = "Login user", description = "Authenticate user (Customer/Admin/SuperAdmin) and return JWT token")
+    public ResponseEntity<LoginResponseDto> loginUser(@Valid @RequestBody LoginRequestDto loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())

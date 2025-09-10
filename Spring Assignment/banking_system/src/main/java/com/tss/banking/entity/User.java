@@ -16,7 +16,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -28,7 +30,9 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "users", indexes = {
         @Index(name = "idx_users_email", columnList = "email", unique = true),
-        @Index(name = "idx_users_phone", columnList = "phone", unique = true)
+        @Index(name = "idx_users_phone", columnList = "phone", unique = true),
+        @Index(name = "idx_users_status_role", columnList = "status,role"),
+        @Index(name = "idx_users_created_at", columnList = "createdAt")
 })
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -52,6 +56,10 @@ public class User {
     
     @Column(length = 512)
     private String address;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address addressDetails;
 
     @Column(nullable = false, length = 255)
     private String password;

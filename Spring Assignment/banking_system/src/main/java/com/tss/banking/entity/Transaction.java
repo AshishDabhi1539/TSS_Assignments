@@ -28,7 +28,9 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "transactions", indexes = {
         @Index(name = "idx_transactions_account", columnList = "account_id"),
         @Index(name = "idx_transactions_created_at", columnList = "date"),
-        @Index(name = "idx_transactions_idem_key", columnList = "idempotencyKey", unique = true)
+        @Index(name = "idx_transactions_idem_key", columnList = "idempotencyKey", unique = true),
+        @Index(name = "idx_transactions_status_type", columnList = "status,type"),
+        @Index(name = "idx_transactions_recipient", columnList = "recipient_account_id")
 })
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -40,12 +42,20 @@ public class Transaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_account_id")
+    private Account recipientAccount;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 32)
     private TransactionType type;
     
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
+    
+    @Column(precision = 15, scale = 2)
+    private BigDecimal feeAmount;
     
     @Column(nullable = false)
     private LocalDateTime date;
@@ -82,6 +92,9 @@ public class Transaction {
         }
         if (status == null) {
             status = TransactionStatus.PENDING;
+        }
+        if (feeAmount == null) {
+            feeAmount = BigDecimal.ZERO;
         }
     }
 

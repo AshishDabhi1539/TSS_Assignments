@@ -1,5 +1,6 @@
 package com.tss.banking.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -28,11 +29,14 @@ public class FeeRule {
     @Column(nullable = false, length = 64)
     private String feeType; // e.g., MIN_BALANCE_FEE, INTER_BRANCH_TRANSFER_FEE
 
-    private Double fixedAmount;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal fixedAmount;
 
-    private Double percentAmount;
+    @Column(precision = 5, scale = 4)
+    private BigDecimal percentAmount;
 
-    private Double threshold;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal threshold;
 
     private LocalDate effectiveFrom;
 

@@ -1,5 +1,6 @@
 package com.tss.banking.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.tss.banking.entity.enums.AccountType;
@@ -39,7 +40,8 @@ public class InterestRateConfig {
     @Column(nullable = false, length = 32)
     private AccountType accountType;
 
-    private double annualRatePercent;
+    @Column(precision = 5, scale = 4)
+    private BigDecimal annualRatePercent;
 
     private LocalDate effectiveFrom;
 

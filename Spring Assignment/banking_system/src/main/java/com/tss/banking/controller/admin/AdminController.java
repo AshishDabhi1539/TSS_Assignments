@@ -67,7 +67,7 @@ public class AdminController {
         return ResponseEntity.ok(bankService.createBank(dto));
     }
 
-    /*@GetMapping("/banks")
+    @GetMapping("/banks")
     @Operation(summary = "Get all banks", description = "Get list of all banks")
     public ResponseEntity<List<BankResponseDto>> getAllBanks() {
         return ResponseEntity.ok(bankService.getAllBanks());
@@ -90,5 +90,5 @@ public class AdminController {
     @Operation(summary = "Get branches by bank", description = "Get all branches for a specific bank")
     public ResponseEntity<List<BranchResponseDto>> getBranchesByBank(@PathVariable Long bankId) {
         return ResponseEntity.ok(branchService.getBranchesByBank(bankId));
-    }*/
+    }
 }
