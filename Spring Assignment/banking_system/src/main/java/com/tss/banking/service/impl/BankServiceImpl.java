@@ -1,5 +1,7 @@
 package com.tss.banking.service.impl;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,5 +34,13 @@ public class BankServiceImpl implements BankService {
         Bank bank = bankRepo.findById(id)
                 .orElseThrow(() -> new BankApiException("Bank not found with ID: " + id));
         return mapper.map(bank, BankResponseDto.class);
+    }
+
+    @Override
+    public List<BankResponseDto> getAllBanks() {
+        List<Bank> banks = bankRepo.findAll();
+        return banks.stream()
+                .map(bank -> mapper.map(bank, BankResponseDto.class))
+                .toList();
     }
 }

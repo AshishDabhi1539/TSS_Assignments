@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,32 +22,33 @@ import com.tss.security.service.AccountService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
-    @PostMapping
+    @PostMapping("/accounts")
     public ResponseEntity<AccountResponseDto> addAccount(@Valid @RequestBody AccountDto accountDto) {
         AccountResponseDto savedAccount = accountService.addAccount(accountDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAccount);
     }
 
-    @GetMapping
+    @GetMapping("/accounts")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<AccountResponseDto>> readAllAccounts() {
         List<AccountResponseDto> accounts = accountService.readAllAccount();
         return ResponseEntity.ok(accounts);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/accounts/{id}")
     public ResponseEntity<AccountResponseDto> readParticularAccount(@PathVariable Long id) {
         AccountResponseDto account = accountService.readParticularAccount(id);
         return ResponseEntity.ok(account);
     }
 
-    @PutMapping("/{id}/disable")
+    @PutMapping("/accounts/{id}/disable")
     public ResponseEntity<AccountResponseDto> disableAccount(@PathVariable Long id) {
         AccountResponseDto disabledAccount = accountService.disableAccount(id);
         return ResponseEntity.ok(disabledAccount);

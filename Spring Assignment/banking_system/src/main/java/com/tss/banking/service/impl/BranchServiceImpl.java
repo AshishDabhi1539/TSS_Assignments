@@ -1,5 +1,7 @@
 package com.tss.banking.service.impl;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,21 @@ public class BranchServiceImpl implements BranchService {
         Branch branch = branchRepo.findById(id)
                 .orElseThrow(() -> new BankApiException("Branch not found with ID: " + id));
         return mapper.map(branch, BranchResponseDto.class);
+    }
+
+    @Override
+    public List<BranchResponseDto> getAllBranches() {
+        List<Branch> branches = branchRepo.findAll();
+        return branches.stream()
+                .map(branch -> mapper.map(branch, BranchResponseDto.class))
+                .toList();
+    }
+
+    @Override
+    public List<BranchResponseDto> getBranchesByBank(Long bankId) {
+        List<Branch> branches = branchRepo.findByBankId(bankId);
+        return branches.stream()
+                .map(branch -> mapper.map(branch, BranchResponseDto.class))
+                .toList();
     }
 }

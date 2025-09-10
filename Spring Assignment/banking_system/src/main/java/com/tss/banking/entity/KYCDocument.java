@@ -32,7 +32,7 @@ public class KYCDocument {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
+    private User customer;
 
     @Column(length = 32)
     private String documentType; // PAN, AADHAAR, PASSPORT

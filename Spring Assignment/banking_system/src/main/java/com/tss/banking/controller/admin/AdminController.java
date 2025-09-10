@@ -1,24 +1,94 @@
 package com.tss.banking.controller.admin;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tss.banking.dto.response.CustomerResponseDto;
-import com.tss.banking.service.CustomerService;
+import com.tss.banking.dto.request.BankRequestDto;
+import com.tss.banking.dto.request.BranchRequestDto;
+import com.tss.banking.dto.response.BankResponseDto;
+import com.tss.banking.dto.response.BranchResponseDto;
+import com.tss.banking.dto.response.UserResponseDto;
+import com.tss.banking.service.BankService;
+import com.tss.banking.service.BranchService;
+import com.tss.banking.service.UserService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
+@Tag(name = "Admin", description = "Admin Management APIs")
+@PreAuthorize("hasRole('ADMIN') or hasRole('SUPERADMIN')")
 public class AdminController {
 
     @Autowired
-    private CustomerService customerService;
+    private UserService userService;
 
-    @PutMapping("/approve-customer/{id}")
-    public ResponseEntity<CustomerResponseDto> approveCustomer(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.approveCustomer(id));
+    @Autowired
+    private BankService bankService;
+
+    @Autowired
+    private BranchService branchService;
+
+    // User Management
+    @GetMapping("/users/pending")
+    @Operation(summary = "Get pending users", description = "Get all users with PENDING status for approval")
+    public ResponseEntity<List<UserResponseDto>> getPendingUsers() {
+        return ResponseEntity.ok(userService.getPendingUsers());
     }
+
+    @PutMapping("/users/{id}/approve")
+    @Operation(summary = "Approve user", description = "Approve a user by changing status to VERIFIED")
+    public ResponseEntity<UserResponseDto> approveUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.approveUser(id));
+    }
+
+    @PutMapping("/users/{id}/reject")
+    @Operation(summary = "Reject user", description = "Reject a user by changing status to INACTIVE")
+    public ResponseEntity<UserResponseDto> rejectUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.rejectUser(id));
+    }
+
+    // Bank Management
+    @PostMapping("/banks")
+    @Operation(summary = "Create bank", description = "Create a new bank")
+    public ResponseEntity<BankResponseDto> createBank(@Valid @RequestBody BankRequestDto dto) {
+        return ResponseEntity.ok(bankService.createBank(dto));
+    }
+
+    /*@GetMapping("/banks")
+    @Operation(summary = "Get all banks", description = "Get list of all banks")
+    public ResponseEntity<List<BankResponseDto>> getAllBanks() {
+        return ResponseEntity.ok(bankService.getAllBanks());
+    }
+
+    // Branch Management
+    @PostMapping("/branches")
+    @Operation(summary = "Create branch", description = "Create a new branch")
+    public ResponseEntity<BranchResponseDto> createBranch(@Valid @RequestBody BranchRequestDto dto) {
+        return ResponseEntity.ok(branchService.createBranch(dto));
+    }
+
+    @GetMapping("/branches")
+    @Operation(summary = "Get all branches", description = "Get list of all branches")
+    public ResponseEntity<List<BranchResponseDto>> getAllBranches() {
+        return ResponseEntity.ok(branchService.getAllBranches());
+    }
+
+    @GetMapping("/banks/{bankId}/branches")
+    @Operation(summary = "Get branches by bank", description = "Get all branches for a specific bank")
+    public ResponseEntity<List<BranchResponseDto>> getBranchesByBank(@PathVariable Long bankId) {
+        return ResponseEntity.ok(branchService.getBranchesByBank(bankId));
+    }*/
 }

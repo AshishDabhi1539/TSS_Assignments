@@ -8,11 +8,11 @@ import com.tss.banking.dto.request.BranchAssignmentRequestDto;
 import com.tss.banking.dto.response.BranchAssignmentResponseDto;
 import com.tss.banking.entity.Branch;
 import com.tss.banking.entity.BranchAssignment;
-import com.tss.banking.entity.Customer;
+import com.tss.banking.entity.User;
 import com.tss.banking.exception.BankApiException;
 import com.tss.banking.repository.BranchAssignmentRepository;
 import com.tss.banking.repository.BranchRepository;
-import com.tss.banking.repository.CustomerRepository;
+import com.tss.banking.repository.UserRepository;
 import com.tss.banking.service.BranchAssignmentService;
 
 @Service
@@ -22,7 +22,7 @@ public class BranchAssignmentServiceImpl implements BranchAssignmentService {
     private BranchAssignmentRepository branchAssignmentRepo;
 
     @Autowired
-    private CustomerRepository customerRepo;
+    private UserRepository userRepo;
 
     @Autowired
     private BranchRepository branchRepo;
@@ -32,13 +32,13 @@ public class BranchAssignmentServiceImpl implements BranchAssignmentService {
 
     @Override
     public BranchAssignmentResponseDto assignToBranch(BranchAssignmentRequestDto dto) {
-        Customer customer = customerRepo.findById(dto.getCustomerId())
-                .orElseThrow(() -> new BankApiException("Customer not found with ID: " + dto.getCustomerId()));
+        User user = userRepo.findById(dto.getCustomerId())
+                .orElseThrow(() -> new BankApiException("User not found with ID: " + dto.getCustomerId()));
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
 
         BranchAssignment assignment = mapper.map(dto, BranchAssignment.class);
-        assignment.setCustomer(customer);
+        assignment.setCustomer(user);
         assignment.setBranch(branch);
         BranchAssignment savedAssignment = branchAssignmentRepo.save(assignment);
         return mapper.map(savedAssignment, BranchAssignmentResponseDto.class);

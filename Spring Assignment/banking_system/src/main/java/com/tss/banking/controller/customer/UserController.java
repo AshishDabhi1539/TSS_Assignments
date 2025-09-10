@@ -1,12 +1,11 @@
-package com.tss.banking.controller.controller;
-
-import java.time.LocalDateTime;
+package com.tss.banking.controller.customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,21 +18,21 @@ import com.tss.banking.dto.request.AccountRequestDto;
 import com.tss.banking.dto.request.TransactionRequestDto;
 import com.tss.banking.dto.response.AccountResponseDto;
 import com.tss.banking.dto.response.AccountStatementDto;
-import com.tss.banking.dto.response.CustomerResponseDto;
+import com.tss.banking.dto.response.UserResponseDto;
 import com.tss.banking.dto.response.TransactionResponseDto;
 import com.tss.banking.service.AccountService;
 import com.tss.banking.service.AccountStatementService;
-import com.tss.banking.service.CustomerService;
+import com.tss.banking.service.UserService;
 import com.tss.banking.service.TransactionService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/customers")
-public class CustomerController {
+@RequestMapping("/api/users")
+public class UserController {
 
     @Autowired
-    private CustomerService customerService;
+    private UserService userService;
 
     @Autowired
     private AccountService accountService;
@@ -45,8 +44,9 @@ public class CustomerController {
     private AccountStatementService accountStatementService;
 
     @GetMapping("/profile")
-    public ResponseEntity<CustomerResponseDto> getCustomerProfile(@RequestParam Long customerId) {
-        return ResponseEntity.ok(customerService.getCustomerById(customerId));
+    public ResponseEntity<UserResponseDto> getUserProfile(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.getCurrentUserProfile(email));
     }
 
     @PostMapping("/accounts")
@@ -59,13 +59,13 @@ public class CustomerController {
         return ResponseEntity.ok(transactionService.createTransaction(dto));
     }
 
-    @GetMapping("/transactions")
+    /*@GetMapping("/transactions")
     public ResponseEntity<Page<TransactionResponseDto>> getTransactionHistory(
-            @RequestParam Long customerId,
+            @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(transactionService.getTransactionsByCustomerId(customerId, pageable));
+        return ResponseEntity.ok(transactionService.getTransactionsByUserId(userId, pageable));
     }
 
     @GetMapping("/accounts/{accountId}/transactions")
@@ -78,20 +78,10 @@ public class CustomerController {
     }
 
     @GetMapping("/accounts/{accountId}/statement")
-    public ResponseEntity<AccountStatementDto> generateAccountStatement(
+    public ResponseEntity<AccountStatementDto> getAccountStatement(
             @PathVariable Long accountId,
             @RequestParam String fromDate,
             @RequestParam String toDate) {
-        LocalDateTime from = LocalDateTime.parse(fromDate + "T00:00:00");
-        LocalDateTime to = LocalDateTime.parse(toDate + "T23:59:59");
-        return ResponseEntity.ok(accountStatementService.generateAccountStatement(accountId, from, to));
-    }
-
-    @GetMapping("/accounts/{accountId}/statement/monthly")
-    public ResponseEntity<AccountStatementDto> generateMonthlyStatement(
-            @PathVariable Long accountId,
-            @RequestParam int year,
-            @RequestParam int month) {
-        return ResponseEntity.ok(accountStatementService.generateMonthlyStatement(accountId, year, month));
-    }
+        return ResponseEntity.ok(accountStatementService.generateStatement(accountId, fromDate, toDate));
+    }*/
 }

@@ -31,7 +31,7 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private User customer;
 
     @Column(length = 16)
     private String channel; // EMAIL, SMS, INAPP

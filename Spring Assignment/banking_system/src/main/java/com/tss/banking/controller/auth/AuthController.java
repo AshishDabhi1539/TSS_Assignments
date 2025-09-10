@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tss.banking.dto.request.CustomerRequestDto;
+import com.tss.banking.dto.request.UserRequestDto;
 import com.tss.banking.dto.request.LoginRequestDto;
-import com.tss.banking.dto.response.CustomerResponseDto;
+import com.tss.banking.dto.response.UserResponseDto;
 import com.tss.banking.dto.response.LoginResponseDto;
-import com.tss.banking.entity.Customer;
+import com.tss.banking.entity.User;
 import com.tss.banking.exception.BankApiException;
-import com.tss.banking.repository.CustomerRepository;
+import com.tss.banking.repository.UserRepository;
 import com.tss.banking.security.JwtUtil;
-import com.tss.banking.service.CustomerService;
+import com.tss.banking.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,7 @@ import jakarta.validation.Valid;
 public class AuthController {
 
     @Autowired
-    private CustomerService customerService;
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,12 +40,12 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new customer", description = "Register a new customer with email and password")
-    public ResponseEntity<CustomerResponseDto> registerCustomer(@Valid @RequestBody CustomerRequestDto dto) {
-        return ResponseEntity.ok(customerService.registerCustomer(dto));
+    @Operation(summary = "Register a new user", description = "Register a new user with email and password")
+    public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRequestDto dto) {
+        return ResponseEntity.ok(userService.registerUser(dto));
     }
 
     @PostMapping("/login")
@@ -57,13 +57,13 @@ public class AuthController {
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Customer customer = customerRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new BankApiException("Customer not found"));
+            User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new BankApiException("User not found"));
 
-            String token = jwtUtil.generateToken(userDetails.getUsername(), customer.getRole().name());
+            String token = jwtUtil.generateToken(userDetails.getUsername(), user.getRole().name());
 
-            return ResponseEntity.ok(new LoginResponseDto(token, customer.getEmail(), 
-                customer.getRole().name(), customer.getId()));
+            return ResponseEntity.ok(new LoginResponseDto(token, user.getEmail(), 
+                user.getRole().name(), user.getId()));
 
         } catch (Exception e) {
             throw new BankApiException("Invalid email or password");

@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class CustomerRequestDto {
+public class UserRequestDto {
     
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 64, message = "First name must be between 2 and 64 characters")

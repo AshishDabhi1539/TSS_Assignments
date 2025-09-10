@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class CustomerResponseDto {
+public class UserResponseDto {
     private Long id;
     private String firstName;
     private String lastName;
