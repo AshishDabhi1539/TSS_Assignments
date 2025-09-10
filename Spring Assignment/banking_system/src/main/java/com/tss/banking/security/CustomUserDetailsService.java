@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), 
-                user.getStatus().name().equals("VERIFIED"),
-                true, true, true, authorities);
+                user.getEnabled() && user.getStatus().name().equals("VERIFIED"),
+                true, true, !user.getSoftDeleted(), authorities);
     }
 }

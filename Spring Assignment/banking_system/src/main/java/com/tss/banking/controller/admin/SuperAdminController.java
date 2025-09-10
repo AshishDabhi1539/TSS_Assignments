@@ -53,6 +53,8 @@ public class SuperAdminController {
         superAdmin.setPassword(passwordEncoder.encode("admin123"));
         superAdmin.setStatus(UserStatus.VERIFIED);
         superAdmin.setRole(RoleType.SUPERADMIN);
+        superAdmin.setEnabled(true);
+        superAdmin.setSoftDeleted(false);
         
         userRepository.save(superAdmin);
         
@@ -69,10 +71,11 @@ public class SuperAdminController {
         // Register the admin user
         UserResponseDto response = userService.registerUser(dto);
         
-        // Manually set status to VERIFIED for admin (bypassing normal flow)
+        // Manually set status to VERIFIED and enabled for admin (bypassing normal flow)
         User admin = userRepository.findByEmail(dto.getEmail())
             .orElseThrow(() -> new RuntimeException("Admin user not found after creation"));
         admin.setStatus(UserStatus.VERIFIED);
+        admin.setEnabled(true);
         userRepository.save(admin);
         
         return ResponseEntity.ok(response);
