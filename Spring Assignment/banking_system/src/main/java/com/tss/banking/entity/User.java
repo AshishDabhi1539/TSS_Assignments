@@ -79,6 +79,9 @@ public class User {
     private Boolean enabled = true;
 
     @Column(nullable = false)
+    private Boolean locked = false;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -111,6 +114,9 @@ public class User {
         }
         if (enabled == null) {
             enabled = true;
+        }
+        if (locked == null) {
+            locked = false;
         }
     }
 

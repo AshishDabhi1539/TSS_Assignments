@@ -1,7 +1,7 @@
 -- Insert SuperAdmin user with static credentials: email=admin@system.com, password=admin123
 -- Password hash for 'admin123': $2a$10$N.zmdr9k7uOCQb07YxWpNOy6y0.L1n/vyVs5Z5.JfbkqP.fzUOBdS
-INSERT INTO users (first_name, last_name, email, phone, address, status, role, password, enabled, soft_deleted, created_at, updated_at, version) VALUES 
-('Super', 'Admin', 'admin@system.com', '1234567890', 'HQ Office', 'VERIFIED', 'SUPERADMIN', '$2a$10$N.zmdr9k7uOCQb07YxWpNOy6y0.L1n/vyVs5Z5.JfbkqP.fzUOBdS', true, false, NOW(), NOW(), 0);
+INSERT INTO users (first_name, last_name, email, phone, address, status, role, password, enabled, soft_deleted, locked, created_at, updated_at, version) VALUES 
+('Super', 'Admin', 'admin@system.com', '1234567890', 'HQ Office', 'VERIFIED', 'SUPERADMIN', '$2a$10$N.zmdr9k7uOCQb07YxWpNOy6y0.L1n/vyVs5Z5.JfbkqP.fzUOBdS', true, false, false, NOW(), NOW(), 0);
 
 -- Insert Banks
 INSERT INTO banks (name, code, address, contact_number) VALUES 
