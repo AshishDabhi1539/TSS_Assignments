@@ -15,11 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tss.banking.dto.request.BankRequestDto;
 import com.tss.banking.dto.request.BranchRequestDto;
+import com.tss.banking.dto.request.BranchAssignmentRequestDto;
 import com.tss.banking.dto.response.BankResponseDto;
 import com.tss.banking.dto.response.BranchResponseDto;
+import com.tss.banking.dto.response.BranchAssignmentResponseDto;
 import com.tss.banking.dto.response.UserResponseDto;
 import com.tss.banking.service.BankService;
 import com.tss.banking.service.BranchService;
+import com.tss.banking.service.BranchAssignmentService;
 import com.tss.banking.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +43,9 @@ public class AdminController {
 
     @Autowired
     private BranchService branchService;
+
+    @Autowired
+    private BranchAssignmentService branchAssignmentService;
 
     // User Management
     @GetMapping("/users/pending")
@@ -90,5 +96,16 @@ public class AdminController {
     @Operation(summary = "Get branches by bank", description = "Get all branches for a specific bank")
     public ResponseEntity<List<BranchResponseDto>> getBranchesByBank(@PathVariable Long bankId) {
         return ResponseEntity.ok(branchService.getBranchesByBank(bankId));
+    }
+
+    // Assign Admin to Branch (one admin per branch)
+    @PostMapping("/branches/{branchId}/assign-admin")
+    @Operation(summary = "Assign admin to branch", description = "Assign exactly one admin as MANAGER to a branch")
+    public ResponseEntity<BranchAssignmentResponseDto> assignAdminToBranch(
+            @PathVariable Long branchId,
+            @Valid @RequestBody BranchAssignmentRequestDto dto) {
+        dto.setBranchId(branchId);
+        dto.setAssignmentType("MANAGER");
+        return ResponseEntity.ok(branchAssignmentService.assignToBranch(dto));
     }
 }

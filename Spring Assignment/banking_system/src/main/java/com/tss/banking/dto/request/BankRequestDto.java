@@ -10,4 +10,11 @@ import lombok.RequiredArgsConstructor;
 public class BankRequestDto {
     private String name;
     private String address;
+    private String code; // optional, auto-generate if null
+    private String currency; // default INR
+    private String country; // optional
+    // Optional overrides for default branch on bank creation
+    private String defaultBranchName;
+    private String defaultBranchCode;
+    private String defaultBranchIfsc;
 }

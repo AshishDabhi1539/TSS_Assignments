@@ -76,12 +76,6 @@ public class User {
     private Boolean softDeleted = false;
 
     @Column(nullable = false)
-    private Boolean enabled = true;
-
-    @Column(nullable = false)
-    private Boolean locked = false;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -111,12 +105,6 @@ public class User {
         }
         if (softDeleted == null) {
             softDeleted = false;
-        }
-        if (enabled == null) {
-            enabled = true;
-        }
-        if (locked == null) {
-            locked = false;
         }
     }
 

@@ -24,7 +24,8 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "branches", indexes = {
         @Index(name = "idx_branches_bank", columnList = "bank_id"),
-        @Index(name = "idx_branches_code", columnList = "code", unique = true)
+        @Index(name = "idx_branches_code", columnList = "code", unique = true),
+        @Index(name = "idx_branches_ifsc", columnList = "ifsc", unique = true)
 })
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -39,6 +40,9 @@ public class Branch {
     
     @Column(unique = true, nullable = false, length = 32)
     private String code;
+    
+    @Column(unique = true, length = 20)
+    private String ifsc;
     
     @Column(length = 512)
     private String address;

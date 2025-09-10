@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 public class BranchResponseDto {
     private Long id;
     private String name;
+    private String code;
+    private String ifsc;
     private String address;
     private String contactNumber;
     private Long bankId;

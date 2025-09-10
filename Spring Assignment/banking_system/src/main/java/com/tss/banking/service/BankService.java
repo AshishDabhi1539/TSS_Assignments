@@ -9,4 +9,5 @@ public interface BankService {
     BankResponseDto createBank(BankRequestDto dto);
     BankResponseDto getBankById(Long id);
     List<BankResponseDto> getAllBanks();
+    boolean bankExists();
 }

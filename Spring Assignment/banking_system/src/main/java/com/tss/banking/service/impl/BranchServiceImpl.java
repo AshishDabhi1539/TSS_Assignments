@@ -34,6 +34,13 @@ public class BranchServiceImpl implements BranchService {
 
         Branch branch = mapper.map(dto, Branch.class);
         branch.setBank(bank);
+        if (branch.getCode() == null || branch.getCode().isBlank()) {
+            branch.setCode(generateBranchCode(branch.getName()));
+        }
+        if (branch.getIfsc() == null || branch.getIfsc().isBlank()) {
+            branch.setIfsc(generateIfsc(bank.getCode()))
+            ;
+        }
         Branch savedBranch = branchRepo.save(branch);
         return mapper.map(savedBranch, BranchResponseDto.class);
     }
@@ -59,5 +66,17 @@ public class BranchServiceImpl implements BranchService {
         return branches.stream()
                 .map(branch -> mapper.map(branch, BranchResponseDto.class))
                 .toList();
+    }
+
+    private String generateBranchCode(String name) {
+        String prefix = name != null && !name.isBlank() ? name.replaceAll("[^A-Z0-9]", "").toUpperCase() : "BR";
+        if (prefix.length() > 3) prefix = prefix.substring(0, 3);
+        return prefix + "-" + String.format("%04d", 1);
+    }
+
+    private String generateIfsc(String bankCode) {
+        String base = bankCode != null ? bankCode.replaceAll("[^A-Z0-9]", "") : "BANK";
+        if (base.length() < 4) base = (base + "XXXX").substring(0, 4);
+        return base + "0001"; // simple placeholder
     }
 }
