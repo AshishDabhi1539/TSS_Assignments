@@ -1,7 +1,5 @@
 package com.tss.banking.dto.request;
 
-import java.math.BigDecimal;
-
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +23,7 @@ public class TransactionRequestDto {
     
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", message = "Amount must be greater than 0")
-    private BigDecimal amount;
+    private long amount;
     
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;

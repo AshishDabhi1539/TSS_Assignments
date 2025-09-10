@@ -16,21 +16,20 @@ import com.tss.banking.repository.UserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        com.tss.banking.entity.User user;
-        
-        user = userRepository.findByEmail(usernameOrEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + usernameOrEmail));
+	@Override
+	public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+		com.tss.banking.entity.User user;
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+		user = userRepository.findByEmail(usernameOrEmail)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + usernameOrEmail));
 
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), 
-                user.getStatus().name().equals("VERIFIED"),
-                true, true, true, authorities);
-    }
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+				user.getStatus().name().equals("VERIFIED"), true, true, true, authorities);
+	}
 }
