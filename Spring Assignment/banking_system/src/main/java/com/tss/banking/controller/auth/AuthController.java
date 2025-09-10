@@ -45,6 +45,8 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Register a new user", description = "Register a new user with email and password")
     public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserRequestDto dto) {
+        // Force CUSTOMER role for public registration
+        dto.setRole("CUSTOMER");
         return ResponseEntity.ok(userService.registerUser(dto));
     }
 
