@@ -5829,3 +5829,395 @@ Caused by: java.lang.Error: Unresolved compilation problems:
 2025-09-10 16:05:18 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2025-09-10 16:05:18 - com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown initiated...
 2025-09-10 16:05:18 - com.zaxxer.hikari.HikariDataSource - HikariPool-13 - Shutdown completed.
+2025-09-10 16:05:19 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 23000 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:05:19 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:05:19 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:05:19 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:05:19 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 46 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:05:19 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:05:19 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:05:19 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:05:19 - o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:05:19 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 579 ms
+2025-09-10 16:05:19 - com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Starting...
+2025-09-10 16:05:19 - com.zaxxer.hikari.pool.HikariPool - HikariPool-14 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4ab4d527
+2025-09-10 16:05:19 - com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Start completed.
+2025-09-10 16:05:19 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:05:19 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:05:19 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:05:19 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:05:19 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:05:19 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-14)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:05:20 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:05:20 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:05:20 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:05:20 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:05:20 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:05:21 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:05:21 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:05:21 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 2.111 seconds (process running for 14556.936)
+2025-09-10 16:05:21 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:08:17 - o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-10 16:08:17 - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-10 16:08:17 - o.s.web.servlet.DispatcherServlet - Completed initialization in 19 ms
+2025-09-10 16:09:39 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'text/plain;charset=UTF-8' is not supported]
+2025-09-10 16:13:28 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:13:28 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:13:28 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:13:28 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:13:28 - com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Shutdown initiated...
+2025-09-10 16:13:28 - com.zaxxer.hikari.HikariDataSource - HikariPool-14 - Shutdown completed.
+2025-09-10 16:13:29 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 23000 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:13:29 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:13:29 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:13:29 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:13:29 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:13:30 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:13:30 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:13:30 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:13:30 - o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:13:30 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 693 ms
+2025-09-10 16:13:30 - com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Starting...
+2025-09-10 16:13:30 - com.zaxxer.hikari.pool.HikariPool - HikariPool-15 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3ef176a7
+2025-09-10 16:13:30 - com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Start completed.
+2025-09-10 16:13:30 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:13:30 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:13:30 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:13:30 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:13:30 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:13:30 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-15)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:13:30 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:13:31 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:13:31 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:13:31 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:13:31 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:13:31 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:13:32 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:13:32 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 2.686 seconds (process running for 15047.853)
+2025-09-10 16:13:32 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:13:36 - o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-10 16:13:36 - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-10 16:13:36 - o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-09-10 16:19:27 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.tss.banking.dto.response.UserResponseDto> com.tss.banking.controller.admin.SuperAdminController.createAdmin(com.tss.banking.dto.request.UserRequestDto): [Field error in object 'userRequestDto' on field 'lastName': rejected value [null]; codes [NotBlank.userRequestDto.lastName,NotBlank.lastName,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [userRequestDto.lastName,lastName]; arguments []; default message [lastName]]; default message [Last name is required]] ]
+2025-09-10 16:19:52 - o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 1364, SQLState: HY000
+2025-09-10 16:19:52 - o.h.e.jdbc.spi.SqlExceptionHelper - Field 'enabled' doesn't have a default value
+2025-09-10 16:19:52 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.orm.jpa.JpaSystemException: could not execute statement [Field 'enabled' doesn't have a default value] [insert into users (address,address_id,created_at,email,first_name,last_name,password,phone,role,soft_deleted,status,updated_at,version) values (?,?,?,?,?,?,?,?,?,?,?,?,?)]]
+2025-09-10 16:21:50 - o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+2025-09-10 16:21:50 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:21:51 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:21:51 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:21:51 - com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Shutdown initiated...
+2025-09-10 16:21:51 - com.zaxxer.hikari.HikariDataSource - HikariPool-15 - Shutdown completed.
+2025-09-10 16:21:57 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:21:57 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:21:57 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:21:57 - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-09-10 16:21:57 - o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-09-10 16:21:59 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:21:59 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 164 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:22:00 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:22:00 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:22:00 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:22:00 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:22:00 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2954 ms
+2025-09-10 16:22:00 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-10 16:22:01 - com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@9b8d96f
+2025-09-10 16:22:01 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-10 16:22:01 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:22:01 - org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.26.Final
+2025-09-10 16:22:01 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:22:01 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:22:02 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:22:02 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:22:02 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:22:04 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:22:09 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:22:09 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:22:09 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:22:09 - o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-09-10 16:22:10 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:22:11 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:22:12 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:22:12 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 15.27 seconds (process running for 16.926)
+2025-09-10 16:22:22 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-10 16:22:22 - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-10 16:22:22 - o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-09-10 16:28:43 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.tss.banking.exception.BankApiException: Invalid email or password]
+2025-09-10 16:32:31 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.tss.banking.exception.BankApiException: Invalid email or password]
+2025-09-10 16:34:06 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.tss.banking.exception.BankApiException: Invalid email or password]
+2025-09-10 16:39:20 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:39:20 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:39:20 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:39:20 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:39:20 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-10 16:39:20 - com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-10 16:39:21 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:39:21 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:39:21 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:39:21 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:39:21 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 45 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:39:22 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:39:22 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:39:22 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:39:22 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:39:22 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 668 ms
+2025-09-10 16:39:22 - com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2025-09-10 16:39:22 - com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@209d7891
+2025-09-10 16:39:22 - com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2025-09-10 16:39:22 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:39:22 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:39:22 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:39:22 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:39:22 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:39:22 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:39:22 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:39:23 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:39:23 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:39:23 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:39:23 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:39:23 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:39:23 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:39:23 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 2.285 seconds (process running for 1048.475)
+2025-09-10 16:39:23 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:39:55 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:39:55 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:39:55 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:39:55 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:39:55 - com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2025-09-10 16:39:55 - com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2025-09-10 16:39:55 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:39:55 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:39:55 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:39:55 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:39:55 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 25 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:39:55 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:39:55 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:39:55 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:39:55 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:39:55 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 316 ms
+2025-09-10 16:39:55 - com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2025-09-10 16:39:55 - com.zaxxer.hikari.pool.HikariPool - HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@71029ebf
+2025-09-10 16:39:55 - com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2025-09-10 16:39:55 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:39:55 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:39:55 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:39:55 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:39:55 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:39:55 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:39:56 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:39:56 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:39:56 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:39:56 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:39:56 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:39:56 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:39:56 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:39:56 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 1.116 seconds (process running for 1081.439)
+2025-09-10 16:39:56 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:41:31 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-10 16:41:31 - o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-10 16:41:31 - o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-09-10 16:51:34 - o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.tss.banking.exception.BankApiException: Invalid email or password]
+2025-09-10 16:54:06 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:54:06 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:54:06 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:54:06 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:06 - com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2025-09-10 16:54:06 - com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2025-09-10 16:54:06 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:54:06 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:54:06 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:54:07 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:54:07 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 30 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:54:07 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:54:07 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:54:07 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:54:07 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:54:07 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 457 ms
+2025-09-10 16:54:07 - com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+2025-09-10 16:54:07 - com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@126f06e3
+2025-09-10 16:54:07 - com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+2025-09-10 16:54:07 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:54:07 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:54:07 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:54:07 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:54:07 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:54:07 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:54:07 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:54:08 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:08 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:54:08 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:54:08 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:54:08 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:54:08 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:54:08 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 1.616 seconds (process running for 1933.31)
+2025-09-10 16:54:08 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:54:29 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:54:29 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:54:29 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:54:29 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:29 - com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+2025-09-10 16:54:29 - com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+2025-09-10 16:54:29 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:54:29 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:54:29 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:54:30 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:54:30 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:54:30 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:54:30 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:54:30 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:54:30 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:54:30 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 431 ms
+2025-09-10 16:54:30 - com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+2025-09-10 16:54:30 - com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@71a54eaa
+2025-09-10 16:54:30 - com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+2025-09-10 16:54:30 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:54:30 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:54:30 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:54:30 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:54:30 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:54:30 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:54:30 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:54:30 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:30 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:54:31 - o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-09-10 16:54:31 - o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-09-10 16:54:31 - o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2025-09-10 16:54:31 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2025-09-10 16:54:31 - c.t.banking.BankingSystemApplication - Started BankingSystemApplication in 1.433 seconds (process running for 1956.124)
+2025-09-10 16:54:31 - o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2025-09-10 16:54:43 - o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-09-10 16:54:43 - o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-10 16:54:43 - o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-10 16:54:43 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:43 - com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown initiated...
+2025-09-10 16:54:43 - com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Shutdown completed.
+2025-09-10 16:54:43 - c.t.banking.BankingSystemApplication - Starting BankingSystemApplication using Java 17.0.12 with PID 20624 (C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes started by root in C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system)
+2025-09-10 16:54:43 - c.t.banking.BankingSystemApplication - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-10 16:54:43 - c.t.banking.BankingSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-10 16:54:43 - o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-09-10 16:54:43 - o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 28 ms. Found 7 JPA repository interfaces.
+2025-09-10 16:54:43 - o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-09-10 16:54:43 - o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-10 16:54:43 - o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.44]
+2025-09-10 16:54:43 - o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-10 16:54:43 - o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 365 ms
+2025-09-10 16:54:43 - com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Starting...
+2025-09-10 16:54:43 - com.zaxxer.hikari.pool.HikariPool - HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@42d0ff80
+2025-09-10 16:54:43 - com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Start completed.
+2025-09-10 16:54:43 - o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-09-10 16:54:43 - o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-09-10 16:54:43 - o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-09-10 16:54:43 - org.hibernate.orm.deprecation - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-09-10 16:54:43 - org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2025-09-10 16:54:43 - o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-09-10 16:54:43 - o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-09-10 16:54:44 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:44 - c.t.b.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-09-10 16:54:44 - o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'superAdminController' defined in file [C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes\com\tss\banking\controller\admin\SuperAdminController.class]: Failed to instantiate [com.tss.banking.controller.admin.SuperAdminController]: Constructor threw exception
+2025-09-10 16:54:44 - o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-09-10 16:54:44 - com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown initiated...
+2025-09-10 16:54:44 - com.zaxxer.hikari.HikariDataSource - HikariPool-6 - Shutdown completed.
+2025-09-10 16:54:44 - o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-09-10 16:54:44 - o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-10 16:54:44 - o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'superAdminController' defined in file [C:\Users\ashishkumar.dabhi\Desktop\Ashish\Java\Spring Assignment\banking_system\target\classes\com\tss\banking\controller\admin\SuperAdminController.class]: Failed to instantiate [com.tss.banking.controller.admin.SuperAdminController]: Constructor threw exception
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1357) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1242) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.10.jar:6.2.10]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.10.jar:6.2.10]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.5.jar:3.5.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.5.jar:3.5.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.5.jar:3.5.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.5.jar:3.5.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.5.jar:3.5.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.5.jar:3.5.5]
+	at com.tss.banking.BankingSystemApplication.main(BankingSystemApplication.java:10) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.5.jar:3.5.5]
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.tss.banking.controller.admin.SuperAdminController]: Constructor threw exception
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:223) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:123) ~[spring-beans-6.2.10.jar:6.2.10]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateBean(AbstractAutowireCapableBeanFactory.java:1351) ~[spring-beans-6.2.10.jar:6.2.10]
+	... 24 common frames omitted
+Caused by: java.lang.Error: Unresolved compilation problems: 
+	Duplicate field SuperAdminController.bankService
+	Duplicate field SuperAdminController.bankService
+
+	at com.tss.banking.controller.admin.SuperAdminController.<init>(SuperAdminController.java:52) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:197) ~[spring-beans-6.2.10.jar:6.2.10]
+	... 26 common frames omitted

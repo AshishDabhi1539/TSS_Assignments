@@ -12,14 +12,14 @@ public class LoginResponseDto {
     private String type = "Bearer";
     private String email;
     private String role;
-    private Long customerId;
+    private Long userId;
     private String message;
     
-    public LoginResponseDto(String token, String email, String role, Long customerId) {
+    public LoginResponseDto(String token, String email, String role, Long userId) {
         this.token = token;
         this.email = email;
         this.role = role;
-        this.customerId = customerId;
+        this.userId = userId;
         this.message = "Login successful";
     }
 }
