@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.tss.banking.entity.User;
+import com.tss.banking.entity.enums.RoleType;
 import com.tss.banking.entity.enums.UserStatus;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -14,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);
     List<User> findByStatus(UserStatus status);
+    List<User> findByRole(RoleType role);
 }

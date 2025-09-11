@@ -37,6 +37,7 @@ public class UserRequestDto {
     @Size(min = 6, max = 255, message = "Password must be between 6 and 255 characters")
     private String password;
     
-    @Pattern(regexp = "^(CUSTOMER|ADMIN)$", message = "Role must be either CUSTOMER or ADMIN")
-    private String role = "CUSTOMER"; // Default role
+    @NotBlank(message = "Role is required")
+    @Pattern(regexp = "^CUSTOMER$", message = "Role must be CUSTOMER only")
+    private String role;
 }

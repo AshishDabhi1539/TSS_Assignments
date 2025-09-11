@@ -14,8 +14,9 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class TransactionRequestDto {
     
-    @NotNull(message = "Account ID is required")
-    private Long accountId;
+    @NotBlank(message = "Account number is required")
+    @Size(max = 20, message = "Account number cannot exceed 20 characters")
+    private String accountNumber;
     
     @NotBlank(message = "Transaction type is required")
     @Pattern(regexp = "^(DEBIT|CREDIT|TRANSFER)$", message = "Transaction type must be DEBIT, CREDIT, or TRANSFER")
@@ -29,8 +30,9 @@ public class TransactionRequestDto {
     private String description;
     
     // For TRANSFER transactions
-    private Long toAccountId;
+    @Size(max = 20, message = "To account number cannot exceed 20 characters")
+    private String toAccountNumber;
     
-    @Size(max = 100, message = "Idempotency key cannot exceed 100 characters")
+    // Auto-generated idempotency key for transaction safety
     private String idempotencyKey;
 }

@@ -37,12 +37,15 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public TransactionResponseDto createTransaction(TransactionRequestDto dto) {
+        // Generate idempotency key if not provided
+        if (dto.getIdempotencyKey() == null || dto.getIdempotencyKey().isEmpty()) {
+            dto.setIdempotencyKey(generateIdempotencyKey(dto));
+        }
+        
         // Check for idempotency
-        if (dto.getIdempotencyKey() != null && !dto.getIdempotencyKey().isEmpty()) {
-            Transaction existingTransaction = transactionRepo.findByIdempotencyKey(dto.getIdempotencyKey());
-            if (existingTransaction != null) {
-                return mapper.map(existingTransaction, TransactionResponseDto.class);
-            }
+        Transaction existingTransaction = transactionRepo.findByIdempotencyKey(dto.getIdempotencyKey());
+        if (existingTransaction != null) {
+            return mapper.map(existingTransaction, TransactionResponseDto.class);
         }
 
         TransactionType type;
@@ -60,8 +63,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionResponseDto processSingleAccountTransaction(TransactionRequestDto dto, TransactionType type) {
-        Account account = accountRepo.findById(dto.getAccountId())
-                .orElseThrow(() -> new BankApiException("Account not found with ID: " + dto.getAccountId()));
+        Account account = accountRepo.findByAccountNumber(dto.getAccountNumber())
+                .orElseThrow(() -> new BankApiException("Account not found with number: " + dto.getAccountNumber()));
 
         Transaction transaction = new Transaction();
         transaction.setAccount(account);
@@ -98,15 +101,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionResponseDto processTransferTransaction(TransactionRequestDto dto) {
-        if (dto.getToAccountId() == null) {
-            throw new BankApiException("To Account ID is required for transfer transactions");
+        if (dto.getToAccountNumber() == null || dto.getToAccountNumber().isEmpty()) {
+            throw new BankApiException("To Account Number is required for transfer transactions");
         }
 
-        Account fromAccount = accountRepo.findById(dto.getAccountId())
-                .orElseThrow(() -> new BankApiException("From account not found with ID: " + dto.getAccountId()));
+        Account fromAccount = accountRepo.findByAccountNumber(dto.getAccountNumber())
+                .orElseThrow(() -> new BankApiException("From account not found with number: " + dto.getAccountNumber()));
         
-        Account toAccount = accountRepo.findById(dto.getToAccountId())
-                .orElseThrow(() -> new BankApiException("To account not found with ID: " + dto.getToAccountId()));
+        Account toAccount = accountRepo.findByAccountNumber(dto.getToAccountNumber())
+                .orElseThrow(() -> new BankApiException("To account not found with number: " + dto.getToAccountNumber()));
 
         // Validate sufficient balance
         if (fromAccount.getBalance().compareTo(BigDecimal.valueOf(dto.getAmount())) < 0) {
@@ -118,7 +121,7 @@ public class TransactionServiceImpl implements TransactionService {
         debitTransaction.setAccount(fromAccount);
         debitTransaction.setType(TransactionType.DEBIT);
         debitTransaction.setAmount(BigDecimal.valueOf(dto.getAmount()));
-        debitTransaction.setDescription("Transfer to account " + dto.getToAccountId() + ": " + dto.getDescription());
+        debitTransaction.setDescription("Transfer to account " + dto.getToAccountNumber() + ": " + dto.getDescription());
         debitTransaction.setDate(LocalDateTime.now());
         debitTransaction.setIdempotencyKey(dto.getIdempotencyKey());
         debitTransaction.setBalanceBefore(fromAccount.getBalance());
@@ -133,7 +136,7 @@ public class TransactionServiceImpl implements TransactionService {
         creditTransaction.setAccount(toAccount);
         creditTransaction.setType(TransactionType.CREDIT);
         creditTransaction.setAmount(BigDecimal.valueOf(dto.getAmount()));
-        creditTransaction.setDescription("Transfer from account " + dto.getAccountId() + ": " + dto.getDescription());
+        creditTransaction.setDescription("Transfer from account " + dto.getAccountNumber() + ": " + dto.getDescription());
         creditTransaction.setDate(LocalDateTime.now());
         creditTransaction.setBalanceBefore(toAccount.getBalance());
         
@@ -176,5 +179,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<TransactionResponseDto> getTransactionsByCustomerId(Long customerId, Pageable pageable) {
         Page<Transaction> transactions = transactionRepo.findByCustomerIdOrderByDateDesc(customerId, pageable);
         return transactions.map(transaction -> mapper.map(transaction, TransactionResponseDto.class));
+    }
+    
+    private String generateIdempotencyKey(TransactionRequestDto dto) {
+        // Generate unique idempotency key based on transaction details
+        String base = dto.getAccountNumber() + "_" + dto.getType() + "_" + dto.getAmount() + "_" + System.currentTimeMillis();
+        return "TXN_" + base.hashCode();
     }
 }

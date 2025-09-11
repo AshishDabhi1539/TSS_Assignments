@@ -1,10 +1,12 @@
 package com.tss.banking.service.impl;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tss.banking.dto.request.AccountRequestDto;
 import com.tss.banking.dto.response.AccountResponseDto;
@@ -35,25 +37,68 @@ public class AccountServiceImpl implements AccountService {
     private ModelMapper mapper;
 
     @Override
+    @Transactional
     public AccountResponseDto createAccount(AccountRequestDto dto) {
-        User user = userRepo.findById(dto.getCustomerId())
-                .orElseThrow(() -> new BankApiException("User not found with ID: " + dto.getCustomerId()));
-        Branch branch = branchRepo.findById(dto.getBranchId())
-                .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
-
-        Account account = new Account();
-        account.setCustomer(user);
-        account.setBranch(branch);
-        account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
-        account.setAccountNumber(generateAccountNumber());
         try {
-            account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
-        } catch (Exception ex) {
-            throw new BankApiException("Invalid account type: " + dto.getAccountType());
+            User user = userRepo.findById(dto.getCustomerId())
+                    .orElseThrow(() -> new BankApiException("User not found with ID: " + dto.getCustomerId()));
+            Branch branch = branchRepo.findById(dto.getBranchId())
+                    .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
+
+            // Check if user already has this account type in this branch
+            if (accountRepo.existsByCustomerAndBranchAndAccountType(user, branch, AccountType.valueOf(dto.getAccountType().toUpperCase()))) {
+                throw new BankApiException("User already has a " + dto.getAccountType() + " account in this branch");
+            }
+
+            Account account = new Account();
+            account.setCustomer(user);
+            account.setBranch(branch);
+            account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
+            account.setAccountNumber(generateAccountNumber());
+            try {
+                account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
+            } catch (Exception ex) {
+                throw new BankApiException("Invalid account type: " + dto.getAccountType());
+            }
+            account.setStatus(AccountStatus.ACTIVE);
+            Account savedAccount = accountRepo.save(account);
+            return mapper.map(savedAccount, AccountResponseDto.class);
+        } catch (Exception e) {
+            throw new BankApiException("Failed to create account: " + e.getMessage());
         }
-        account.setStatus(AccountStatus.ACTIVE);
-        Account savedAccount = accountRepo.save(account);
-        return mapper.map(savedAccount, AccountResponseDto.class);
+    }
+
+    @Override
+    @Transactional
+    public AccountResponseDto createAccountForCustomer(AccountRequestDto dto, String customerEmail) {
+        try {
+            User user = userRepo.findByEmail(customerEmail)
+                    .orElseThrow(() -> new BankApiException("User not found with email: " + customerEmail));
+            
+            Branch branch = branchRepo.findById(dto.getBranchId())
+                    .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
+
+            // Check if user already has this account type in this branch
+            if (accountRepo.existsByCustomerAndBranchAndAccountType(user, branch, AccountType.valueOf(dto.getAccountType().toUpperCase()))) {
+                throw new BankApiException("You already have a " + dto.getAccountType() + " account in this branch");
+            }
+
+            Account account = new Account();
+            account.setCustomer(user);
+            account.setBranch(branch);
+            account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
+            account.setAccountNumber(generateAccountNumber());
+            try {
+                account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
+            } catch (Exception ex) {
+                throw new BankApiException("Invalid account type: " + dto.getAccountType());
+            }
+            account.setStatus(AccountStatus.ACTIVE);
+            Account savedAccount = accountRepo.save(account);
+            return mapper.map(savedAccount, AccountResponseDto.class);
+        } catch (Exception e) {
+            throw new BankApiException("Failed to create account: " + e.getMessage());
+        }
     }
 
     @Override
@@ -63,10 +108,27 @@ public class AccountServiceImpl implements AccountService {
         return mapper.map(account, AccountResponseDto.class);
     }
 
+    @Override
+    public List<AccountResponseDto> getAccountsByCustomerId(Long customerId) {
+        User user = userRepo.findById(customerId)
+                .orElseThrow(() -> new BankApiException("User not found with ID: " + customerId));
+        return accountRepo.findByCustomer(user).stream()
+                .map(account -> mapper.map(account, AccountResponseDto.class))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<AccountResponseDto> getAccountsByCustomerEmail(String customerEmail) {
+        User user = userRepo.findByEmail(customerEmail)
+                .orElseThrow(() -> new BankApiException("User not found with email: " + customerEmail));
+        return accountRepo.findByCustomer(user).stream()
+                .map(account -> mapper.map(account, AccountResponseDto.class))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private String generateAccountNumber() {
-        // Generate account number: BANK_CODE + BRANCH_CODE + TIMESTAMP + RANDOM
-        long timestamp = System.currentTimeMillis();
-        int random = (int) (Math.random() * 1000);
-        return String.format("ACC%d%03d", timestamp % 100000000L, random);
+        // Generate account number: BANK_CODE + BRANCH_CODE + SEQUENCE
+        long count = accountRepo.count();
+        return String.format("ACC%010d", count + 1);
     }
 }

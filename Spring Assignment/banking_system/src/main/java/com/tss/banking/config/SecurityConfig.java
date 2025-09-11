@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/customers/**").hasRole("CUSTOMER")
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
-                .requestMatchers("/api/accounts/**", "/api/transactions/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/accounts/admin/**", "/api/transactions/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +46,11 @@ public class BranchAssignment {
     @Column(nullable = false, length = 32)
     private AssignmentType assignmentType;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @PrePersist
     void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
+        // handled by @CreationTimestamp
     }
 }

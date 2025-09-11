@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tss.banking.dto.request.AdminCreationRequestDto;
 import com.tss.banking.dto.request.UserRequestDto;
 import com.tss.banking.dto.response.UserResponseDto;
 import com.tss.banking.entity.User;
@@ -95,5 +96,25 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new BankApiException("User not found with email: " + email));
         return mapper.map(user, UserResponseDto.class);
+    }
+
+    @Override
+    public UserResponseDto createAdmin(AdminCreationRequestDto dto) {
+        // Check if email or phone already exists
+        if (userRepo.existsByEmail(dto.getEmail())) {
+            throw new BankApiException("Email already exists: " + dto.getEmail());
+        }
+        if (userRepo.existsByPhone(dto.getPhone())) {
+            throw new BankApiException("Phone number already exists: " + dto.getPhone());
+        }
+
+        User user = mapper.map(dto, User.class);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setStatus(UserStatus.VERIFIED); // Admin is auto-verified
+        user.setRole(RoleType.ADMIN);
+        user.setSoftDeleted(false);
+        
+        User savedUser = userRepo.save(user);
+        return mapper.map(savedUser, UserResponseDto.class);
     }
 }

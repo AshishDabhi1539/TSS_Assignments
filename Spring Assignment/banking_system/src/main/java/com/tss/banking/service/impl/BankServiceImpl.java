@@ -5,6 +5,7 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tss.banking.dto.request.BankRequestDto;
 import com.tss.banking.dto.response.BankResponseDto;
@@ -28,33 +29,38 @@ public class BankServiceImpl implements BankService {
     private BranchRepository branchRepo;
 
     @Override
+    @Transactional
     public BankResponseDto createBank(BankRequestDto dto) {
-        // Enforce single-bank mode
-        if (bankRepo.count() > 0) {
-            throw new BankApiException("Bank already exists. Single-bank mode enabled.");
+        try {
+            // Enforce single-bank mode
+            if (bankRepo.count() > 0) {
+                throw new BankApiException("Bank already exists. Single-bank mode enabled.");
+            }
+
+            Bank bank = mapper.map(dto, Bank.class);
+            if (bank.getCurrency() == null || bank.getCurrency().isBlank()) {
+                bank.setCurrency("INR");
+            }
+            if (bank.getCode() == null || bank.getCode().isBlank()) {
+                bank.setCode(generateBankCode());
+            }
+
+            Bank savedBank = bankRepo.save(bank);
+
+            // Auto-create default branch
+            Branch defaultBranch = new Branch();
+            defaultBranch.setName(dto.getDefaultBranchName() != null ? dto.getDefaultBranchName() : "Head Office");
+            defaultBranch.setCode(dto.getDefaultBranchCode() != null ? dto.getDefaultBranchCode() : generateBranchCode("HO"));
+            defaultBranch.setIfsc(dto.getDefaultBranchIfsc() != null ? dto.getDefaultBranchIfsc() : generateIfsc(savedBank.getCode(), "0001"));
+            defaultBranch.setAddress(savedBank.getAddress());
+            defaultBranch.setContactNumber(dto.getContactNumber());
+            defaultBranch.setBank(savedBank);
+            branchRepo.save(defaultBranch);
+
+            return mapper.map(savedBank, BankResponseDto.class);
+        } catch (Exception e) {
+            throw new BankApiException("Failed to create bank: " + e.getMessage());
         }
-
-        Bank bank = mapper.map(dto, Bank.class);
-        if (bank.getCurrency() == null || bank.getCurrency().isBlank()) {
-            bank.setCurrency("INR");
-        }
-        if (bank.getCode() == null || bank.getCode().isBlank()) {
-            bank.setCode(generateBankCode());
-        }
-
-        Bank savedBank = bankRepo.save(bank);
-
-        // Auto-create default branch
-        Branch defaultBranch = new Branch();
-        defaultBranch.setName(dto.getDefaultBranchName() != null ? dto.getDefaultBranchName() : "Head Office");
-        defaultBranch.setCode(dto.getDefaultBranchCode() != null ? dto.getDefaultBranchCode() : generateBranchCode("HO"));
-        defaultBranch.setIfsc(dto.getDefaultBranchIfsc() != null ? dto.getDefaultBranchIfsc() : generateIfsc(savedBank.getCode(), "0001"));
-        defaultBranch.setAddress(savedBank.getAddress());
-        defaultBranch.setContactNumber(null);
-        defaultBranch.setBank(savedBank);
-        branchRepo.save(defaultBranch);
-
-        return mapper.map(savedBank, BankResponseDto.class);
     }
 
     @Override

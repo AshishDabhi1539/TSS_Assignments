@@ -1,6 +1,5 @@
 package com.tss.banking.entity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -14,11 +13,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +47,6 @@ public class Branch {
     @Column(length = 15)
     private String contactNumber;
 
-    @Column(nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
@@ -68,14 +56,4 @@ public class Branch {
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BranchAssignment> branchAssignments;
-
-    @PrePersist
-    void onCreate() {
-        // handled by @CreationTimestamp/@UpdateTimestamp
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        // handled by @UpdateTimestamp
-    }
 }

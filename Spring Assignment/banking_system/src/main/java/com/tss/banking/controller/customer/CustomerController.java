@@ -14,21 +14,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tss.banking.dto.request.AccountRequestDto;
 import com.tss.banking.dto.request.TransactionRequestDto;
 import com.tss.banking.dto.response.AccountResponseDto;
 import com.tss.banking.dto.response.AccountStatementDto;
+import com.tss.banking.dto.response.KYCDocumentResponseDto;
 import com.tss.banking.dto.response.UserResponseDto;
 import com.tss.banking.dto.response.TransactionResponseDto;
+import com.tss.banking.entity.User;
+import com.tss.banking.repository.UserRepository;
 import com.tss.banking.service.AccountService;
 import com.tss.banking.service.AccountStatementService;
+import com.tss.banking.service.KYCDocumentService;
 import com.tss.banking.service.UserService;
 import com.tss.banking.service.TransactionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -48,6 +55,12 @@ public class CustomerController {
     @Autowired
     private AccountStatementService accountStatementService;
 
+    @Autowired
+    private KYCDocumentService kycDocumentService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/profile")
     @Operation(summary = "Get customer profile", description = "Get current customer profile information")
     public ResponseEntity<UserResponseDto> getUserProfile(Authentication authentication) {
@@ -58,9 +71,15 @@ public class CustomerController {
     @PostMapping("/accounts")
     @Operation(summary = "Create account", description = "Create a new account for the customer")
     public ResponseEntity<AccountResponseDto> createAccount(@Valid @RequestBody AccountRequestDto dto, Authentication authentication) {
-        // Note: Customer ID should be extracted from authentication context in service layer
-        // For now, the service layer will handle the customer association
-        return ResponseEntity.ok(accountService.createAccount(dto));
+        String email = authentication.getName();
+        return ResponseEntity.ok(accountService.createAccountForCustomer(dto, email));
+    }
+
+    @GetMapping("/accounts")
+    @Operation(summary = "Get customer accounts", description = "Get all accounts for the authenticated customer")
+    public ResponseEntity<List<AccountResponseDto>> getCustomerAccounts(Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.ok(accountService.getAccountsByCustomerEmail(email));
     }
 
     @PostMapping("/transactions")
@@ -105,5 +124,31 @@ public class CustomerController {
         // For now, using current time as placeholder
         return ResponseEntity.ok(accountStatementService.generateAccountStatement(accountId, 
             java.time.LocalDateTime.now().minusDays(30), java.time.LocalDateTime.now()));
+    }
+
+    @PostMapping("/kyc/upload")
+    @Operation(summary = "Upload KYC document", description = "Upload KYC document for the authenticated customer")
+    public ResponseEntity<KYCDocumentResponseDto> uploadKYCDocument(
+            @RequestParam String documentType,
+            @RequestParam String documentNumber,
+            @RequestParam String issuedBy,
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication) {
+        String email = authentication.getName();
+        User customer = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        
+        return ResponseEntity.ok(kycDocumentService.uploadKYCDocument(
+                customer.getId(), documentType, documentNumber, issuedBy, file));
+    }
+
+    @GetMapping("/kyc")
+    @Operation(summary = "Get customer KYC documents", description = "Get all KYC documents for the authenticated customer")
+    public ResponseEntity<List<KYCDocumentResponseDto>> getCustomerKYCDocuments(Authentication authentication) {
+        String email = authentication.getName();
+        User customer = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        
+        return ResponseEntity.ok(kycDocumentService.getKYCDocumentsByCustomerId(customer.getId()));
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tss.banking.dto.request.BankRequestDto;
 import com.tss.banking.dto.request.BranchAssignmentRequestDto;
 import com.tss.banking.dto.request.BranchRequestDto;
-import com.tss.banking.dto.request.UserRequestDto;
+import com.tss.banking.dto.request.AdminCreationRequestDto;
 import com.tss.banking.dto.response.BankResponseDto;
 import com.tss.banking.dto.response.BranchAssignmentResponseDto;
 import com.tss.banking.dto.response.BranchResponseDto;
@@ -85,19 +85,9 @@ public class SuperAdminController {
 	@PostMapping("/create-admin")
 	@Operation(summary = "Create Admin", description = "Create a new admin user - SUPERADMIN ONLY")
 	@PreAuthorize("hasRole('SUPERADMIN')")
-	public ResponseEntity<UserResponseDto> createAdmin(@Valid @RequestBody UserRequestDto dto) {
-		// Set role to ADMIN for admin creation
-		dto.setRole("ADMIN");
-
-		// Register the admin user
-		UserResponseDto response = userService.registerUser(dto);
-
-		// Manually set status to VERIFIED and enabled for admin (bypassing normal flow)
-		User admin = userRepository.findByEmail(dto.getEmail())
-				.orElseThrow(() -> new RuntimeException("Admin user not found after creation"));
-		admin.setStatus(UserStatus.VERIFIED);
-		userRepository.save(admin);
-
+	public ResponseEntity<UserResponseDto> createAdmin(@Valid @RequestBody AdminCreationRequestDto dto) {
+		// Use dedicated admin creation service method
+		UserResponseDto response = userService.createAdmin(dto);
 		return ResponseEntity.ok(response);
 	}
 
