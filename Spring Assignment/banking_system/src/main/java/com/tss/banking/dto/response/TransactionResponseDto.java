@@ -5,20 +5,23 @@ import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class TransactionResponseDto {
     private Long id;
-    private Long accountId;
-    private Long recipientAccountId;
+    private String accountNumber;
+    private String recipientAccountNumber;
     private String type;
     private BigDecimal amount;
     private BigDecimal feeAmount;
+    private BigDecimal balanceBefore;
+    private BigDecimal balanceAfter;
     private LocalDateTime date;
     private String description;
     private String status;
     private String referenceNumber;
+    private String failureReason;
 }

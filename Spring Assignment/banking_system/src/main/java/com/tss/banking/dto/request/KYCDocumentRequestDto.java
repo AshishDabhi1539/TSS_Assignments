@@ -3,7 +3,7 @@ package com.tss.banking.dto.request;
 import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,23 +14,26 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KYCDocumentRequestDto {
     
-    @NotNull(message = "Customer ID is required")
+    // Optional for customer operations (derived from auth), required for admin operations
     private Long customerId;
     
     @NotBlank(message = "Document type is required")
-    @Size(max = 32, message = "Document type must not exceed 32 characters")
+    @Pattern(regexp = "^(PAN|AADHAAR|PASSPORT|DRIVING_LICENSE|VOTER_ID)$", 
+             message = "Document type must be PAN, AADHAAR, PASSPORT, DRIVING_LICENSE, or VOTER_ID")
     private String documentType;
     
     @NotBlank(message = "Document number is required")
-    @Size(max = 64, message = "Document number must not exceed 64 characters")
+    @Size(min = 5, max = 64, message = "Document number must be between 5 and 64 characters")
     private String documentNumber;
     
-    @Size(max = 32, message = "Status must not exceed 32 characters")
-    private String status;
+    @Pattern(regexp = "^(PENDING|APPROVED|REJECTED)$", message = "Status must be PENDING, APPROVED, or REJECTED")
+    private String status = "PENDING";
     
+    @Size(max = 128, message = "Issued by cannot exceed 128 characters")
     private String issuedBy;
     
     private LocalDate expiryDate;
     
+    @Size(max = 512, message = "File reference cannot exceed 512 characters")
     private String fileRef;
 }

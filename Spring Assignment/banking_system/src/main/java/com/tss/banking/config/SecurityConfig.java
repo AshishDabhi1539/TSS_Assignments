@@ -1,6 +1,5 @@
 package com.tss.banking.config;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +33,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
                 .requestMatchers("/api/accounts/admin/**", "/api/transactions/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/addresses/**").hasAnyRole("CUSTOMER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/banks/**", "/api/branches/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/beneficiaries/**", "/api/fee-rules/**", "/api/interest-rates/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/kyc/**", "/api/notifications/**").hasAnyRole("CUSTOMER", "ADMIN", "SUPERADMIN")
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -50,10 +53,5 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-    }
-
-    @Bean
-    ModelMapper modelMapper() {
-        return new ModelMapper();
     }
 }

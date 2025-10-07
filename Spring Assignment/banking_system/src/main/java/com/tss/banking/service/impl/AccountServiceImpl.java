@@ -50,10 +50,16 @@ public class AccountServiceImpl implements AccountService {
                 throw new BankApiException("User already has a " + dto.getAccountType() + " account in this branch");
             }
 
+            // Handle null initial balance
+            BigDecimal initialBalance = dto.getInitialBalance();
+            if (initialBalance == null) {
+                initialBalance = new BigDecimal("2000.00");
+            }
+
             Account account = new Account();
             account.setCustomer(user);
             account.setBranch(branch);
-            account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
+            account.setBalance(initialBalance);
             account.setAccountNumber(generateAccountNumber());
             try {
                 account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
@@ -61,8 +67,11 @@ public class AccountServiceImpl implements AccountService {
                 throw new BankApiException("Invalid account type: " + dto.getAccountType());
             }
             account.setStatus(AccountStatus.ACTIVE);
+            
+            // Note: Minimum balance validation will be handled by @PrePersist in Account entity
+            
             Account savedAccount = accountRepo.save(account);
-            return mapper.map(savedAccount, AccountResponseDto.class);
+            return mapToAccountResponseDto(savedAccount);
         } catch (Exception e) {
             throw new BankApiException("Failed to create account: " + e.getMessage());
         }
@@ -74,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             User user = userRepo.findByEmail(customerEmail)
                     .orElseThrow(() -> new BankApiException("User not found with email: " + customerEmail));
-            
+
             Branch branch = branchRepo.findById(dto.getBranchId())
                     .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
 
@@ -83,10 +92,16 @@ public class AccountServiceImpl implements AccountService {
                 throw new BankApiException("You already have a " + dto.getAccountType() + " account in this branch");
             }
 
+            // Handle null initial balance
+            BigDecimal initialBalance = dto.getInitialBalance();
+            if (initialBalance == null) {
+                initialBalance = new BigDecimal("2000.00");
+            }
+
             Account account = new Account();
             account.setCustomer(user);
             account.setBranch(branch);
-            account.setBalance(BigDecimal.valueOf(dto.getInitialBalance()));
+            account.setBalance(initialBalance);
             account.setAccountNumber(generateAccountNumber());
             try {
                 account.setAccountType(AccountType.valueOf(dto.getAccountType().toUpperCase()));
@@ -94,8 +109,11 @@ public class AccountServiceImpl implements AccountService {
                 throw new BankApiException("Invalid account type: " + dto.getAccountType());
             }
             account.setStatus(AccountStatus.ACTIVE);
+            
+            // Note: Minimum balance validation will be handled by @PrePersist in Account entity
+            
             Account savedAccount = accountRepo.save(account);
-            return mapper.map(savedAccount, AccountResponseDto.class);
+            return mapToAccountResponseDto(savedAccount);
         } catch (Exception e) {
             throw new BankApiException("Failed to create account: " + e.getMessage());
         }
@@ -130,5 +148,24 @@ public class AccountServiceImpl implements AccountService {
         // Generate account number: BANK_CODE + BRANCH_CODE + SEQUENCE
         long count = accountRepo.count();
         return String.format("ACC%010d", count + 1);
+    }
+    
+    private AccountResponseDto mapToAccountResponseDto(Account account) {
+        AccountResponseDto dto = mapper.map(account, AccountResponseDto.class);
+        
+        // Populate customer information
+        if (account.getCustomer() != null) {
+            dto.setCustomerId(account.getCustomer().getId());
+            dto.setCustomerName(account.getCustomer().getFirstName() + " " + account.getCustomer().getLastName());
+        }
+        
+        // Populate branch information
+        if (account.getBranch() != null) {
+            dto.setBranchId(account.getBranch().getId());
+            dto.setBranchName(account.getBranch().getName());
+            dto.setBranchCode(account.getBranch().getCode());
+        }
+        
+        return dto;
     }
 }

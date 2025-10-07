@@ -3,6 +3,7 @@ package com.tss.banking.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.tss.banking.entity.enums.TransactionType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,7 @@ public class FeeRuleServiceImpl implements FeeRuleService {
 
     @Override
     public List<FeeRuleResponseDto> getFeeRulesByTransactionType(String transactionType) {
-        return feeRuleRepository.findActiveByTransactionType(transactionType).stream()
+        return feeRuleRepository.findActiveByTransactionType(TransactionType.valueOf(transactionType)).stream()
                 .map(feeRule -> modelMapper.map(feeRule, FeeRuleResponseDto.class))
                 .collect(Collectors.toList());
     }

@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BeneficiaryResponseDto {
-    
     private Long id;
-    private Long ownerId;
-    private String ownerName;
-    private Long beneficiaryAccountId;
-    private String beneficiaryAccountNumber;
     private String alias;
+    private String beneficiaryAccountNumber;
+    private String accountHolderName;
+    private String bankName;
+    private String branchName;
+    private String ifsc;
     private String verificationStatus;
     private LocalDateTime createdAt;
+    private boolean isActive;
 }

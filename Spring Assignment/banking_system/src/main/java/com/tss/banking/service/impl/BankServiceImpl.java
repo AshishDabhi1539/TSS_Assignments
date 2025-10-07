@@ -11,9 +11,11 @@ import com.tss.banking.dto.request.BankRequestDto;
 import com.tss.banking.dto.response.BankResponseDto;
 import com.tss.banking.entity.Bank;
 import com.tss.banking.entity.Branch;
+import com.tss.banking.entity.enums.AddressType;
 import com.tss.banking.exception.BankApiException;
 import com.tss.banking.repository.BankRepository;
 import com.tss.banking.repository.BranchRepository;
+import com.tss.banking.service.AddressService;
 import com.tss.banking.service.BankService;
 
 @Service
@@ -27,6 +29,9 @@ public class BankServiceImpl implements BankService {
 
     @Autowired
     private BranchRepository branchRepo;
+
+    @Autowired
+    private AddressService addressService;
 
     @Override
     @Transactional
@@ -47,15 +52,23 @@ public class BankServiceImpl implements BankService {
 
             Bank savedBank = bankRepo.save(bank);
 
-            // Auto-create default branch
+            // Create address for the bank using unified address system
+            createBankAddress(savedBank.getId(), dto);
+
+            // Auto-create default branch with required contact details
             Branch defaultBranch = new Branch();
             defaultBranch.setName(dto.getDefaultBranchName() != null ? dto.getDefaultBranchName() : "Head Office");
-            defaultBranch.setCode(dto.getDefaultBranchCode() != null ? dto.getDefaultBranchCode() : generateBranchCode("HO"));
-            defaultBranch.setIfsc(dto.getDefaultBranchIfsc() != null ? dto.getDefaultBranchIfsc() : generateIfsc(savedBank.getCode(), "0001"));
-            defaultBranch.setAddress(savedBank.getAddress());
-            defaultBranch.setContactNumber(dto.getContactNumber());
+            defaultBranch.setCode(generateBranchCode(savedBank.getCode(), "001"));
+            defaultBranch.setIfsc(generateIfsc(savedBank.getCode(), "0001"));
             defaultBranch.setBank(savedBank);
-            branchRepo.save(defaultBranch);
+            defaultBranch.setIsActive(true);
+            // Set default contact details for head office branch
+            defaultBranch.setContactNumber("+911234567890");
+            defaultBranch.setEmail("headoffice@" + savedBank.getName().toLowerCase().replaceAll("\\s+", "") + ".com");
+            Branch savedBranch = branchRepo.save(defaultBranch);
+
+            // Create address for the default branch using the same bank address
+            createBranchAddress(savedBranch.getId(), dto);
 
             return mapper.map(savedBank, BankResponseDto.class);
         } catch (Exception e) {
@@ -87,8 +100,13 @@ public class BankServiceImpl implements BankService {
         return "BANK-0001"; // simple placeholder
     }
 
-    private String generateBranchCode(String prefix) {
-        return prefix + "-0001"; // simple placeholder
+    private String generateBranchCode(String bankCode, String sequence) {
+        // Generate consistent branch code: BANKCODE + sequence
+        String cleanBankCode = bankCode.replaceAll("[^A-Z0-9]", "");
+        if (cleanBankCode.length() > 4) {
+            cleanBankCode = cleanBankCode.substring(0, 4);
+        }
+        return cleanBankCode + sequence;
     }
 
     private String generateIfsc(String bankCode, String seq) {
@@ -98,5 +116,25 @@ public class BankServiceImpl implements BankService {
             base = (base + "XXXX").substring(0, 4);
         }
         return base + seq + "HO";
+    }
+
+    private void createBankAddress(Long bankId, BankRequestDto dto) {
+        try {
+            addressService.createAddressForEntity("BANK", bankId, AddressType.HEAD_OFFICE,
+                    dto.getAddressLine1(), dto.getAddressLine2(), dto.getCity(),
+                    dto.getState(), dto.getPostalCode(), dto.getCountry(), "Corporate Office");
+        } catch (Exception e) {
+            System.err.println("Failed to create address for bank: " + e.getMessage());
+        }
+    }
+
+    private void createBranchAddress(Long branchId, BankRequestDto dto) {
+        try {
+            addressService.createAddressForEntity("BRANCH", branchId, AddressType.BRANCH,
+                    dto.getAddressLine1(), dto.getAddressLine2(), dto.getCity(),
+                    dto.getState(), dto.getPostalCode(), dto.getCountry(), "Near Main Road");
+        } catch (Exception e) {
+            System.err.println("Failed to create address for branch: " + e.getMessage());
+        }
     }
 }

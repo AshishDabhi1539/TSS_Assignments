@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tss.banking.dto.request.AdminCreationRequestDto;
 import com.tss.banking.dto.request.BankRequestDto;
 import com.tss.banking.dto.request.BranchAssignmentRequestDto;
 import com.tss.banking.dto.request.BranchRequestDto;
-import com.tss.banking.dto.request.AdminCreationRequestDto;
 import com.tss.banking.dto.response.BankResponseDto;
 import com.tss.banking.dto.response.BranchAssignmentResponseDto;
 import com.tss.banking.dto.response.BranchResponseDto;
@@ -61,7 +61,7 @@ public class SuperAdminController {
 	@Operation(summary = "Initialize SuperAdmin", description = "Create SuperAdmin user if not exists - PUBLIC ENDPOINT")
 	public ResponseEntity<String> initializeSuperAdmin() {
 		// Check if SuperAdmin already exists
-		if (userRepository.findByEmail("admin@system.com").isPresent()) {
+		if (userRepository.findByEmail("superadmin@bankingsystem.com").isPresent()) {
 			return ResponseEntity.ok("SuperAdmin already exists");
 		}
 
@@ -69,17 +69,21 @@ public class SuperAdminController {
 		User superAdmin = new User();
 		superAdmin.setFirstName("Super");
 		superAdmin.setLastName("Admin");
-		superAdmin.setEmail("admin@system.com");
-		superAdmin.setPhone("1234567890");
-		superAdmin.setAddress("HQ Office");
-		superAdmin.setPassword(passwordEncoder.encode("admin123"));
+		superAdmin.setEmail("superadmin@bankingsystem.com");
+		superAdmin.setPhone("9999999999");
+		superAdmin.setPassword(passwordEncoder.encode("SuperAdmin@123"));
 		superAdmin.setStatus(UserStatus.VERIFIED);
 		superAdmin.setRole(RoleType.SUPERADMIN);
+		superAdmin.setEmailVerified(true);
+		superAdmin.setEnabled(true);
 		superAdmin.setSoftDeleted(false);
+		// Set static approval details for SuperAdmin
+		superAdmin.setApprovedAt(java.time.LocalDateTime.now());
+		superAdmin.setApprovedBy(superAdmin); // Self-approved during system initialization
 
 		userRepository.save(superAdmin);
 
-		return ResponseEntity.ok("SuperAdmin created successfully");
+		return ResponseEntity.ok("SuperAdmin created successfully with email: superadmin@bankingsystem.com");
 	}
 
 	@PostMapping("/create-admin")

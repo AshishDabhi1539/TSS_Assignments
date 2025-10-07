@@ -17,7 +17,10 @@ import com.tss.banking.entity.enums.TransactionType;
 import com.tss.banking.exception.BankApiException;
 import com.tss.banking.repository.AccountRepository;
 import com.tss.banking.repository.TransactionRepository;
+import com.tss.banking.repository.UserRepository;
 import com.tss.banking.service.AccountStatementService;
+import com.tss.banking.entity.User;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AccountStatementServiceImpl implements AccountStatementService {
@@ -31,6 +34,9 @@ public class AccountStatementServiceImpl implements AccountStatementService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public AccountStatementDto generateAccountStatement(Long accountId, LocalDateTime fromDate, LocalDateTime toDate) {
         Account account = accountRepository.findById(accountId)
@@ -40,6 +46,27 @@ public class AccountStatementServiceImpl implements AccountStatementService {
                 accountId, fromDate, toDate);
 
         return buildAccountStatement(account, transactions, fromDate, toDate);
+    }
+
+    @Override
+    public AccountStatementDto generateAccountStatementForCustomer(Long accountId, String fromDate, String toDate, String customerEmail) {
+        // Validate that the account belongs to the customer
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new BankApiException("Account not found with ID: " + accountId));
+        
+        User customer = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new BankApiException("Customer not found"));
+        
+        if (!account.getCustomer().getId().equals(customer.getId())) {
+            throw new BankApiException("Access denied: You can only view statements for your own accounts");
+        }
+        
+        // Parse date strings to LocalDateTime
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime fromDateTime = LocalDateTime.parse(fromDate + "T00:00:00");
+        LocalDateTime toDateTime = LocalDateTime.parse(toDate + "T23:59:59");
+        
+        return generateAccountStatement(accountId, fromDateTime, toDateTime);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.tss.banking.service.impl;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,8 @@ import com.tss.banking.repository.BranchAssignmentRepository;
 import com.tss.banking.repository.BranchRepository;
 import com.tss.banking.repository.UserRepository;
 import com.tss.banking.service.BranchService;
+import com.tss.banking.service.AddressService;
+import com.tss.banking.entity.enums.AddressType;
 
 @Service
 public class BranchServiceImpl implements BranchService {
@@ -38,7 +39,7 @@ public class BranchServiceImpl implements BranchService {
     private BranchAssignmentRepository branchAssignmentRepo;
 
     @Autowired
-    private ModelMapper mapper;
+    private AddressService addressService;
 
     @Override
     @Transactional
@@ -55,7 +56,6 @@ public class BranchServiceImpl implements BranchService {
             // Create new branch instance instead of using mapper to avoid ID conflicts
             Branch branch = new Branch();
             branch.setName(dto.getName());
-            branch.setAddress(dto.getAddress());
             branch.setContactNumber(dto.getContactNumber());
             branch.setBank(bank);
             
@@ -68,10 +68,13 @@ public class BranchServiceImpl implements BranchService {
             
             Branch savedBranch = branchRepo.save(branch);
             
+            // Create address for the branch using unified address system
+            createBranchAddress(savedBranch.getId(), dto);
+            
             // Auto-assign admin to branch if available
             assignAdminToBranch(savedBranch);
             
-            return mapper.map(savedBranch, BranchResponseDto.class);
+            return mapBranchToResponseDto(savedBranch);
         } catch (Exception e) {
             throw new BankApiException("Failed to create branch: " + e.getMessage());
         }
@@ -81,14 +84,14 @@ public class BranchServiceImpl implements BranchService {
     public BranchResponseDto getBranchById(Long id) {
         Branch branch = branchRepo.findById(id)
                 .orElseThrow(() -> new BankApiException("Branch not found with ID: " + id));
-        return mapper.map(branch, BranchResponseDto.class);
+        return mapBranchToResponseDto(branch);
     }
 
     @Override
     public List<BranchResponseDto> getAllBranches() {
         List<Branch> branches = branchRepo.findAll();
         return branches.stream()
-                .map(branch -> mapper.map(branch, BranchResponseDto.class))
+                .map(this::mapBranchToResponseDto)
                 .toList();
     }
 
@@ -96,7 +99,7 @@ public class BranchServiceImpl implements BranchService {
     public List<BranchResponseDto> getBranchesByBank(Long bankId) {
         List<Branch> branches = branchRepo.findByBankId(bankId);
         return branches.stream()
-                .map(branch -> mapper.map(branch, BranchResponseDto.class))
+                .map(this::mapBranchToResponseDto)
                 .toList();
     }
 
@@ -166,5 +169,34 @@ public class BranchServiceImpl implements BranchService {
             // Log error but don't fail branch creation
             System.err.println("Failed to assign admin to branch: " + e.getMessage());
         }
+    }
+
+    private void createBranchAddress(Long branchId, BranchRequestDto dto) {
+        try {
+            addressService.createAddressForEntity("BRANCH", branchId, AddressType.BRANCH,
+                    dto.getAddressLine1(), dto.getAddressLine2(), dto.getCity(),
+                    dto.getState(), dto.getPostalCode(), dto.getCountry(), null);
+        } catch (Exception e) {
+            System.err.println("Failed to create address for branch: " + e.getMessage());
+        }
+    }
+
+    private BranchResponseDto mapBranchToResponseDto(Branch branch) {
+        BranchResponseDto dto = new BranchResponseDto();
+        dto.setId(branch.getId());
+        dto.setName(branch.getName());
+        dto.setCode(branch.getCode());
+        dto.setIfsc(branch.getIfsc());
+        dto.setContactNumber(branch.getContactNumber());
+        dto.setBankId(branch.getBank().getId());
+        
+        // Get formatted address from unified address system
+        try {
+            dto.setAddress(addressService.getPrimaryAddress("BRANCH", branch.getId()).getFormattedAddress());
+        } catch (Exception e) {
+            dto.setAddress("Address not available");
+        }
+        
+        return dto;
     }
 }

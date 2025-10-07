@@ -2,10 +2,10 @@ package com.tss.banking.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 public class BranchResponseDto {
     private Long id;
@@ -14,5 +14,11 @@ public class BranchResponseDto {
     private String ifsc;
     private String address;
     private String contactNumber;
+    private String email;
+    private boolean isActive;
+    
+    // Bank information
     private Long bankId;
+    private String bankName;
+    private String bankCode;
 }
