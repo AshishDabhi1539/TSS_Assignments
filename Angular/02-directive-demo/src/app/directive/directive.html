@@ -1,0 +1,79 @@
+<div class="container mt-4">
+    <h3>Directive Table</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price (₹)</th>
+                <th>Stock</th>
+                <th>Total Amount (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products; let i = index" [ngClass]="{
+                    'table-warning': product.stock > 0 && product.stock < 15,
+                    'table-danger': product.stock === 0
+                }">
+                <td>{{ i + 1 }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.price | currency:'INR' }}</td>
+                <td>
+                    <span *ngIf="product.stock > 0; else out">{{ product.stock }}</span>
+                    <ng-template #out>
+                        <em class="text-danger">Out of Stock</em>
+                    </ng-template>
+                </td>
+                <td>
+                    {{ product.stock * product.price | currency:'INR' }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5" class="text-end"><strong>Grand Total</strong></td>
+                <td><strong>{{ grandTotal | currency:'INR' }}</strong></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container mt-4">
+    <h3>Student Attendance</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Email</th>
+                <th>Attendance (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let student of students; let i = index" [ngClass]="{
+                    'table-success': student.grade === 'A',
+                    'table-warning': student.grade === 'B',
+                    'table-danger': student.grade === 'C'
+                }">
+                <td>{{ i + 1 }}</td>
+                <td>{{ student.name }}</td>
+                <td [ngSwitch]="student.grade">
+                    <span *ngSwitchCase="'A'" class="badge bg-success">A (Distinction)</span>
+                    <span *ngSwitchCase="'B'" class="badge bg-warning text-dark">B (Average)</span>
+                    <span *ngSwitchCase="'C'" class="badge bg-danger">C (Just Pass)</span>
+                    <span *ngSwitchDefault>{{ student.grade }}</span>
+                </td>
+                <td>{{ student.email }}</td>
+                <td>
+                    <span *ngIf="student.attendance > 70; else lowAttendance">{{ student.attendance }}</span>
+                    <ng-template #lowAttendance>
+                        <em class="text-danger">{{ student.attendance }} - Low</em>
+                    </ng-template>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
