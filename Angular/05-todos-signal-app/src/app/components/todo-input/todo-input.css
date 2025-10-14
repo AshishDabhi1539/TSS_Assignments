@@ -1,0 +1,139 @@
+/* ===== Page Centering ===== */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #89f7fe, #af7932);
+  background-attachment: fixed;
+  margin: 0;
+}
+
+/* ===== Glass Card ===== */
+.card {
+  width: 520px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  transition: all 0.4s ease;
+  overflow: hidden;
+  animation: fadeIn 0.8s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 45px rgba(31, 38, 135, 0.45);
+}
+
+/* ===== Card Inner Glow Animation ===== */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+  animation: rotateGlow 10s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== Card Body ===== */
+.card-body {
+  padding: 2rem 2.2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Title ===== */
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.8rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
+}
+
+/* ===== Input Field ===== */
+input[type="text"] {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+  font-style: italic;
+}
+
+/* ===== Button Styling ===== */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  color: #1a1a1a;
+  box-shadow: 0 4px 20px rgba(102, 166, 255, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #66a6ff, #89f7fe);
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(102, 166, 255, 0.5);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* ===== Fade Animation ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 500px) {
+  .card {
+    width: 90%;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+}

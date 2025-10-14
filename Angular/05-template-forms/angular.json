@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "05-todos-signal-app": {
+    "05-template-forms": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -60,10 +60,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "05-todos-signal-app:build:production"
+              "buildTarget": "05-template-forms:build:production"
             },
             "development": {
-              "buildTarget": "05-todos-signal-app:build:development"
+              "buildTarget": "05-template-forms:build:development"
             }
           },
           "defaultConfiguration": "development"
