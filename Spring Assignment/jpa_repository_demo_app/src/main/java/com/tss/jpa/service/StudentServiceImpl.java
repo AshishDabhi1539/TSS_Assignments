@@ -15,9 +15,12 @@ import com.tss.jpa.dto.AddressRequestDto;
 import com.tss.jpa.dto.StudentRequestDto;
 import com.tss.jpa.dto.StudentResponseDto;
 import com.tss.jpa.dto.StudentResponsePage;
+import com.tss.jpa.dto.StudentWithCoursesResponseDto;
 import com.tss.jpa.entity.Address;
+import com.tss.jpa.entity.Course;
 import com.tss.jpa.entity.Student;
 import com.tss.jpa.exception.StudentApiException;
+import com.tss.jpa.repository.CourseRepository;
 import com.tss.jpa.repository.StudentRepository;
 
 @Service
@@ -25,6 +28,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepo;
+    
+    @Autowired
+    private CourseRepository courseRepo;
 
     @Autowired
     private ModelMapper mapper;
@@ -110,6 +116,30 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<Student> findStudentByFirstment(String firstName) {
 		return studentRepo.findByFirstName(firstName);
+	}
+
+	@Override
+	public StudentWithCoursesResponseDto assignCourse(int studentId, long courseId) {
+		Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new StudentApiException("Student not found with ID: " + studentId));
+        
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new StudentApiException("Course not found with ID: " + courseId));
+       
+        List<Student> existingStudents = course.getStudents();
+        existingStudents.add(student); 
+        
+        course.setStudents(existingStudents);        
+        courseRepo.save(course);
+        
+        List<Course> dbCourses = student.getCourses();
+        if (dbCourses.contains(course)) {
+            throw new StudentApiException("Already Assigned This Course");
+        }
+        dbCourses.add(course);
+        student.setCourses(dbCourses);
+        studentRepo.save(student);
+        return mapper.map(student, StudentWithCoursesResponseDto.class);
 	}
 }
 

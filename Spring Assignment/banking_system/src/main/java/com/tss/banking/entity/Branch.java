@@ -1,0 +1,81 @@
+package com.tss.banking.entity;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+@Entity
+@Table(name = "branches", indexes = {
+        @Index(name = "idx_branches_bank", columnList = "bank_id"),
+        @Index(name = "idx_branches_code", columnList = "code", unique = true),
+        @Index(name = "idx_branches_ifsc", columnList = "ifsc", unique = true)
+})
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Data
+public class Branch {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(nullable = false, length = 128)
+    private String name;
+    
+    @Column(unique = true, nullable = false, length = 32)
+    private String code;
+    
+    @Column(unique = true, length = 20)
+    private String ifsc;
+    
+    @Column(length = 512)
+    private String address;
+    
+    @Column(length = 15)
+    private String contactNumber;
+
+    @Column(nullable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_id", nullable = false)
+    private Bank bank;
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> accounts;
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BranchAssignment> branchAssignments;
+
+    @PrePersist
+    void onCreate() {
+        // handled by @CreationTimestamp/@UpdateTimestamp
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        // handled by @UpdateTimestamp
+    }
+}

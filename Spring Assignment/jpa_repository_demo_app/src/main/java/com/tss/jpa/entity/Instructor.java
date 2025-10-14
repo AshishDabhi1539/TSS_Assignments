@@ -37,5 +37,5 @@ public class Instructor {
 
 	@OneToMany(mappedBy = "instructor", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
 			CascadeType.DETACH })
-	private List<Course> course;
+	private List<Course> courses;
 }
