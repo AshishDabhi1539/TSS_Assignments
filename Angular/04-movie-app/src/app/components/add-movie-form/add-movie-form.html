@@ -1,0 +1,66 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Add New Movie</h5>
+  </div>
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()" #movieForm="ngForm">
+      <div class="mb-3">
+        <label for="movieName" class="form-label">Movie Name</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="movieName" 
+          name="movieName"
+          [(ngModel)]="movie.name" 
+          required
+          placeholder="Enter movie name">
+      </div>
+      
+      <div class="mb-3">
+        <label for="yearOfRelease" class="form-label">Year of Release</label>
+        <input 
+          type="number" 
+          class="form-control" 
+          id="yearOfRelease" 
+          name="yearOfRelease"
+          [(ngModel)]="movie.yearOfRelease" 
+          required
+          min="1900"
+          max="2030"
+          placeholder="Enter year of release">
+      </div>
+      
+      <div class="mb-3">
+        <label for="actors" class="form-label">Actors (comma-separated)</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="actors" 
+          name="actors"
+          [(ngModel)]="actorsText" 
+          required
+          placeholder="Enter actors separated by commas">
+        <div class="form-text">Example: Tom Hanks, Meg Ryan, Billy Crystal</div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="movieImgUrl" class="form-label">Movie Image URL</label>
+        <input 
+          type="url" 
+          class="form-control" 
+          id="movieImgUrl" 
+          name="movieImgUrl"
+          [(ngModel)]="movie.movieImgUrl" 
+          required
+          placeholder="Enter movie poster image URL">
+      </div>
+      
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="!movieForm.form.valid">
+        Add Movie
+      </button>
+    </form>
+  </div>
+</div>

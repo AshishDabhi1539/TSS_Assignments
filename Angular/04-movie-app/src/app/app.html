@@ -1,0 +1,37 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <header class="text-center py-4 mb-4">
+        <h1 class="display-4 text-primary">{{ title() }}</h1>
+        <p class="lead text-muted">Create and manage your movie collection with parent-child communication</p>
+      </header>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Add Movie Form Section -->
+    <div class="col-lg-4 col-md-12 mb-4">
+      <app-add-movie-form (movieAdded)="onMovieAdded($event)"></app-add-movie-form>
+    </div>
+
+    <!-- Movie List Section -->
+    <div class="col-lg-8 col-md-12">
+      <app-movie-list 
+        [movies]="movies" 
+        (movieSelected)="onMovieSelected($event)"
+        (movieDeleted)="onMovieDeleted($event)">
+      </app-movie-list>
+    </div>
+  </div>
+
+  <!-- Selected Movie Info -->
+  <div class="row" *ngIf="selectedMovieId">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <h6>Selected Movie ID: {{ selectedMovieId }}</h6>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet />
