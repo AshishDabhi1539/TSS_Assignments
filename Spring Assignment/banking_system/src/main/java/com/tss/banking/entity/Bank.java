@@ -1,6 +1,9 @@
 package com.tss.banking.entity;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,10 +16,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+<<<<<<< HEAD
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+=======
+import jakarta.persistence.Table;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +55,7 @@ public class Bank {
     @Column(length = 64)
     private String country;
 
+<<<<<<< HEAD
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -55,6 +63,8 @@ public class Bank {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Branch> branches;
 
@@ -63,11 +73,14 @@ public class Bank {
         if (currency == null) {
             currency = "INR";
         }
+<<<<<<< HEAD
         // timestamps handled by annotations
     }
 
     @PreUpdate
     void onUpdate() {
         // timestamp handled by @UpdateTimestamp
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     }
 }

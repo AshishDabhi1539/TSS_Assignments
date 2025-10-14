@@ -1,17 +1,43 @@
 package com.tss.banking.dto.response;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class InterBankTransferResponseDto {
     private String transferReference;
     private BigDecimal amount;
+=======
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class InterBankTransferResponseDto {
+    
+    private boolean success;
+    private String message;
+    private String transferReference;
+    private BigDecimal amount;
+    private BigDecimal previousBalance;
+    private BigDecimal previousAvailableBalance;
+    private BigDecimal newBalance;
+    private BigDecimal newAvailableBalance;
+    private LocalDateTime transferDate;
+    private LocalDateTime createdDate;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     private String destinationBankCode;
     private String destinationAccountNumber;
     private String destinationAccountHolderName;
     private String destinationIfscCode;
     private String remarks;
     private String status;
+<<<<<<< HEAD
     private LocalDateTime transferDate;
     private LocalDateTime createdDate;
     private BigDecimal newBalance;
@@ -49,3 +75,6 @@ public class InterBankTransferResponseDto {
 }
 
 
+=======
+}
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba

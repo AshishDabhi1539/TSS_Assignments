@@ -1,0 +1,60 @@
+<p>binding-demo works!</p>
+
+<h3>Welcome <i>{{ name.toUpperCase() }} BHAI</i></h3>
+<hr>
+
+<h3>Counter : {{ counter }}</h3>
+<button (click)="incrementCounter()">Increment</button>
+&nbsp;
+<button (click)="decrementCounter()">Decrement</button>
+
+<br><br>
+<hr>
+
+<h3>Property Binding</h3>
+<button [disabled]="active">Some button</button>
+&nbsp;
+<button (click)="toggleButton()">Toggle button</button>
+
+<hr>
+
+<h3>Image Binding from URL</h3>
+<img [src]="imageUrl" width="200" alt="Angular logo" />
+<br>
+<a [href]="imageUrl" target="_blank">Open Image</a>
+<hr>
+
+<h2>Class Binding</h2>
+
+<h3 [class.active]="isActive">The colour is green if class active -- Active Value : {{isActive}}</h3>
+<h3 [class.valid]="!isValid">The colour is red if class invalid -- Valid Value : {{isValid}}</h3>
+
+
+<button (click)="isActive = !isActive">Toggle Active button</button>
+&nbsp;
+<button (click)="isValid = !isValid">Toggle Valid Button</button>
+
+<br><br>
+<hr>
+<!-- Two way Binding -->
+
+<h2>Twoway Binding</h2>
+<label for="username">Enter Username : </label>
+<input type="text" placeholder="enter username" name="username"
+    [(ngModel)]="userName"
+>
+
+<h2>{{userName}}, length of String : {{userName.length}}</h2>
+<hr>
+<!-- Style Binding -->
+<h2>Twoway Binding</h2>
+<p [style.color]="isActive?'green':'red'"
+    [style.fontSize.px]="fontSize">Colour by expressions</p>
+
+<button (click)="fontSize = Math.min(30,fontSize+2)">A+</button>
+&nbsp;
+<button (click)="fontSize = Math.max(14,fontSize-2)">A-</button>
+<br><br>
+<!-- Style binding using ngStyle -->
+
+<div [ngStyle]="{'background':bg,'fontSize.px':fontSize,'border':'1px solid #ddd'}">Box with ngStyle Binding</div>

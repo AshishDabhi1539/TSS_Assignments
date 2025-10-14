@@ -1,6 +1,7 @@
 package com.tss.banking.dto.response;
 
 import java.math.BigDecimal;
+<<<<<<< HEAD
 import java.time.LocalDate;
 
 public class InterestRateConfigResponseDto {
@@ -29,3 +30,25 @@ public class InterestRateConfigResponseDto {
 }
 
 
+=======
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class InterestRateConfigResponseDto {
+    
+    private Long id;
+    private String accountType;
+    private BigDecimal interestRate;
+    private BigDecimal minBalance;
+    private String description;
+    private Boolean isActive;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba

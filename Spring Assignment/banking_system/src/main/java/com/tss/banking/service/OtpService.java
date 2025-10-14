@@ -1,5 +1,6 @@
 package com.tss.banking.service;
 
+<<<<<<< HEAD
 public interface OtpService {
     
     /**
@@ -36,4 +37,15 @@ public interface OtpService {
      * Clean up expired OTPs (scheduled task)
      */
     void cleanupExpiredOtps();
+=======
+import com.tss.banking.entity.User;
+import com.tss.banking.entity.enums.OtpType;
+
+public interface OtpService {
+    void generateAndSendOtp(User user, OtpType otpType);
+    boolean verifyOtp(User user, String otp, OtpType otpType);
+    void resendOtp(User user, OtpType otpType);
+    void expireActiveOtps(User user, OtpType otpType);
+    void cleanupExpiredTokens();
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 }

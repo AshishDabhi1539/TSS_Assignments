@@ -41,7 +41,17 @@ public class InterestRateConfig {
     private AccountType accountType;
 
     @Column(precision = 5, scale = 4)
+<<<<<<< HEAD
     private BigDecimal annualRatePercent;
+=======
+    private BigDecimal interestRate;
+
+    @Column(precision = 15, scale = 2)
+    private BigDecimal minBalance;
+
+    @Column(nullable = false)
+    private Boolean isActive = true;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 
     private LocalDate effectiveFrom;
 

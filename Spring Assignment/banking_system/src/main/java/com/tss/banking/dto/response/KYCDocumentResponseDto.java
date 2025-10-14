@@ -3,7 +3,19 @@ package com.tss.banking.dto.response;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+<<<<<<< HEAD
 public class KYCDocumentResponseDto {
+=======
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class KYCDocumentResponseDto {
+    
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     private Long id;
     private Long customerId;
     private String documentType;
@@ -12,6 +24,7 @@ public class KYCDocumentResponseDto {
     private String issuedBy;
     private LocalDate expiryDate;
     private String fileRef;
+<<<<<<< HEAD
     private LocalDateTime createdAt;
 
     public Long getId() { return id; }
@@ -35,3 +48,8 @@ public class KYCDocumentResponseDto {
 }
 
 
+=======
+    private String fileUrl;
+    private LocalDateTime createdAt;
+}
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba

@@ -1,14 +1,21 @@
 package com.tss.banking.controller;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+=======
+import java.util.List;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+<<<<<<< HEAD
 import org.springframework.security.core.Authentication;
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +36,12 @@ import com.tss.banking.dto.request.BeneficiaryValidationRequestDto;
 import com.tss.banking.dto.response.BeneficiaryActivationResponseDto;
 import com.tss.banking.dto.response.BeneficiaryResponseDto;
 import com.tss.banking.dto.response.BeneficiaryValidationResponseDto;
+=======
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tss.banking.dto.request.BeneficiaryRequestDto;
+import com.tss.banking.dto.response.BeneficiaryResponseDto;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import com.tss.banking.service.BeneficiaryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,23 +51,34 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/beneficiaries")
 @Tag(name = "Beneficiary", description = "Beneficiary Management APIs")
+<<<<<<< HEAD
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN', 'ROLE_CUSTOMER')")
+=======
+@PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN', 'CUSTOMER')")
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 public class BeneficiaryController {
 
     @Autowired
     private BeneficiaryService beneficiaryService;
 
     @PostMapping
+<<<<<<< HEAD
     @Operation(summary = "Create beneficiary", description = "Create a new beneficiary for authenticated customer")
     public ResponseEntity<BeneficiaryResponseDto> createBeneficiary(
             @Valid @RequestBody BeneficiaryCreateRequestDto dto,
             Authentication authentication) {
         String customerEmail = authentication.getName();
         return ResponseEntity.ok(beneficiaryService.addBeneficiaryForCustomer(dto, customerEmail));
+=======
+    @Operation(summary = "Create beneficiary", description = "Create a new beneficiary")
+    public ResponseEntity<BeneficiaryResponseDto> createBeneficiary(@Valid @RequestBody BeneficiaryRequestDto dto) {
+        return ResponseEntity.ok(beneficiaryService.createBeneficiary(dto));
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get beneficiary by ID", description = "Retrieve beneficiary details by ID")
+<<<<<<< HEAD
     public ResponseEntity<BeneficiaryResponseDto> getBeneficiaryById(@PathVariable Long id, Authentication authentication) {
         String customerEmail = authentication.getName();
         return ResponseEntity.ok(beneficiaryService.getBeneficiaryByIdForCustomer(id, customerEmail));
@@ -212,10 +237,20 @@ public class BeneficiaryController {
     @GetMapping("/all")
     @Operation(summary = "Get all beneficiaries", description = "Get all beneficiaries (Admin only)")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")
+=======
+    public ResponseEntity<BeneficiaryResponseDto> getBeneficiaryById(@PathVariable Long id) {
+        return ResponseEntity.ok(beneficiaryService.getBeneficiaryById(id));
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all beneficiaries", description = "Retrieve all beneficiaries")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPERADMIN')")
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     public ResponseEntity<List<BeneficiaryResponseDto>> getAllBeneficiaries() {
         return ResponseEntity.ok(beneficiaryService.getAllBeneficiaries());
     }
 
+<<<<<<< HEAD
     @GetMapping("/dormant")
     @Operation(summary = "Get dormant beneficiaries", description = "Get beneficiaries inactive for 90+ days (Admin only)")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERADMIN')")
@@ -249,5 +284,24 @@ public class BeneficiaryController {
             response.put("message", e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
+=======
+    @GetMapping("/owner/{ownerId}")
+    @Operation(summary = "Get beneficiaries by owner", description = "Retrieve beneficiaries for a specific owner")
+    public ResponseEntity<List<BeneficiaryResponseDto>> getBeneficiariesByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(beneficiaryService.getBeneficiariesByOwner(ownerId));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update beneficiary", description = "Update an existing beneficiary")
+    public ResponseEntity<BeneficiaryResponseDto> updateBeneficiary(@PathVariable Long id, @Valid @RequestBody BeneficiaryRequestDto dto) {
+        return ResponseEntity.ok(beneficiaryService.updateBeneficiary(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete beneficiary", description = "Delete a beneficiary by ID")
+    public ResponseEntity<Void> deleteBeneficiary(@PathVariable Long id) {
+        beneficiaryService.deleteBeneficiary(id);
+        return ResponseEntity.noContent().build();
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     }
 }

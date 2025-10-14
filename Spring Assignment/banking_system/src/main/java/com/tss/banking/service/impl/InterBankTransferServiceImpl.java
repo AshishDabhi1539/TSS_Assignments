@@ -22,10 +22,18 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+<<<<<<< HEAD
 import com.tss.banking.dto.request.InterBankTransferRequestDto;
 import com.tss.banking.dto.response.InterBankTransferResponseDto;
 import com.tss.banking.dto.response.TransferRequestSummaryDto;
 import com.tss.banking.dto.request.TransferActionRequestDto;
+=======
+
+import com.tss.banking.dto.request.InterBankTransferRequestDto;
+import com.tss.banking.dto.request.TransferActionRequestDto;
+import com.tss.banking.dto.response.InterBankTransferResponseDto;
+import com.tss.banking.dto.response.TransferRequestSummaryDto;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import com.tss.banking.entity.Account;
 import com.tss.banking.entity.Transaction;
 import com.tss.banking.entity.User;
@@ -33,6 +41,7 @@ import com.tss.banking.entity.enums.TransactionType;
 import com.tss.banking.entity.enums.TransactionStatus;
 import com.tss.banking.repository.AccountRepository;
 import com.tss.banking.repository.TransactionRepository;
+<<<<<<< HEAD
 // Minimal local interface to compile
 interface InterBankTransferService {
     InterBankTransferResponseDto initiateTransfer(Integer accountId, InterBankTransferRequestDto transferRequest, com.tss.banking.entity.User customerUser);
@@ -43,6 +52,9 @@ interface InterBankTransferService {
     java.util.List<TransferRequestSummaryDto> getCustomerTransferRequests(com.tss.banking.entity.User customerUser);
     TransferRequestSummaryDto getTransferRequestByReference(String transferReference, com.tss.banking.entity.User customerUser);
 }
+=======
+import com.tss.banking.service.InterBankTransferService;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 
 @Service
 @Transactional
@@ -59,6 +71,7 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
     private RestTemplate restTemplate;
     
     private static final String SOURCE_BANK_CODE = "BANK002"; // DeepS Bank
+<<<<<<< HEAD
 
     private static final String SHARED_DB_URL = System.getenv("SHARED_DB_URL");
     private static final String SHARED_DB_USERNAME = System.getenv("SHARED_DB_USERNAME");
@@ -72,6 +85,8 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
         return DriverManager.getConnection(SHARED_DB_URL, SHARED_DB_USERNAME, SHARED_DB_PASSWORD);
     }
     
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     @Override
     public InterBankTransferResponseDto initiateTransfer(Integer accountId, InterBankTransferRequestDto transferRequest, User customerUser) {
         System.out.println("🏦 MAIN DATABASE: Validating account ownership for accountId: " + accountId);
@@ -161,7 +176,12 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
         transaction.setBalanceBefore(previousBalance);
         transaction.setBalanceAfter(account.getBalance());
         transaction.setReferenceNumber(transferReference);
+<<<<<<< HEAD
         // Transaction entity has no from/to account number fields; store in description/reference only
+=======
+        transaction.setFromAccountNumber(account.getAccountNumber());
+        transaction.setToAccountNumber(transferRequest.getDestinationAccountNumber());
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         transaction.setStatus(TransactionStatus.PENDING);
         
         transactionRepository.save(transaction);
@@ -326,13 +346,21 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
         
         return "Transfer request approved successfully. Amount credited to destination account.";
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     @Override
     public String rejectTransferRequest(Integer requestId, TransferActionRequestDto actionRequest, User adminUser) {
         // Get transfer request from shared database
         String selectQuery = "SELECT * FROM transfer_requests WHERE request_id = ? AND destination_bank_code = ?";
         Map<String, Object> transferRequest = null;
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         try (Connection conn = getSharedDatabaseConnection()) {
             try (PreparedStatement stmt = conn.prepareStatement(selectQuery)) {
                 stmt.setInt(1, requestId);
@@ -353,18 +381,26 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
                     transferRequest.put("transfer_reference", rs.getString("transfer_reference"));
                     transferRequest.put("status", rs.getString("status"));
                     transferRequest.put("remarks", rs.getString("remarks"));
+<<<<<<< HEAD
                     // transferRequest.put("rejection_reason", actionRequest.getReason());
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to fetch transfer request: " + e.getMessage());
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         // Check if already processed
         String status = (String) transferRequest.get("status");
         if (!"PENDING".equals(status)) {
             throw new RuntimeException("Transfer request is not pending");
         }
+<<<<<<< HEAD
 
         // Update status in shared database
         String updateQuery = "UPDATE transfer_requests SET status = 'REJECTED', processed_date = NOW(), processed_by_admin = ?, rejection_reason = ? WHERE request_id = ?";
@@ -373,11 +409,21 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
                 stmt.setLong(1, adminUser.getId());
                 stmt.setString(2, actionRequest.getReason());
                 stmt.setInt(3, requestId);
+=======
+        
+        // Update status in shared database
+        String updateQuery = "UPDATE transfer_requests SET status = 'REJECTED', processed_date = NOW(), processed_by_admin = ? WHERE request_id = ?";
+        try (Connection conn = getSharedDatabaseConnection()) {
+            try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+                stmt.setLong(1, adminUser.getId());
+                stmt.setInt(2, requestId);
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
                 stmt.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update transfer request status: " + e.getMessage());
         }
+<<<<<<< HEAD
 
         // Notify source bank to refund the amount
         notifySourceBankToRefund(transferRequest);
@@ -385,6 +431,15 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
         return "Transfer request rejected. Source bank has been notified to refund the amount.";
     }
 
+=======
+        
+        // Notify source bank to refund the amount
+        notifySourceBankToRefund(transferRequest);
+        
+        return "Transfer request rejected. Source bank has been notified to refund the amount.";
+    }
+    
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     @Override
     public String processRefund(Map<String, Object> refundRequest) {
         System.out.println("🏦 MAIN DATABASE: Processing refund for transfer reference: " + refundRequest.get("transferReference"));
@@ -442,7 +497,12 @@ public class InterBankTransferServiceImpl implements InterBankTransferService {
         refundTransaction.setDescription("Inter-bank transfer refund - " + refundRequest.get("transferReference"));
         refundTransaction.setBalanceBefore(sourceAccount.getBalance().subtract(refundAmount));
         refundTransaction.setBalanceAfter(sourceAccount.getBalance());
+<<<<<<< HEAD
         // Transaction entity does not track from/to numbers; description and reference suffice
+=======
+        refundTransaction.setFromAccountNumber(sourceAccountNumber);
+        refundTransaction.setToAccountNumber(sourceAccountNumber);
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         refundTransaction.setStatus(TransactionStatus.COMPLETED);
         transactionRepository.save(refundTransaction);
         // Update status in shared database

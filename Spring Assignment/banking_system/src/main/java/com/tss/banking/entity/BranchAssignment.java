@@ -17,6 +17,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+<<<<<<< HEAD
+=======
+import org.hibernate.annotations.CreationTimestamp;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +49,20 @@ public class BranchAssignment {
     @Column(nullable = false, length = 32)
     private AssignmentType assignmentType;
 
+<<<<<<< HEAD
+=======
+    @CreationTimestamp
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     private LocalDateTime createdAt;
 
     @PrePersist
     void onCreate() {
+<<<<<<< HEAD
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }
+=======
+        // handled by @CreationTimestamp
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     }
 }

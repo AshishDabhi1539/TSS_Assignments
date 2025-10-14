@@ -12,11 +12,16 @@
     <artifactId>jpa_cloudinary_demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jpa_cloudinary_demo</name>
+<<<<<<< HEAD
     <description>Demo project for Spring Boot with AWS S3</description>
+=======
+    <description>Demo project for Spring Boot</description>
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
+<<<<<<< HEAD
         <!-- HTTP Client for API calls -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -25,6 +30,12 @@
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
+=======
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

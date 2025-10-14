@@ -1,0 +1,2 @@
+<app-todo-input (addEmitter)="onAddTodo($event)"></app-todo-input>
+<app-todo-list [todosInput]="todos" (toggleEmitter)="onToggleTodo($event)" (deleteEmitter)="onDeleteTodo($event)"></app-todo-list>

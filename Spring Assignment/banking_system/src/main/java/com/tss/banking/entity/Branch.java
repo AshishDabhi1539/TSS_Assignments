@@ -1,6 +1,9 @@
 package com.tss.banking.entity;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -14,11 +17,15 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+<<<<<<< HEAD
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+=======
+import jakarta.persistence.Table;
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +59,7 @@ public class Branch {
     @Column(length = 15)
     private String contactNumber;
 
+<<<<<<< HEAD
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -59,6 +67,8 @@ public class Branch {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
@@ -68,6 +78,7 @@ public class Branch {
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BranchAssignment> branchAssignments;
+<<<<<<< HEAD
 
     @PrePersist
     void onCreate() {
@@ -78,4 +89,6 @@ public class Branch {
     void onUpdate() {
         // handled by @UpdateTimestamp
     }
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 }

@@ -37,6 +37,19 @@ public class BranchAssignmentServiceImpl implements BranchAssignmentService {
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new BankApiException("Branch not found with ID: " + dto.getBranchId()));
 
+<<<<<<< HEAD
+=======
+        // Check if assignment already exists for this user and branch
+        if (branchAssignmentRepo.existsByCustomerAndBranch(user, branch)) {
+            throw new BankApiException("User is already assigned to this branch");
+        }
+
+        // Validate that only admin/superadmin users can be assigned to branches
+        if (!user.getRole().name().equals("ADMIN") && !user.getRole().name().equals("SUPERADMIN")) {
+            throw new BankApiException("Only admin users can be assigned to branches");
+        }
+
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
         BranchAssignment assignment = mapper.map(dto, BranchAssignment.class);
         assignment.setCustomer(user);
         assignment.setBranch(branch);

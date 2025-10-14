@@ -1,6 +1,9 @@
 package com.tss.banking.config;
 
+<<<<<<< HEAD
 import org.modelmapper.ModelMapper;
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +36,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/customers/**").hasRole("CUSTOMER")
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
                 .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
+<<<<<<< HEAD
                 .requestMatchers("/api/accounts/**", "/api/transactions/**").hasAnyRole("ADMIN", "SUPERADMIN")
+=======
+                .requestMatchers("/api/accounts/admin/**", "/api/transactions/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/addresses/**").hasAnyRole("CUSTOMER", "ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/banks/**", "/api/branches/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/beneficiaries/**", "/api/fee-rules/**", "/api/interest-rates/**").hasAnyRole("ADMIN", "SUPERADMIN")
+                .requestMatchers("/api/kyc/**", "/api/notifications/**").hasAnyRole("CUSTOMER", "ADMIN", "SUPERADMIN")
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,9 +62,12 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+<<<<<<< HEAD
 
     @Bean
     ModelMapper modelMapper() {
         return new ModelMapper();
     }
+=======
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 }

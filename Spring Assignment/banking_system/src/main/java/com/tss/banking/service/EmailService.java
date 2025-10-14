@@ -1,5 +1,6 @@
 package com.tss.banking.service;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -42,4 +43,14 @@ public interface EmailService {
     // Generic email
     void sendEmail(String to, String subject, String body);
     void sendHtmlEmail(String to, String subject, String htmlBody);
+=======
+import com.tss.banking.entity.User;
+
+public interface EmailService {
+    void sendOtpEmail(User user, String otp, String otpType);
+    void sendWelcomeEmail(User user);
+    void sendAccountApprovedEmail(User user);
+    void sendAccountRejectedEmail(User user);
+    void sendPasswordChangeSuccessEmail(User user);
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
 }

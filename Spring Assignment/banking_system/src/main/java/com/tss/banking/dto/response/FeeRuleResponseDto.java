@@ -1,6 +1,7 @@
 package com.tss.banking.dto.response;
 
 import java.math.BigDecimal;
+<<<<<<< HEAD
 import java.time.LocalDate;
 
 public class FeeRuleResponseDto {
@@ -29,3 +30,26 @@ public class FeeRuleResponseDto {
 }
 
 
+=======
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FeeRuleResponseDto {
+    
+    private Long id;
+    private String transactionType;
+    private String feeType;
+    private BigDecimal feeAmount;
+    private BigDecimal minAmount;
+    private BigDecimal maxAmount;
+    private Boolean isActive;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}
+>>>>>>> 71789bece0117f6fd0443d9de29f6cd341d4deba
