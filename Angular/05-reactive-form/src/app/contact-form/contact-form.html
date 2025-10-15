@@ -1,0 +1,71 @@
+<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        formControlName="name"
+        >
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        formControlName="email"
+        >
+  </div>
+  <div class="mb-3">
+    <label for="date" class="form-label">Date</label>
+    <input
+        type="date"
+        class="form-control"
+        id="date"
+        name="date"
+        formControlName="dob"
+        >
+  </div>
+  <div class="mb-3">
+    <label for="gender" class="form-label">Gender :&nbsp;</label>
+    <div class="form-check form-check-inline" id="gender">
+        <input
+        type="radio"
+        class="form-check-input"
+        id="genderMale"
+        value="male"
+        formControlName="gender"
+        >
+        <label for="genderMale" class="form-check-label">Male</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input
+        type="radio"
+        class="form-check-input"
+        id="genderFemale"
+        value="female"
+        formControlName="gender"
+        >
+        <label for="genderFemale" class="form-check-label">Female</label>
+    </div>
+    </div>
+    <div class="mb-3">
+        <label for="educations" class="form-label">Highest Education</label>
+        <select
+            name="educations"
+            id="education"
+            class="form-select"
+            formControlName="highestEducation"
+            >
+            <option *ngFor="let e of educations" [value]="e">{{e}}</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+ 
+</form>
+ 

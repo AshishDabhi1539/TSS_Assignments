@@ -2,12 +2,16 @@
   <div class="row">
     <div class="col-12 mb-4">
       <h3>Movie Collection</h3>
-      <p class="text-muted" *ngIf="movies.length === 0">No movies added yet. Add your first movie using the form above!</p>
+      <!-- SIGNAL INTEGRATION: Using signal() to get current value for length check -->
+      <!-- Previous implementation: *ngIf="movies.length === 0" -->
+      <p class="text-muted" *ngIf="movies().length === 0">No movies added yet. Add your first movie using the form above!</p>
     </div>
   </div>
   
-  <div class="row" *ngIf="movies.length > 0">
-    @for (movie of movies; track movie.id) {
+  <!-- SIGNAL INTEGRATION: Using signal() to get current value for length check and iteration -->
+  <!-- Previous implementation: *ngIf="movies.length > 0" and @for (movie of movies; track movie.id) -->
+  <div class="row" *ngIf="movies().length > 0">
+    @for (movie of movies(); track movie.id) {
       <div class="col-lg-4 col-md-6 mb-4">
         <div class="card h-100 movie-card">
           <div class="card-img-container">

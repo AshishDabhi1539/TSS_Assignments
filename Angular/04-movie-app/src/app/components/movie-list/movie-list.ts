@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Movie } from '../../models/movie.model';
 
@@ -9,9 +9,13 @@ import { Movie } from '../../models/movie.model';
   styleUrl: './movie-list.css'
 })
 export class MovieList {
-  @Input() movies: Movie[] = [];
-  @Output() movieSelected = new EventEmitter<number>();
-  @Output() movieDeleted = new EventEmitter<number>();
+  //@Input() movies: Movie[] = [];
+  movies = input.required<Movie[]>();
+
+  //@Output() movieSelected = new EventEmitter<number>();
+  //@Output() movieDeleted = new EventEmitter<number>();
+  movieSelected = output<number>();
+  movieDeleted = output<number>();
 
   onSelect(movieId: number) {
     this.movieSelected.emit(movieId);

@@ -16,8 +16,10 @@
 
     <!-- Movie List Section -->
     <div class="col-lg-8 col-md-12">
+      <!-- SIGNAL INTEGRATION: Using signal() to pass current value to child component -->
+      <!-- Previous implementation: [movies]="movies" -->
       <app-movie-list 
-        [movies]="movies" 
+        [movies]="movies()" 
         (movieSelected)="onMovieSelected($event)"
         (movieDeleted)="onMovieDeleted($event)">
       </app-movie-list>
@@ -25,10 +27,14 @@
   </div>
 
   <!-- Selected Movie Info -->
-  <div class="row" *ngIf="selectedMovieId">
+  <!-- SIGNAL INTEGRATION: Using signal() to get current value for conditional display -->
+  <!-- Previous implementation: *ngIf="selectedMovieId" -->
+  <div class="row" *ngIf="selectedMovieId()">
     <div class="col-12">
       <div class="alert alert-info">
-        <h6>Selected Movie ID: {{ selectedMovieId }}</h6>
+        <!-- SIGNAL INTEGRATION: Using signal() to display current selected movie ID -->
+        <!-- Previous implementation: {{ selectedMovieId }} -->
+        <h6>Selected Movie ID: {{ selectedMovieId() }}</h6>
       </div>
     </div>
   </div>

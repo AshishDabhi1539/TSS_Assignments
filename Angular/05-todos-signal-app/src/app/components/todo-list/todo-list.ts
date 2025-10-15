@@ -9,7 +9,7 @@ import { Todo } from '../../models/todo.model';
   styleUrls: ['./todo-list.css']
 })
 export class TodoList {
-  todos = input.required<Todo[]>(); // signal-style Input
+  todos = input.required<Todo[]>();
   deleteEmitter = output<number>();
   toggleEmitter = output<number>();
 }

@@ -3,4 +3,5 @@ export interface ContactModelForm{
     email:string
     age:number
     message:string
+    agree:boolean
 }

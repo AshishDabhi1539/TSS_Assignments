@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Movie } from '../../models/movie.model';
 
@@ -9,7 +9,9 @@ import { Movie } from '../../models/movie.model';
   styleUrl: './add-movie-form.css'
 })
 export class AddMovieForm {
-  @Output() movieAdded = new EventEmitter<Movie>();
+  // SIGNAL INTEGRATION: Converting from @Output to signal-based output (following todos app pattern)
+  // Previous implementation: @Output() movieAdded = new EventEmitter<Movie>();
+  movieAdded = output<Movie>();
 
   movie: Partial<Movie> = {
     name: '',
@@ -24,6 +26,7 @@ export class AddMovieForm {
     if (this.movie.name && this.movie.yearOfRelease && this.actorsText && this.movie.movieImgUrl) {
       this.movie.actors = this.actorsText.split(',').map(actor => actor.trim()).filter(actor => actor.length > 0);
       this.movie.id = Date.now();
+      
       this.movieAdded.emit(this.movie as Movie);
       
       this.resetForm();

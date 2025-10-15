@@ -14,25 +14,34 @@ import { MovieList } from './components/movie-list/movie-list';
 export class App {
   protected readonly title = signal('Movie Collection App');
   
-  movies: Movie[] = [];
-  selectedMovieId: number | null = null;
+  //movies: Movie[] = [];
+  movies = signal<Movie[]>([]);
+  
+  //selectedMovieId: number | null = null;
+  selectedMovieId = signal<number | null>(null);
 
   onMovieAdded(movie: Movie) {
-    this.movies = [...this.movies, movie];
+    //this.movies = [...this.movies, movie];
+    this.movies.update((currentMovies) => [...currentMovies, movie]);
     console.log('Movie added:', movie);
   }
 
   onMovieSelected(movieId: number) {
-    this.selectedMovieId = movieId;
-    const selectedMovie = this.movies.find(m => m.id === movieId);
+    //this.selectedMovieId = movieId;
+    this.selectedMovieId.set(movieId);
+    
+    //const selectedMovie = this.movies.find(m => m.id === movieId);
+    const selectedMovie = this.movies().find(m => m.id === movieId);
     console.log('Movie selected:', selectedMovie);
     alert(`Selected: ${selectedMovie?.name} (${selectedMovie?.yearOfRelease})`);
   }
 
   onMovieDeleted(movieId: number) {
-    this.movies = this.movies.filter(movie => movie.id !== movieId);
-    if (this.selectedMovieId === movieId) {
-      this.selectedMovieId = null;
+    //this.movies = this.movies.filter(movie => movie.id !== movieId);
+    this.movies.update((currentMovies) => currentMovies.filter(movie => movie.id !== movieId));
+    
+    if (this.selectedMovieId() === movieId) {
+      this.selectedMovieId.set(null);
     }
     console.log('Movie deleted:', movieId);
   }

@@ -1,23 +1,105 @@
-<form>
+<form (ngSubmit)="onFormSubmit(f)" #f="ngForm" novalidate>
+  <!-- Name -->
   <div class="mb-3">
     <label for="name" class="form-label">Name</label>
-    <input type="text" class="form-control" id="name" name="name" required>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="name"
+      [(ngModel)]="contactModel.name"
+      required
+      minlength="3"
+      #nameCtrl="ngModel"
+      [class.is-invalid]="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)"
+    >
+    <div *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)" class="invalid-feedback d-block">
+      <div *ngIf="nameCtrl.errors?.['required']">Name is required.</div>
+      <div *ngIf="nameCtrl.errors?.['minlength']">Name should be at least 3 characters.</div>
+    </div>
   </div>
 
+  <!-- Email -->
   <div class="mb-3">
     <label for="email" class="form-label">Email address</label>
-    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
+    <input
+      type="email"
+      class="form-control"
+      id="email"
+      name="email"
+      [(ngModel)]="contactModel.email"
+      required
+      email
+      #emailCtrl="ngModel"
+      [class.is-invalid]="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)"
+    >
+    <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="invalid-feedback d-block">
+      <div *ngIf="emailCtrl.errors?.['required']">Email is required.</div>
+      <div *ngIf="emailCtrl.errors?.['email']">Please enter a valid email address.</div>
+    </div>
   </div>
 
+  <!-- Age -->
   <div class="mb-3">
     <label for="age" class="form-label">Age</label>
-    <input type="number" class="form-control" id="age" name="age" required min="0">
+    <input
+      type="number"
+      class="form-control"
+      id="age"
+      name="age"
+      [(ngModel)]="contactModel.age"
+      required
+      min="1"
+      #ageCtrl="ngModel"
+      [class.is-invalid]="ageCtrl.invalid && (ageCtrl.dirty || ageCtrl.touched)"
+    >
+    <div *ngIf="ageCtrl.invalid && (ageCtrl.dirty || ageCtrl.touched)" class="invalid-feedback d-block">
+      <div *ngIf="ageCtrl.errors?.['required']">Age is required.</div>
+      <div *ngIf="ageCtrl.errors?.['min']">Age must be greater than 0.</div>
+    </div>
   </div>
 
+  <!-- Message -->
   <div class="mb-3">
     <label for="message" class="form-label">Message</label>
-    <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+    <textarea
+      class="form-control"
+      id="message"
+      name="message"
+      rows="3"
+      [(ngModel)]="contactModel.message"
+      required
+      minlength="5"
+      #messageCtrl="ngModel"
+      [class.is-invalid]="messageCtrl.invalid && (messageCtrl.dirty || messageCtrl.touched)"
+    ></textarea>
+    <div *ngIf="messageCtrl.invalid && (messageCtrl.dirty || messageCtrl.touched)" class="invalid-feedback d-block">
+      <div *ngIf="messageCtrl.errors?.['required']">Message is required.</div>
+      <div *ngIf="messageCtrl.errors?.['minlength']">Message should be at least 5 characters.</div>
+    </div>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <!-- Agree Checkbox -->
+  <div class="form-check mb-3">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      id="agree"
+      name="agree"
+      [(ngModel)]="contactModel.agree"
+      required
+      #agreeCtrl="ngModel"
+    >
+    <label class="form-check-label" for="agree">
+      I agree to the terms and conditions
+    </label>
+    <div *ngIf="agreeCtrl.invalid && (agreeCtrl.dirty || agreeCtrl.touched)" class="invalid-feedback d-block">
+      You must agree before submitting.
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary" [disabled]="f.invalid">
+    Submit
+  </button>
 </form>
