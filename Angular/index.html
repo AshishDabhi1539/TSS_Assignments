@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Screening Application - Complete Workflow Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .diagram-container {
+            width: 100%;
+            overflow-x: auto;
+            text-align: center;
+        }
+        .mermaid {
+            background: white;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        @media print {
+            body { margin: 0; padding: 10px; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏦 Loan Screening Application - Complete Workflow Diagram</h1>
+        
+        <div class="diagram-container">
+            <div class="mermaid">
+graph TD
+    %% USER REGISTRATION & AUTHENTICATION
+    A[User Registration] --> B{Email Verification}
+    B -->|Verified| C[Account Activated]
+    B -->|Not Verified| D[Pending Verification]
+    D --> E[Resend OTP]
+    E --> B
+    C --> F[User Login]
+    F --> G{Role Check}
+    
+    %% ROLE-BASED ROUTING
+    G -->|APPLICANT| H[Applicant Dashboard]
+    G -->|LOAN_OFFICER| I[Loan Officer Dashboard]
+    G -->|COMPLIANCE_OFFICER| J[Compliance Officer Dashboard]
+    G -->|ADMIN| K[Admin Dashboard]
+    
+    %% APPLICANT FLOW
+    H --> L{Personal Details Complete?}
+    L -->|No| M[Complete Personal Details]
+    M --> N[KYC Information Form]
+    N --> O[Financial Profile Setup]
+    O --> P[Create Loan Application]
+    L -->|Yes| P
+    
+    P --> Q[Upload Documents]
+    Q --> R[Submit Application]
+    R --> S[Auto-Assignment to Officer]
+    S --> T[Application Status: UNDER_REVIEW]
+    
+    %% LOAN OFFICER WORKFLOW
+    I --> U[View Assigned Applications]
+    U --> V[Select Application for Review]
+    V --> W[Start Document Verification]
+    W --> X{Document Verification Result}
+    
+    X -->|Pass| Y[Trigger External Verification]
+    X -->|Fail| Z[Request Document Resubmission]
+    Z --> AA[Status: DOCUMENT_INCOMPLETE]
+    AA --> AB[Applicant Resubmits Documents]
+    AB --> W
+    
+    %% EXTERNAL VERIFICATION PROCESS
+    Y --> AC[Status: PENDING_EXTERNAL_VERIFICATION]
+    AC --> AD[Execute External Score Service]
+    AD --> AE[Call Stored Procedure]
+    AE --> AF[Credit Score Calculation]
+    AF --> AG{External Data Found?}
+    
+    AG -->|Yes| AH[Process Credit History]
+    AG -->|No| AI[High Risk Classification]
+    AH --> AJ{Risk Assessment}
+    AI --> AK[Risk Score: 75 - HIGH]
+    
+    AJ -->|Low Risk| AL[Status: READY_FOR_DECISION]
+    AJ -->|Medium Risk| AM[Additional Documentation Required]
+    AJ -->|High Risk| AN[Manual Underwriting Required]
+    AK --> AO[Enhanced Verification Required]
+    
+    AM --> AP[Request Additional Documents]
+    AN --> AL
+    AO --> AL
+    
+    %% DECISION MANAGEMENT
+    AL --> AQ[Loan Officer Decision]
+    AQ --> AR{Final Decision}
+    
+    AR -->|Approve| AS[Status: APPROVED]
+    AR -->|Reject| AT[Status: REJECTED]
+    AR -->|Flag for Compliance| AU[Status: FLAGGED_FOR_COMPLIANCE]
+    
+    %% COMPLIANCE OFFICER WORKFLOW
+    AU --> AV[Auto-Assignment to Compliance Officer]
+    AV --> AW[Compliance Officer Notification]
+    J --> AX[View Flagged Applications]
+    AX --> AY[Select Application for Investigation]
+    AY --> AZ[Start Compliance Investigation]
+    
+    AZ --> BA{Investigation Type}
+    BA -->|Standard Review| BB[Compliance Review Process]
+    BA -->|Comprehensive Investigation| BC[Execute Compliance Stored Procedure]
+    
+    BB --> BD{Risk Level Assessment}
+    BC --> BE[Detailed Background Check]
+    BE --> BD
+    
+    BD -->|Low Risk| BF[Conditional Compliance]
+    BD -->|Medium Risk| BG[Request Compliance Documents]
+    BD -->|High Risk| BH[Regulatory Escalation]
+    BD -->|Critical Risk| BI[Senior Compliance Review]
+    
+    %% COMPLIANCE DECISIONS
+    BF --> BJ{Conditions Met?}
+    BJ -->|Yes| BK[Compliance Cleared]
+    BJ -->|No| BL[Compliance Rejected]
+    
+    BG --> BM[Status: PENDING_COMPLIANCE_DOCS]
+    BM --> BN[Applicant Submits Documents]
+    BN --> BO{Documents Received}
+    BO -->|Yes| BP[Review Compliance Documents]
+    BO -->|Timeout| BQ[Compliance Timeout]
+    
+    BP --> BR{Compliance Decision}
+    BR -->|Clear| BK
+    BR -->|Reject| BL
+    
+    BH --> BS[Senior Officer Assignment]
+    BI --> BT[Senior Compliance Investigation]
+    BS --> BU{Senior Decision}
+    BT --> BU
+    
+    BU -->|Clear| BK
+    BU -->|Reject| BL
+    BU -->|Report| BV[Regulatory Reporting]
+    
+    %% FINAL OUTCOMES
+    BK --> BW[Status: CLEARED - Back to READY_FOR_DECISION]
+    BL --> BX[Status: REJECTED]
+    BQ --> BY[Status: COMPLIANCE_TIMEOUT]
+    BV --> BZ[Status: REGULATORY_REPORTING]
+    
+    BW --> AQ
+    
+    %% APPROVAL WORKFLOW
+    AS --> CA[Loan Approval Process]
+    CA --> CB[Generate Loan Agreement]
+    CB --> CC[Status: DOCUMENTATION]
+    CC --> CD[Applicant Signs Documents]
+    CD --> CE[Status: DISBURSEMENT_PENDING]
+    CE --> CF[Disburse Loan Amount]
+    CF --> CG[Status: DISBURSED]
+    
+    %% NOTIFICATION SYSTEM
+    R --> CN[Create Application Notification]
+    S --> CO[Officer Assignment Notification]
+    Z --> CP[Document Resubmission Notification]
+    AU --> CQ[Compliance Flag Notification]
+    AS --> CR[Approval Notification]
+    AT --> CS[Rejection Notification]
+    BK --> CT[Compliance Cleared Notification]
+    BL --> CU[Compliance Rejected Notification]
+    
+    %% AUDIT TRAIL
+    CN --> DA[Audit Log: APPLICATION_CREATED]
+    CO --> DB[Audit Log: OFFICER_ASSIGNED]
+    CP --> DC[Audit Log: DOCUMENT_RESUBMISSION_REQUESTED]
+    CQ --> DD[Audit Log: FLAGGED_FOR_COMPLIANCE]
+    CR --> DE[Audit Log: LOAN_APPROVED]
+    CS --> DF[Audit Log: LOAN_REJECTED]
+    CT --> DG[Audit Log: COMPLIANCE_CLEARED]
+    CU --> DH[Audit Log: COMPLIANCE_REJECTED]
+    
+    %% ADMIN FUNCTIONS
+    K --> EA[User Management]
+    K --> EB[Officer Creation]
+    K --> EC[System Configuration]
+    
+    EB --> ED[Create Officer Profile]
+    ED --> EE[Auto-Generate Employee ID]
+    EE --> EF[Assign Department & Designation]
+    EF --> EG[Officer Profile Complete]
+    
+    %% DOCUMENT MANAGEMENT
+    Q --> FA[Document Upload Service]
+    FA --> FB[OCR Processing]
+    FB --> FC[Document Validation]
+    FC --> FD[Store in Cloud Storage]
+    FD --> FE[Update Document Status]
+    
+    %% EXTERNAL INTEGRATIONS
+    AD --> GA[External Database Connection]
+    GA --> GB[Credit Score History Repository]
+    GB --> GC[Fraud Record Repository]
+    GC --> GD[Bank Details Repository]
+    GD --> GE[Loan History Repository]
+    
+    %% WORKFLOW TRACKING
+    T --> HA[Create Workflow Entry]
+    AC --> HB[Update Workflow Status]
+    AL --> HC[Workflow Transition Log]
+    AU --> HD[Compliance Workflow Entry]
+    BK --> HE[Workflow Completion Log]
+    
+    %% STYLE DEFINITIONS
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef process fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef decision fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef compliance fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef notification fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef audit fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class A,CG startEnd
+    class P,R,W,Y,AD,AZ,CA,CB,CD,CF process
+    class B,X,AG,AJ,AR,BD,BJ,BO,BR,BU decision
+    class AU,AV,AW,AX,AY,AZ,BB,BC,BD,BF,BG,BH,BI,BK,BL,BM,BN,BP,BR,BS,BT,BU,BV,BW,BX,BY,BZ compliance
+    class CN,CO,CP,CQ,CR,CS,CT,CU notification
+    class DA,DB,DC,DD,DE,DF,DG,DH,HA,HB,HC,HD,HE audit
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>October 16, 2025 | TSS Consultancy Services</p>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
