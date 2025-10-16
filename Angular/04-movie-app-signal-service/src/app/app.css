@@ -1,0 +1,46 @@
+/* Simple App Styles */
+
+.container-fluid {
+  padding: 20px;
+}
+
+header {
+  background-color: #ced8c2;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+}
+
+header h1 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px 8px 0 0 !important;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 15px;
+  }
+  
+  header {
+    margin-bottom: 20px;
+    padding: 20px 15px;
+  }
+  
+  header h1 {
+    font-size: 1.8rem;
+  }
+}

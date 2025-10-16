@@ -1,0 +1,49 @@
+/* Simple Movie List Styles */
+
+.movie-list-container h3 {
+  color: #343a40;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.movie-card {
+  transition: transform 0.2s ease;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.movie-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.card-img-container {
+  height: 300px;
+  overflow: hidden;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actors-list {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.btn-group .btn {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .card-img-container {
+    height: 250px;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}

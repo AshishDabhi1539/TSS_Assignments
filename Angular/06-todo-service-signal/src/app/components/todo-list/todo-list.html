@@ -1,0 +1,24 @@
+<div class="card shadow-sm">
+    <div class="card-body">
+ 
+        <p *ngIf="!todoService.todos().length" class="text-muted mb-0">
+            No todos yet. Add one above!
+        </p>
+ 
+        <ul class="list-group list-group-flush" *ngIf="todoService.todos().length">
+            <li class="list-group-item d-flex align-items-center justify-content-between" *ngFor="let t of todoService.todos()">
+                <div class="form-check">
+                    <input class="form-check-input me-2" type="checkbox" [checked]="t.done"
+                        (change)="todoService.toggle(t.id)" />
+                    <label class="form-check-label">
+                        <span [class.text-decoration-line-through]="t.done">{{ t.title }}</span>
+                    </label>
+                </div>
+ 
+                <button class="btn btn-sm btn-outline-danger" (click)="todoService.remove(t.id)">
+                    Delete
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
