@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Todo } from '../../models/todo.model';
 import { TodoService } from '../../services/todo.service';
+import { Todo } from '../../models/todo.model';
 
 @Component({
   selector: 'app-todo-list',
@@ -10,31 +10,25 @@ import { TodoService } from '../../services/todo.service';
   templateUrl: './todo-list.html',
   styleUrls: ['./todo-list.css']
 })
-export class TodoList implements OnInit {
+export class TodoListComponent {
 
-    todos: Todo[]=[];
- 
-  todoService = inject(TodoService);
+  todos: Signal<Todo[]>;
 
-  @Input({ required: true }) todosInput: Todo[] = [];
-  @Output() toggleEmitter = new EventEmitter<number>();
-  @Output() deleteEmitter = new EventEmitter<number>();
-
-  
-  ngOnInit(): void {
-    // Initialize todos from the service signal
-    this.todos = this.todoService.todos();
+  constructor(public todoService: TodoService) {
+    // keep a reference to the signal from the service
+    this.todos = this.todoService.todos;
   }
 
-  toggleTodo(id: number) {
-    this.toggleEmitter.emit(id);
+  onToggle(id: number): void {
+    this.todoService.toggle(id);
   }
 
-  deleteTodo(id: number) {
-    this.deleteEmitter.emit(id);
+  onRemove(id: number): void {
+    this.todoService.remove(id);
   }
 
-  get hasTodos(): boolean {
-    return this.todos.length > 0;
+  onClearAll(): void {
+    this.todoService.clearAllTodos();
   }
+
 }

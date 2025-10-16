@@ -26,7 +26,6 @@ export class MovieService {
 
     remove(id: number) {
         this._movies.update(list => list.filter(m => m.id !== id));
-        // Clear selection if the selected movie is being removed
         if (this._selectedMovieId() === id) {
             this._selectedMovieId.set(null);
         }

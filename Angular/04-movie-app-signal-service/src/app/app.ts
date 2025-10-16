@@ -12,7 +12,7 @@ import { MovieService } from './services/movie.service';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('Movie Collection App with Service');
+  protected readonly title = signal('Movie Collection App');
   
   // Inject the movie service
   private movieService = inject(MovieService);

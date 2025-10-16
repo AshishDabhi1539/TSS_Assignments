@@ -9,10 +9,8 @@ import { MovieService } from '../../services/movie.service';
   styleUrl: './movie-list.css'
 })
 export class MovieList {
-  // Inject the movie service
   private movieService = inject(MovieService);
 
-  // Expose the movies signal from the service
   movies = this.movieService.movies;
 
   onSelect(movieId: number) {
