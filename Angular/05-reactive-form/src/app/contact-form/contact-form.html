@@ -1,71 +1,116 @@
-<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
-  <div class="mb-3">
-    <label for="name" class="form-label">Name</label>
-    <input
-        type="text"
-        class="form-control"
-        id="name"
-        name="name"
-        formControlName="name"
-        >
-  </div>
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-        type="email"
-        class="form-control"
-        id="email"
-        name="email"
-        formControlName="email"
-        >
-  </div>
-  <div class="mb-3">
-    <label for="date" class="form-label">Date</label>
-    <input
-        type="date"
-        class="form-control"
-        id="date"
-        name="date"
-        formControlName="dob"
-        >
-  </div>
-  <div class="mb-3">
-    <label for="gender" class="form-label">Gender :&nbsp;</label>
-    <div class="form-check form-check-inline" id="gender">
-        <input
-        type="radio"
-        class="form-check-input"
-        id="genderMale"
-        value="male"
-        formControlName="gender"
-        >
-        <label for="genderMale" class="form-check-label">Male</label>
-    </div>
-    <div class="form-check form-check-inline">
-        <input
-        type="radio"
-        class="form-check-input"
-        id="genderFemale"
-        value="female"
-        formControlName="gender"
-        >
-        <label for="genderFemale" class="form-check-label">Female</label>
-    </div>
-    </div>
+<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()" novalidate>
+
+    <!-- Name -->
     <div class="mb-3">
-        <label for="educations" class="form-label">Highest Education</label>
-        <select
-            name="educations"
-            id="education"
-            class="form-select"
-            formControlName="highestEducation"
-            >
-            <option *ngFor="let e of educations" [value]="e">{{e}}</option>
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" formControlName="name"
+            [class.is-invalid]="userForm.controls.name.invalid && (userForm.controls.name.dirty || userForm.controls.name.touched)">
+        <div *ngIf="userForm.controls.name.invalid && (userForm.controls.name.dirty || userForm.controls.name.touched)"
+            class="invalid-feedback d-block">
+            <div *ngIf="userForm.controls.name.errors?.['required']">Name is required.</div>
+            <div *ngIf="userForm.controls.name.errors?.['minlength']">Name should be at least 3 characters long.</div>
+            <div *ngIf="userForm.controls.name.errors?.['noDigits']">Name does not contain Digits.</div>
+        </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" formControlName="email"
+            [class.is-invalid]="userForm.controls.email.invalid && (userForm.controls.email.dirty || userForm.controls.email.touched)">
+        <div *ngIf="userForm.controls.email.invalid && (userForm.controls.email.dirty || userForm.controls.email.touched)"
+            class="invalid-feedback d-block">
+            <div *ngIf="userForm.controls.email.errors?.['required']">Email is required.</div>
+            <div *ngIf="userForm.controls.email.errors?.['email']">Please enter a valid email address.</div>
+        </div>
+    </div>
+
+    <!-- Date of Birth (with Age Validation) -->
+    <div class="mb-3">
+        <label for="dob" class="form-label">Date of Birth</label>
+        <input type="date" class="form-control" id="dob" formControlName="dob"
+            [class.is-invalid]="userForm.controls.dob.invalid && (userForm.controls.dob.dirty || userForm.controls.dob.touched)">
+        <div *ngIf="userForm.controls.dob.invalid && (userForm.controls.dob.dirty || userForm.controls.dob.touched)"
+            class="invalid-feedback d-block">
+            <div *ngIf="userForm.controls.dob.errors?.['required']">Date of Birth is required.</div>
+            <div *ngIf="userForm.controls.dob.errors?.['minAge']">
+                You must be at least {{ userForm.controls.dob.errors?.['minAge'].requiredAge }} years old.
+                (Your age: {{ userForm.controls.dob.errors?.['minAge'].actualAge }})
+            </div>
+        </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="mb-3">
+        <label class="form-label d-block">Gender</label>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="genderMale" value="male" formControlName="gender">
+            <label for="genderMale" class="form-check-label">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="genderFemale" value="female" formControlName="gender">
+            <label for="genderFemale" class="form-check-label">Female</label>
+        </div>
+    </div>
+
+    <!-- Highest Education -->
+    <div class="mb-3">
+        <label for="education" class="form-label">Highest Education</label>
+        <select id="education" class="form-select" formControlName="highestEducation">
+            <option *ngFor="let e of educations" [value]="e">{{ e }}</option>
         </select>
     </div>
+
+    <!-- Skills Section -->
+<div class="mb-3" formArrayName="skills">
+  <label class="form-label">Skills</label>
+
+  <div
+    class="input-group mb-2"
+    *ngFor="let skillCtrl of skills.controls; let i = index"
+  >
+    <input
+      type="text"
+      class="form-control"
+      [formControlName]="i"
+      placeholder="e.g. Angular / Java"
+      [class.is-invalid]="
+        skillCtrl.invalid && (skillCtrl.dirty || skillCtrl.touched)
+      "
+    />
+
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="removeSkill(i)"
+    >
+      Remove
+    </button>
+  </div>
+
+  <!-- Validation message -->
+  <div
+    *ngIf="skills.invalid && (skills.dirty || skills.touched)"
+    class="text-danger mt-1"
+  >
+    At least one valid skill is required.
+  </div>
+
+  <!-- Add button -->
+  <button
+    type="button"
+    class="btn btn-outline-success btn-sm mt-2"
+    (click)="addSkill()"
+  >
+    + Add Skill
+  </button>
+</div>
+
+    <!-- Submit Button -->
     <div class="mb-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">
+            Submit
+        </button>
     </div>
- 
+
 </form>
- 

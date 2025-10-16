@@ -79,26 +79,15 @@
     </div>
   </div>
 
-  <!-- Agree Checkbox -->
-  <div class="form-check mb-3">
-    <input
-      type="checkbox"
-      class="form-check-input"
-      id="agree"
-      name="agree"
-      [(ngModel)]="contactModel.agree"
-      required
-      #agreeCtrl="ngModel"
-    >
-    <label class="form-check-label" for="agree">
-      I agree to the terms and conditions
-    </label>
-    <div *ngIf="agreeCtrl.invalid && (agreeCtrl.dirty || agreeCtrl.touched)" class="invalid-feedback d-block">
-      You must agree before submitting.
-    </div>
+  <div class="mb-3">
+    <input type="checkbox"
+    class="form-check-input"
+    nama="agree"
+    [(ngModel)]="contactModel.agree"
+    #agreeCtrl="ngModel"
+    [class.is-invalid]="ageCtrl.invalid && (agreeCtrl.dirty || agreeCtrl.touchedy)">
   </div>
-
-  <!-- Submit Button -->
+  <!-- Submit -->
   <button type="submit" class="btn btn-primary" [disabled]="f.invalid">
     Submit
   </button>
