@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between align-items-centre my-3">
+    <p class="h2">Students</p>
+    <a routerLink="/students/add" class="btn btn-primary">Add Student</a>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">
+    {{error}}
+</div>
+
+<ng-container *ngIf="!loading else loadingBlock">
+    <table class="table table-striped-table-bordered" *ngIf="students.length else emptyBlock">
+        <thead>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th style="width: 220px;"></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let s of students">
+                <td>{{s.name}}</td>
+                <td>{{s.email}}</td>
+                <td>{{s.age}}</td>
+                <td>
+                    <a [routerLink]="['/students',s.id]" class="btn btn-sm btn-outline-secondary">View</a>
+                    <a [routerLink]="['/students',s.id,'edit']" class="btn btn-sm btn-outline-primary ms-1">Edit</a>
+                    <button (click)="onDelete(s.id)" class="btn btn-sm btn-outline-danger ms-1">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+<ng-template #loadingBlock>
+    <h2>Loading...</h2>
+</ng-template>
+
+<ng-template #emptyBlock>
+    <h2>No Students In The Database</h2>
+</ng-template>
