@@ -1,0 +1,107 @@
+<form [formGroup]="studentForm" (ngSubmit)="onFormSubmit()" novalidate class="my-3">
+
+  <!-- Name -->
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input
+      type="text"
+      id="name"
+      class="form-control"
+      formControlName="name"
+      placeholder="Enter full name"
+      [class.is-invalid]="
+        studentForm.controls.name.invalid &&
+        (studentForm.controls.name.dirty || studentForm.controls.name.touched)
+      "
+    />
+    <div
+      *ngIf="
+        studentForm.controls.name.invalid &&
+        (studentForm.controls.name.dirty || studentForm.controls.name.touched)
+      "
+      class="invalid-feedback d-block"
+    >
+      <div *ngIf="studentForm.controls.name.errors?.['required']">
+        Name is required.
+      </div>
+      <div *ngIf="studentForm.controls.name.errors?.['minlength']">
+        Name must be at least 3 characters long.
+      </div>
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input
+      type="email"
+      id="email"
+      class="form-control"
+      formControlName="email"
+      placeholder="Enter email address"
+      [class.is-invalid]="
+        studentForm.controls.email.invalid &&
+        (studentForm.controls.email.dirty || studentForm.controls.email.touched)
+      "
+    />
+    <div
+      *ngIf="
+        studentForm.controls.email.invalid &&
+        (studentForm.controls.email.dirty || studentForm.controls.email.touched)
+      "
+      class="invalid-feedback d-block"
+    >
+      <div *ngIf="studentForm.controls.email.errors?.['required']">
+        Email is required.
+      </div>
+      <div *ngIf="studentForm.controls.email.errors?.['email']">
+        Please enter a valid email address.
+      </div>
+    </div>
+  </div>
+
+  <!-- Age -->
+  <div class="mb-3">
+    <label for="age" class="form-label">Age</label>
+    <input
+      type="number"
+      id="age"
+      class="form-control"
+      formControlName="age"
+      placeholder="Enter age"
+      [class.is-invalid]="
+        studentForm.controls.age.invalid &&
+        (studentForm.controls.age.dirty || studentForm.controls.age.touched)
+      "
+    />
+    <div
+      *ngIf="
+        studentForm.controls.age.invalid &&
+        (studentForm.controls.age.dirty || studentForm.controls.age.touched)
+      "
+      class="invalid-feedback d-block"
+    >
+      <div *ngIf="studentForm.controls.age.errors?.['required']">
+        Age is required.
+      </div>
+      <div *ngIf="studentForm.controls.age.errors?.['min']">
+        Age must be at least 10.
+      </div>
+      <div *ngIf="studentForm.controls.age.errors?.['max']">
+        Age must be less than or equal to 100.
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="mb-3">
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="studentForm.invalid"
+    >
+      {{ isEdit ? 'Update' : 'Submit' }}
+    </button>
+  </div>
+
+</form>
