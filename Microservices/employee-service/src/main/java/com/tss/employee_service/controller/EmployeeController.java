@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,4 +39,18 @@ public class EmployeeController {
     public ResponseEntity<EmployeeResponseDto> createEmployee(@RequestBody EmployeeRequestDto dto) {
         return ResponseEntity.ok(employeeService.saveEmployee(dto));
     }
+    
+    @GetMapping("/department/{deptId}")
+    public ResponseEntity<List<EmployeeResponseDto>> getEmployeesByDepartment(
+            @PathVariable("deptId") long deptId) {
+        return ResponseEntity.ok(employeeService.getEmployeesByDepartmentId(deptId));
+    }
+    
+    @PutMapping("/{emp_id}/department/{dept_id}")
+    public ResponseEntity<EmpApiResponseDto> updateEmployeeDepartment(
+            @PathVariable("emp_id") long empId,
+            @PathVariable("dept_id") long deptId) {
+        return ResponseEntity.ok(employeeService.updateEmployeeDepartment(empId, deptId));
+    }
+
 }

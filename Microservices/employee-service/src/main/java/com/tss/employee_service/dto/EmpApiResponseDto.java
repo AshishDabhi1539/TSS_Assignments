@@ -2,13 +2,13 @@ package com.tss.employee_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class EmpApiResponseDto {
-
-	private EmployeeResponseDto employee;
-	private DepartmentResponseDto department;
+    private String message;
+    private EmployeeResponseDto employee;
+    private DepartmentResponseDto department;
 }

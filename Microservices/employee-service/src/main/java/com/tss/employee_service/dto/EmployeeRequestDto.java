@@ -6,4 +6,5 @@ import lombok.Data;
 public class EmployeeRequestDto {
     private String name;
     private double salary;
+    private long deptId;
 }

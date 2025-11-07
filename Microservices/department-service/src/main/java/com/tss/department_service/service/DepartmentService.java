@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.tss.department_service.dto.DepartmentRequestDto;
 import com.tss.department_service.dto.DepartmentResponseDto;
+import com.tss.department_service.dto.DeptApiResponseDto;
 
 public interface DepartmentService {
     List<DepartmentResponseDto> getAllDepartments();
     DepartmentResponseDto getDepartmentById(long id);
     DepartmentResponseDto saveDepartment(DepartmentRequestDto dto);
+    DeptApiResponseDto getDepartmentWithEmployees(long deptId);
 }

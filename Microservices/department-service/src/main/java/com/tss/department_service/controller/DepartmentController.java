@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tss.department_service.dto.DepartmentRequestDto;
 import com.tss.department_service.dto.DepartmentResponseDto;
+import com.tss.department_service.dto.DeptApiResponseDto;
 import com.tss.department_service.service.DepartmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,4 +38,10 @@ public class DepartmentController {
     public ResponseEntity<DepartmentResponseDto> createDepartment(@RequestBody DepartmentRequestDto dto) {
         return ResponseEntity.ok(departmentService.saveDepartment(dto));
     }
+    
+    @GetMapping("/{dept_id}/employees")
+    public ResponseEntity<DeptApiResponseDto> getDepartmentWithEmployees(@PathVariable("dept_id") long deptId) {
+        return ResponseEntity.ok(departmentService.getDepartmentWithEmployees(deptId));
+    }
+
 }
