@@ -2,6 +2,7 @@ package com.tss.employee_service.controller;
 
 import java.util.List;
 
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/empservice/employees")
+@RefreshScope
 @RequiredArgsConstructor
 public class EmployeeController {
 

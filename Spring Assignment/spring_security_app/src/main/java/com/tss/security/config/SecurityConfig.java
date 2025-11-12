@@ -30,6 +30,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 @Configuration
 public class SecurityConfig {
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private UserDetailsService userDetailsService;
 
@@ -55,8 +56,6 @@ public class SecurityConfig {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.authorizeHttpRequests(auth -> auth
-				// Public Endpoints
-				.requestMatchers("/api/register", "/api/login", "/api/validate").permitAll()
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-resources",
 						"/webjars/**")
 				.permitAll()

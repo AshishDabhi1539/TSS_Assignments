@@ -2,6 +2,8 @@ package com.tss.department_service.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +21,18 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/deptservice/departments")
+@RefreshScope
 @RequiredArgsConstructor
 public class DepartmentController {
 
     private final DepartmentService departmentService;
+    
+    @Value("${app.name}")
+    private String name;
 
     @GetMapping
     public ResponseEntity<List<DepartmentResponseDto>> getAllDepartments() {
+    	System.out.println("----------------------------------->"+name);
         return ResponseEntity.ok(departmentService.getAllDepartments());
     }
 
